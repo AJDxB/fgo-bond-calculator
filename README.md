@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# FGO Bond Level Calculator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![GitHub stars](https://img.shields.io/github/stars/AJDxB/fgo-bond-calculator?style=flat-square)](https://github.com/AJDxB/fgo-bond-calculator/stargazers)
+[![GitHub license](https://img.shields.io/github/license/AJDxB/fgo-bond-calculator?style=flat-square)](https://github.com/AJDxB/fgo-bond-calculator/blob/main/LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/AJDxB/fgo-bond-calculator?style=flat-square)](https://github.com/AJDxB/fgo-bond-calculator/commits/main)
+[![Issues](https://img.shields.io/github/issues/AJDxB/fgo-bond-calculator?style=flat-square)](https://github.com/AJDxB/fgo-bond-calculator/issues)
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+FGO Bond Level Calculator is a React web app for Fate/Grand Order players to calculate the bond points required to reach a target bond level for any servant.  
+Data for this app is provided by [Atlas Academy](https://atlasacademy.io/).
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Bond point calculation for all available FGO servants
+- Per-servant bond tables (based on Atlas Academy data)
+- Simple, responsive user interface
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Planned Features
 
-### `npm test`
+- Fuzzy search for easier servant selection
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Getting Started
 
-### `npm run build`
+**Requirements:**  
+- Node.js and npm
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Installation:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+git clone https://github.com/AJDxB/fgo-bond-calculator.git
+cd fgo-bond-calculator
+npm install
+npm start
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+Then open http://localhost:3000 in your browser.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+**Usage**
+1. Select a servant from the dropdown list.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Enter your current cumulative bond points.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Select your target bond level.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. Click "Calculate" to see the required bond points.
 
-## Learn More
+**License**
+This project is licensed under the MIT License.
+See the LICENSE file for details.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Contributing**
+Contributions, issues, and suggestions are welcome.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Acknowledgments**
+- [Atlas Academy](https://atlasacademy.io/) (for FGO data API)
+- React
