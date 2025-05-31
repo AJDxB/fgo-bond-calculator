@@ -22,35 +22,38 @@ Data for this app is provided by [Atlas Academy](https://atlasacademy.io/).
 
 ## Getting Started
 
-**Requirements:**  
+### Requirements
+
 - Node.js and npm
 
-**Installation:**
+### Installation
 
+```bash
 git clone https://github.com/AJDxB/fgo-bond-calculator.git
 cd fgo-bond-calculator
 npm install
 npm start
+```
 
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Then open http://localhost:3000 in your browser.
+## Usage
 
-**Usage**
 1. Select a servant from the dropdown list.
-
 2. Enter your current cumulative bond points.
-
 3. Select your target bond level.
-
 4. Click "Calculate" to see the required bond points.
 
-**License**
-This project is licensed under the MIT License.
+## License
+
+This project is licensed under the MIT License.  
 See the LICENSE file for details.
 
-**Contributing**
+## Contributing
+
 Contributions, issues, and suggestions are welcome.
 
-**Acknowledgments**
+## Acknowledgments
+
 - [Atlas Academy](https://atlasacademy.io/) (for FGO data API)
 - React
