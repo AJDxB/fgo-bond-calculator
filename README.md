@@ -9,7 +9,7 @@
 
 A React web app for Fate/Grand Order players to calculate bond points needed to reach target bond levels.
 
-**Live Demo:** [https://ajdxb.github.io/fgo-bond-calculator](https://ajdxb.github.io/fgo-bond-calculator)
+**Live Demo:** [FGO Bond Calculator](https://ajdxb.github.io/fgo-bond-calculator)
 
 Data provided by [Atlas Academy](https://atlasacademy.io/).
 
@@ -18,9 +18,10 @@ Data provided by [Atlas Academy](https://atlasacademy.io/).
 - Bond point calculation for all FGO servants
 - Fuzzy search for servant selection
 - Dark/light mode toggle
-- Class icons and rarity stars
+- Class icons and rarity stars with fallback system
 - Filters out enemy-only and temporary servants
-- Responsive design
+- Fully responsive design for mobile and desktop
+- Dynamic scaling using CSS clamp() functions
 
 ## Getting Started
 
@@ -68,6 +69,13 @@ Contributions, issues, and suggestions are welcome.
 - FGO community for inspiration and feedback
 
 ## Changelog
+
+### v0.2.2 - Responsive Design & Image Fixes
+- Implemented fully responsive design using CSS clamp() functions
+- Fixed class icon paths for GitHub Pages deployment
+- Added proper mobile scaling while maintaining desktop appearance
+- Fixed desktop centering issues with flexbox layout
+- Enhanced image fallback system with emoji alternatives
 
 ### v0.2.1 - Deployment Improvements
 - Updated site title and favicon
