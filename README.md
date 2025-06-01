@@ -7,7 +7,7 @@
 
 ## Overview
 
-A React web app for Fate/Grand Order players to calculate bond points needed to reach target bond levels.
+A React web app for Fate/Grand Order players to calculate bond points needed to reach target bond levels and plan quest runs efficiently.
 
 **Live Demo:** [FGO Bond Calculator](https://ajdxb.github.io/fgo-bond-calculator)
 
@@ -16,8 +16,12 @@ Data provided by [Atlas Academy](https://atlasacademy.io/).
 ## Features
 
 - Bond point calculation for all FGO servants
+- Real-time quest runs calculator for farming efficiency
 - Fuzzy search for servant selection
-- Dark/light mode toggle
+- Dark/light mode toggle with persistent preference
+- Automatic calculations without manual button clicks
+- Bond bonus calculation for CEs and event bonuses
+- Multiple quest types with AP costs and time estimates
 - Class icons and rarity stars with fallback system
 - Filters out enemy-only and temporary servants
 - Fully responsive design for mobile and desktop
@@ -51,7 +55,8 @@ npm run deploy
 1. Select a servant from the dropdown
 2. Enter your current cumulative bond points
 3. Select your target bond level
-4. Click "Calculate" to see required bond points
+4. View automatic calculation results and quest runs needed
+5. Adjust quest type and bond bonuses for optimal farming strategy
 
 ## License
 
@@ -69,6 +74,15 @@ Contributions, issues, and suggestions are welcome.
 - FGO community for inspiration and feedback
 
 ## Changelog
+
+### v0.3.0 - Runs to Max Calculator & Auto-calculations
+- Added quest runs calculator with multiple quest types
+- Implemented automatic calculations without manual button clicks
+- Added bond bonus calculation for CEs and event bonuses
+- Enhanced result display with quest efficiency metrics
+- Added persistent dark/light mode preference using localStorage
+- Improved code organization by separating CSS from JavaScript
+- Added goal reached detection with enhanced visual feedback
 
 ### v0.2.2 - Responsive Design & Image Fixes
 - Implemented fully responsive design using CSS clamp() functions
