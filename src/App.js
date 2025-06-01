@@ -19,11 +19,16 @@ function App() {
   const [currentBondPoints, setCurrentBondPoints] = useState("");
   const [targetBond, setTargetBond] = useState(null);
   const [result, setResult] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Initialize from localStorage or default to false
+    const saved = localStorage.getItem('fgo-calculator-dark-mode');
+    return saved !== null ? JSON.parse(saved) : false;
+  });
 
-  // Apply theme to document
+  // Apply theme to document and save to localStorage
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+    localStorage.setItem('fgo-calculator-dark-mode', JSON.stringify(isDarkMode));
   }, [isDarkMode]);
 
   // Custom styles for react-select (keeping these as they're component-specific)
@@ -274,20 +279,24 @@ function App() {
     );
   };
 
-  // Submit calculation
-  const handleCalculate = (e) => {
-    e.preventDefault();
-    if (!selectedServant || !bondLevels.length || !targetBond) return;
+  // Auto-calculate when inputs change
+  useEffect(() => {
+    if (selectedServant && bondLevels.length && targetBond) {
+      const currPoints = parseInt(currentBondPoints.replace(/,/g, "")) || 0;
+      const totalTarget = targetBond.points;
+      const needed = Math.max(0, totalTarget - currPoints);
 
-    const currPoints = parseInt(currentBondPoints.replace(/,/g, "")) || 0;
-    const totalTarget = targetBond.points;
-    const needed = Math.max(0, totalTarget - currPoints);
-
-    setResult({
-      needed,
-      targetLabel: targetBond.label,
-    });
-  };
+      setResult({
+        needed,
+        targetLabel: targetBond.label,
+        isGoalReached: currPoints >= totalTarget,
+        currentPoints: currPoints,
+        targetPoints: totalTarget
+      });
+    } else {
+      setResult(null);
+    }
+  }, [selectedServant, bondLevels, targetBond, currentBondPoints]);
 
   return (
     <div className="app-container">
@@ -307,7 +316,7 @@ function App() {
           />
         </div>
 
-        <form onSubmit={handleCalculate}>
+        <div>
           <div className="form-group">
             <label className="form-label">Servant</label>
             <Select
@@ -358,22 +367,26 @@ function App() {
               ))}
             </select>
           </div>
-
-          <button
-            type="submit"
-            className="calculate-btn"
-            disabled={!selectedServant || !targetBond}
-          >
-            Calculate
-          </button>
-        </form>
+        </div>
 
         {result && (
-          <div className="result-container fade-in">
-            Bond points needed to reach <b>{result.targetLabel}</b>:<br />
-            <span className="result-number">
-              {result.needed.toLocaleString()}
-            </span>
+          <div className={`result-container fade-in ${result.isGoalReached ? 'goal-reached' : ''}`}>
+            {result.isGoalReached ? (
+              <>
+                <strong>Goal Reached!</strong><br />
+                You have already reached <b>{result.targetLabel}</b>!<br />
+                <span className="result-number success">
+                  {(result.currentPoints - result.targetPoints).toLocaleString()} points over target
+                </span>
+              </>
+            ) : (
+              <>
+                Bond points needed to reach <b>{result.targetLabel}</b>:<br />
+                <span className="result-number">
+                  {result.needed.toLocaleString()}
+                </span>
+              </>
+            )}
           </div>
         )}
 

@@ -21,49 +21,49 @@ const RunsCalculator = ({ selectedServant, currentBondPoints, targetBond }) => {
 
   // Calculate runs when inputs change
   useEffect(() => {
+    const calculateRuns = () => {
+      if (!selectedServant || !targetBond) return;
+
+      const currPoints = parseInt(currentBondPoints.replace(/,/g, "")) || 0;
+      const targetPoints = targetBond.points;
+      const pointsNeeded = Math.max(0, targetPoints - currPoints);
+
+      if (pointsNeeded === 0) {
+        setResults({
+          runsNeeded: 0,
+          totalAP: 0,
+          pointsNeeded,
+          bondPerRun: 0,
+          message: "Target bond level already reached!"
+        });
+        return;
+      }
+
+      const quest = QUEST_DATA[selectedQuest];
+      const bondPerRun = Math.floor(quest.baseBond * (1 + bondBonus / 100));
+      const runsNeeded = Math.ceil(pointsNeeded / bondPerRun);
+      const totalAP = runsNeeded * quest.ap;
+
+      // Calculate estimated time (assuming 1 run = 3 minutes average)
+      const estimatedMinutes = runsNeeded * 3;
+      const hours = Math.floor(estimatedMinutes / 60);
+      const minutes = estimatedMinutes % 60;
+
+      setResults({
+        runsNeeded,
+        totalAP,
+        pointsNeeded,
+        bondPerRun,
+        questName: quest.name,
+        estimatedTime: { hours, minutes },
+        apPerDay: Math.floor(totalAP / (24 * 6)) // Assuming 1 AP per 6 minutes natural regen
+      });
+    };
+
     if (selectedServant && targetBond && currentBondPoints !== "") {
       calculateRuns();
     }
   }, [selectedServant, targetBond, currentBondPoints, selectedQuest, bondBonus]);
-
-  const calculateRuns = () => {
-    if (!selectedServant || !targetBond) return;
-
-    const currPoints = parseInt(currentBondPoints.replace(/,/g, "")) || 0;
-    const targetPoints = targetBond.points;
-    const pointsNeeded = Math.max(0, targetPoints - currPoints);
-
-    if (pointsNeeded === 0) {
-      setResults({
-        runsNeeded: 0,
-        totalAP: 0,
-        pointsNeeded,
-        bondPerRun: 0,
-        message: "Target bond level already reached!"
-      });
-      return;
-    }
-
-    const quest = QUEST_DATA[selectedQuest];
-    const bondPerRun = Math.floor(quest.baseBond * (1 + bondBonus / 100));
-    const runsNeeded = Math.ceil(pointsNeeded / bondPerRun);
-    const totalAP = runsNeeded * quest.ap;
-
-    // Calculate estimated time (assuming 1 run = 3 minutes average)
-    const estimatedMinutes = runsNeeded * 3;
-    const hours = Math.floor(estimatedMinutes / 60);
-    const minutes = estimatedMinutes % 60;
-
-    setResults({
-      runsNeeded,
-      totalAP,
-      pointsNeeded,
-      bondPerRun,
-      questName: quest.name,
-      estimatedTime: { hours, minutes },
-      apPerDay: Math.floor(totalAP / (24 * 6)) // Assuming 1 AP per 6 minutes natural regen
-    });
-  };
 
   const handleBonusChange = (e) => {
     const value = Math.max(0, Math.min(300, parseInt(e.target.value) || 0)); // Cap at 300%
