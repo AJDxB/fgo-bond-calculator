@@ -129,21 +129,21 @@ function App() {
     // Check for special cases first (also check if name contains "aŋra" for the special character)
     if (specialCases[servantName] || servantName.includes("aŋra") || servantName.includes("mainiiu")) {
       const special = specialCases[servantName] || { rarity: "Silver", class: "avenger" };
-      return `/ServantClassImages/${special.rarity}/Class-${capitalizeClass(special.class)}-${special.rarity}.png`;
+      return `${process.env.PUBLIC_URL}/ServantClassImages/${special.rarity}/Class-${capitalizeClass(special.class)}-${special.rarity}.png`;
     }
     
     // Normal case - get rarity-appropriate icon
     const rarityFolder = getRarityFolder(servant.rarity);
     const capitalizedClass = capitalizeClass(className);
     
-    return `/ServantClassImages/${rarityFolder}/Class-${capitalizedClass}-${rarityFolder}.png`;
+    return `${process.env.PUBLIC_URL}/ServantClassImages/${rarityFolder}/Class-${capitalizedClass}-${rarityFolder}.png`;
   };
 
   // Helper function to get fallback class icon (Gold version)
   const getFallbackClassIcon = (servant) => {
     const className = servant.className.toLowerCase();
     const capitalizedClass = capitalizeClass(className);
-    return `/ServantClassImages/Gold/Class-${capitalizedClass}-Gold.png`;
+    return `${process.env.PUBLIC_URL}/ServantClassImages/Gold/Class-${capitalizedClass}-Gold.png`;
   };
 
   // Helper function to get emoji fallback
