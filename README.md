@@ -7,18 +7,20 @@
 
 ## Overview
 
-FGO Bond Level Calculator is a React web app for Fate/Grand Order players to calculate the bond points required to reach a target bond level for any servant.  
-Data for this app is provided by [Atlas Academy](https://atlasacademy.io/).
+A React web app for Fate/Grand Order players to calculate bond points needed to reach target bond levels.
+
+**Live Demo:** [https://ajdxb.github.io/fgo-bond-calculator](https://ajdxb.github.io/fgo-bond-calculator)
+
+Data provided by [Atlas Academy](https://atlasacademy.io/).
 
 ## Features
 
-- Bond point calculation for all available FGO servants
-- Per-servant bond tables (based on Atlas Academy data)
-- Simple, responsive user interface
-
-## Planned Features
-
-- Fuzzy search for easier servant selection
+- Bond point calculation for all FGO servants
+- Fuzzy search for servant selection
+- Dark/light mode toggle
+- Class icons and rarity stars
+- Filters out enemy-only and temporary servants
+- Responsive design
 
 ## Getting Started
 
@@ -37,12 +39,18 @@ npm start
 
 Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Deployment
+
+```bash
+npm run deploy
+```
+
 ## Usage
 
-1. Select a servant from the dropdown list.
-2. Enter your current cumulative bond points.
-3. Select your target bond level.
-4. Click "Calculate" to see the required bond points.
+1. Select a servant from the dropdown
+2. Enter your current cumulative bond points
+3. Select your target bond level
+4. Click "Calculate" to see required bond points
 
 ## License
 
@@ -55,5 +63,24 @@ Contributions, issues, and suggestions are welcome.
 
 ## Acknowledgments
 
-- [Atlas Academy](https://atlasacademy.io/) (for FGO data API)
-- React
+- [Atlas Academy](https://atlasacademy.io/) for FGO data API
+- React team for the frontend framework
+- FGO community for inspiration and feedback
+
+## Changelog
+
+### v0.2.1 - Deployment Improvements
+- Updated site title and favicon
+- Improved metadata for web deployment
+
+### v0.2.0 - UI Overhaul and Enhanced Search
+- Added dark/light mode toggle
+- Implemented fuzzy search for servants
+- Smart filtering of unplayable servants
+- Enhanced UI with class icons and rarity stars
+- Improved spacing and typography
+
+### v0.1.0 - Initial Release
+- Basic bond point calculation
+- Servant selection dropdown
+- Responsive design
