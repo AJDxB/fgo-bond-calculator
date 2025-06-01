@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/fgo-bond-calculator/static/css/main.e6c13ad2.css",
+    "main.js": "/fgo-bond-calculator/static/js/main.1ba5a553.js",
+    "static/js/453.b97aeb05.chunk.js": "/fgo-bond-calculator/static/js/453.b97aeb05.chunk.js",
+    "static/media/fgo_calc_logo.png": "/fgo-bond-calculator/static/media/fgo_calc_logo.b9034b71446f37d275e4.png",
+    "index.html": "/fgo-bond-calculator/index.html",
+    "main.e6c13ad2.css.map": "/fgo-bond-calculator/static/css/main.e6c13ad2.css.map",
+    "main.1ba5a553.js.map": "/fgo-bond-calculator/static/js/main.1ba5a553.js.map",
+    "453.b97aeb05.chunk.js.map": "/fgo-bond-calculator/static/js/453.b97aeb05.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.1ba5a553.js"
+  ]
+}
