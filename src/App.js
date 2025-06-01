@@ -49,7 +49,6 @@ function App() {
     control: (provided) => ({
       ...provided,
       width: "100%",
-      minWidth: "360px",
       minHeight: "52px",
       fontSize: "1.35rem",
       borderRadius: "10px",
@@ -61,7 +60,6 @@ function App() {
     menu: (provided) => ({
       ...provided,
       width: "100%",
-      minWidth: "360px",
       borderRadius: "10px",
       zIndex: 9999,
       backgroundColor: currentTheme.cardBackground,
@@ -392,6 +390,8 @@ function App() {
           padding: "48px 36px 42px 36px",
           position: "relative",
           transition: "background 0.3s ease",
+          marginLeft: "20px",
+          marginRight: "20px",
         }}
       >
         {/* Dark Mode Toggle */}
@@ -496,7 +496,6 @@ function App() {
               }}
               style={{
                 width: "100%",
-                minWidth: "360px",
                 minHeight: "52px",
                 fontSize: "1.35rem",
                 borderRadius: 10,
