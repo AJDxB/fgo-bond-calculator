@@ -1,0 +1,125 @@
+/* RunsCalculator.css */
+
+.runs-calculator {
+  margin-top: clamp(25px, 6vw, 35px);
+  padding: clamp(20px, 5vw, 30px);
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.runs-title {
+  font-size: clamp(1.3rem, 3.5vw, 1.6rem);
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 clamp(18px, 4vw, 25px) 0;
+  text-align: center;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: clamp(12px, 3vw, 16px);
+}
+
+.runs-info {
+  text-align: center;
+  color: var(--text-color);
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  margin: 0;
+  opacity: 0.8;
+}
+
+.runs-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(15px, 3vw, 20px);
+  margin-bottom: clamp(20px, 5vw, 25px);
+}
+
+.bonus-help {
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  font-weight: normal;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-left: clamp(8px, 2vw, 12px);
+}
+
+.results-container {
+  background: var(--result-bg);
+  border-radius: 12px;
+  padding: clamp(18px, 4vw, 24px);
+  border: 1px solid var(--border-color);
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(12px, 3vw, 16px);
+  margin-bottom: clamp(15px, 3vw, 20px);
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(10px, 2.5vw, 14px);
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  min-height: clamp(35px, 8vw, 45px);
+}
+
+.result-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.result-label {
+  font-size: clamp(0.95rem, 2.3vw, 1.1rem);
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.result-value {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 700;
+  color: var(--result-text);
+}
+
+.quest-info {
+  text-align: center;
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  color: var(--text-color);
+  padding: clamp(10px, 2.5vw, 14px);
+  background: var(--input-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .result-item.full-width {
+    grid-column: 1;
+  }
+  
+  .runs-form {
+    gap: clamp(12px, 3vw, 15px);
+  }
+}
+
+/* Animation for results appearance */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.results-container.fade-in {
+  animation: slideIn 0.4s ease-out;
+}
