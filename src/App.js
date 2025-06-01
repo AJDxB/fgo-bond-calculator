@@ -1,3 +1,15 @@
+/**
+ * App.js
+ * FGO Bond Calculator - Main Application Component
+ * 
+ * Main calculator interface with servant selection, bond calculations,
+ * and integrated runs calculator for quest farming efficiency
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.0 - Added runs calculator and auto-calculations
+ * @github https://github.com/AJDxB/fgo-bond-calculator
+ */
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";

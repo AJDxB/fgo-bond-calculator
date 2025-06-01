@@ -2,7 +2,31 @@
   "name": "fgo-bond-calculator",
   "version": "0.3.0",
   "private": true,
+  "description": "A React web app for Fate/Grand Order players to calculate bond points and plan quest runs efficiently",
   "homepage": "https://ajdxb.github.io/fgo-bond-calculator",
+  "author": {
+    "name": "AJDxB",
+    "email": "ajdxb4787@gmail.com",
+    "url": "https://github.com/AJDxB"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AJDxB/fgo-bond-calculator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AJDxB/fgo-bond-calculator/issues"
+  },
+  "keywords": [
+    "fgo",
+    "fate-grand-order",
+    "bond-calculator",
+    "quest-calculator",
+    "react",
+    "gaming-tool",
+    "bond-farming",
+    "ap-calculator"
+  ],
+  "license": "MIT",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -22,7 +46,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -44,5 +70,9 @@
   },
   "devDependencies": {
     "gh-pages": "^6.3.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 }

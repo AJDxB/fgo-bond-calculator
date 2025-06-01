@@ -1,3 +1,16 @@
+/**
+ * RunsCalculator.js
+ * FGO Bond Calculator - Quest Runs Calculator Component
+ * 
+ * Calculates the number of quest runs needed to reach target bond levels
+ * Includes AP costs, time estimates, and bond bonus calculations
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.0
+ * @created 2025
+ * @github https://github.com/AJDxB/fgo-bond-calculator
+ */
+
 import React, { useState, useEffect } from "react";
 import "./RunsCalculator.css";
 
