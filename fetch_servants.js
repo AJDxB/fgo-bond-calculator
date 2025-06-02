@@ -19,7 +19,15 @@ async function fetchAndSaveServants() {
         !servant.id.toString().startsWith('99') &&
         !(servant.name.toLowerCase().includes('solomon') && servant.className.toLowerCase().includes('caster')) &&
         (servant.cost > 0 || servant.className.toLowerCase() === 'shielder')
-    );
+    ).map((servant) => ({
+      collectionNo: servant.collectionNo,
+      name: servant.name,
+      className: servant.className,
+      rarity: servant.rarity,
+      bondGrowth: servant.bondGrowth,
+      cost: servant.cost,
+      id: servant.id
+    }));
     fs.writeFileSync(OUTPUT_PATH, JSON.stringify(filtered, null, 2), 'utf-8');
     console.log(`Servant data saved to ${OUTPUT_PATH} (${filtered.length} servants)`);
   } catch (err) {
