@@ -191,11 +191,19 @@ function App() {
     );
   };
 
-  // Fetch servants
+  // Helper for checking if data is stale (older than 12 hours)
+  const isStale = (timestamp) => {
+    if (!timestamp) return true;
+    const now = Date.now();
+    return now - timestamp > 12 * 60 * 60 * 1000; // 12 hours
+  };
+
+  // Fetch servants from local file
   useEffect(() => {
-    axios
-      .get("https://api.atlasacademy.io/export/NA/nice_servant.json")
-      .then((response) => {
+    let isMounted = true;
+    const fetchLocalServants = async () => {
+      try {
+        const response = await axios.get("/servants.json");
         const filtered = response.data.filter(
           (servant) =>
             servant.bondGrowth &&
@@ -205,16 +213,26 @@ function App() {
             !(servant.name.toLowerCase().includes("solomon") && servant.className.toLowerCase().includes("caster")) &&
             (servant.cost > 0 || servant.className.toLowerCase() === "shielder")
         );
-        setServants(filtered);
-
-        const opts = filtered.map((servant) => ({
-          value: servant.collectionNo,
-          label: servant.name,
-          className: capitalizeClass(servant.className),
-          servant: servant,
-        }));
-        setOptions(opts);
-      });
+        if (isMounted) {
+          setServants(filtered);
+          setOptions(
+            filtered.map((servant) => ({
+              value: servant.collectionNo,
+              label: servant.name,
+              className: capitalizeClass(servant.className),
+              servant: servant,
+            }))
+          );
+        }
+      } catch (err) {
+        setServants([]);
+        setOptions([]);
+      }
+    };
+    fetchLocalServants();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Update bond levels when servant changes
