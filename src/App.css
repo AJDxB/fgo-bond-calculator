@@ -250,6 +250,41 @@
   font-size: clamp(1rem, 2.5vw, 1.2em);
 }
 
+/* Footer Credit */
+.footer-credit {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--text-color, #888);
+  font-size: 0.95em;
+}
+
+.footer-icon {
+  height: 1.15em;
+  vertical-align: text-bottom;
+  margin: 0 0.2em;
+  display: inline-block;
+  font-size: 1.15em;
+}
+
+.footer-credit a {
+  color: #6cf !important; /* Always light blue */
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.footer-credit a:hover {
+  color: #aeeaff !important;
+}
+
+/* Optionally, fallback for missing image */
+.footer-icon:not([src]) {
+  background: #222;
+  border-radius: 2px;
+  width: 1.15em;
+  height: 1.15em;
+  display: inline-block;
+}
+
 /* Responsive Utilities */
 @media (max-width: 768px) {
   .main-card {

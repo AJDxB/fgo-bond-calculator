@@ -15,6 +15,7 @@ import axios from "axios";
 import Select from "react-select";
 import Fuse from "fuse.js";
 import fgoLogo from "./fgo_calc_logo.png";
+import saintQuartzIcon from "./saintquartz.png";
 import RunsCalculator from "./RunsCalculator";
 import "./App.css";
 
@@ -426,6 +427,15 @@ function App() {
           currentBondPoints={currentBondPoints}
           targetBond={targetBond}
         />
+
+        <footer className="footer-credit">
+          Made with <img
+            src={saintQuartzIcon}
+            alt=""
+            className="footer-icon"
+            aria-hidden="true"
+          /> by <a href="https://github.com/AJDxB" target="_blank" rel="noopener noreferrer">AJDxB</a>
+        </footer>
       </div>
     </div>
   );
