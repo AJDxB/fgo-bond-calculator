@@ -19,13 +19,12 @@ Data provided by [Atlas Academy](https://atlasacademy.io/).
 - Real-time quest runs calculator for farming efficiency
 - Fuzzy search for servant selection
 - Dark/light mode toggle with persistent preference
-- Automatic calculations without manual button clicks
 - Bond bonus calculation for CEs and event bonuses
 - Multiple quest types with AP costs and time estimates
-- Class icons and rarity stars with fallback system
 - Filters out enemy-only and temporary servants
 - Fully responsive design for mobile and desktop
-- Dynamic scaling using CSS clamp() functions
+- Local servant data loaded from `public/servants.json` for fast, reliable access
+- Automated servant data updates via GitHub Actions workflow (twice daily)
 
 ## Getting Started
 
@@ -74,6 +73,11 @@ Contributions, issues, and suggestions are welcome.
 - FGO community for inspiration and feedback
 
 ## Changelog
+
+### v0.3.1 - Local Data & Automation
+- Switched to local servant data (`public/servants.json`) for faster and more reliable access
+- Added GitHub Actions workflow for automated data updates
+- Optimized data size by storing only required fields
 
 ### v0.3.0 - Runs to Max Calculator & Auto-calculations
 - Added quest runs calculator with multiple quest types
