@@ -6,7 +6,7 @@
  * and integrated runs calculator for quest farming efficiency
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.0 - Added runs calculator and auto-calculations
+ * @version 0.3.1 - Added local servant data, auto-updating workflow, and visible author credit
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
 
