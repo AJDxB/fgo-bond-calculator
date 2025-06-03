@@ -431,10 +431,12 @@ function App() {
         <footer className="footer-credit">
           Made with <img
             src={saintQuartzIcon}
-            alt=""
+            alt="Saint Quartz"
             className="footer-icon"
             aria-hidden="true"
           /> by <a href="https://github.com/AJDxB" target="_blank" rel="noopener noreferrer">AJDxB</a>
+          <span className="footer-separator"> | </span>
+          <span className="footer-version">v0.3.1</span>
         </footer>
       </div>
     </div>
