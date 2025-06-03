@@ -6,7 +6,7 @@
  * Includes AP costs, time estimates, and bond bonus calculations
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.0
+ * @version 0.3.1
  * @created 2025
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
