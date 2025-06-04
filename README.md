@@ -25,6 +25,7 @@ Data provided by [Atlas Academy](https://atlasacademy.io/).
 - Fully responsive design for mobile and desktop
 - Local servant data loaded from `public/servants.json` for fast, reliable access
 - Automated servant data updates via GitHub Actions workflow (twice daily)
+- Custom Points mode to Runs Calculator for flexible farming calculations
 
 ## Getting Started
 
@@ -74,7 +75,8 @@ Contributions, issues, and suggestions are welcome.
 
 ## Changelog
 
-### v0.3.1 - Local Data & Automation
+### v0.3.1 - Local Data, Custom Points & UI Enhancements
+- Added Custom Points mode to Runs Calculator for flexible farming calculations
 - Switched to local servant data (`public/servants.json`) for faster and more reliable access
 - Added GitHub Actions workflow for automated data updates
 - Optimized data size by storing only required fields

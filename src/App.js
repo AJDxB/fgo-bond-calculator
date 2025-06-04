@@ -3,10 +3,11 @@
  * FGO Bond Calculator - Main Application Component
  * 
  * Main calculator interface with servant selection, bond calculations,
- * and integrated runs calculator for quest farming efficiency
+ * runs calculator with custom points mode, and farming efficiency tools
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.1 - Added local servant data, auto-updating workflow, and visible author credit
+ * @version 0.3.1 - Added Custom Points mode, local data, and improved documentation
+ * @created 2025-06-04
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
 
