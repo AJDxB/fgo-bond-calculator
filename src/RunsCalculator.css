@@ -68,31 +68,46 @@
   margin-bottom: clamp(15px, 3vw, 20px);
 }
 
-.result-item {
+.runs-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: clamp(10px, 2.5vw, 14px);
+  padding: 10px 14px;
   background: var(--card-bg);
   border-radius: 8px;
   border: 1px solid var(--border-color);
-  min-height: clamp(35px, 8vw, 45px);
+  min-height: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
 }
 
-.result-item.full-width {
+.runs-item:hover {
+  background: var(--input-bg);
+  border-color: var(--border-color);
+}
+
+.runs-item.full-width {
   grid-column: 1 / -1;
 }
 
-.result-label {
-  font-size: clamp(0.95rem, 2.3vw, 1.1rem);
+.runs-label {
+  font-size: 0.85rem;
   color: var(--text-color);
   font-weight: 500;
+  opacity: 0.75;
 }
 
-.result-value {
-  font-size: clamp(1rem, 2.5vw, 1.2rem);
+.runs-value {
+  font-size: 0.9rem;
   font-weight: 700;
-  color: var(--result-text);
+  color: #3142b7;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+[data-theme="dark"] .runs-value {
+  color: #738aff;
 }
 
 .quest-info {

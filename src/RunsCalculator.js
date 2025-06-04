@@ -27,7 +27,7 @@ const QUEST_DATA = {
   event_low: { name: "Event Quests (Low)", ap: 20, baseBond: 910 },
 };
 
-const RunsCalculator = ({ selectedServant, currentBondPoints, targetBond }) => {
+const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
   const [selectedQuest, setSelectedQuest] = useState("daily_doors");
   const [bondBonus, setBondBonus] = useState(0);
   const [results, setResults] = useState(null);
@@ -35,17 +35,14 @@ const RunsCalculator = ({ selectedServant, currentBondPoints, targetBond }) => {
   // Calculate runs when inputs change
   useEffect(() => {
     const calculateRuns = () => {
-      if (!selectedServant || !targetBond) return;
+      if (!selectedServant || !targetBond) return;      // Ensure we have valid numeric input for points
+      const points = typeof pointsNeeded === 'number' ? pointsNeeded : 0;
 
-      const currPoints = parseInt(currentBondPoints.replace(/,/g, "")) || 0;
-      const targetPoints = targetBond.points;
-      const pointsNeeded = Math.max(0, targetPoints - currPoints);
-
-      if (pointsNeeded === 0) {
+      if (points <= 0) {
         setResults({
           runsNeeded: 0,
           totalAP: 0,
-          pointsNeeded,
+          pointsNeeded: 0,
           bondPerRun: 0,
           message: "Target bond level already reached!"
         });
@@ -54,7 +51,7 @@ const RunsCalculator = ({ selectedServant, currentBondPoints, targetBond }) => {
 
       const quest = QUEST_DATA[selectedQuest];
       const bondPerRun = Math.floor(quest.baseBond * (1 + bondBonus / 100));
-      const runsNeeded = Math.ceil(pointsNeeded / bondPerRun);
+      const runsNeeded = Math.ceil(points / bondPerRun);
       const totalAP = runsNeeded * quest.ap;
 
       // Calculate estimated time (assuming 1 run = 3 minutes average)
@@ -65,7 +62,7 @@ const RunsCalculator = ({ selectedServant, currentBondPoints, targetBond }) => {
       setResults({
         runsNeeded,
         totalAP,
-        pointsNeeded,
+        pointsNeeded: points,
         bondPerRun,
         questName: quest.name,
         estimatedTime: { hours, minutes },
@@ -73,10 +70,10 @@ const RunsCalculator = ({ selectedServant, currentBondPoints, targetBond }) => {
       });
     };
 
-    if (selectedServant && targetBond && currentBondPoints !== "") {
+    if (selectedServant && targetBond && typeof pointsNeeded === "number") {
       calculateRuns();
     }
-  }, [selectedServant, targetBond, currentBondPoints, selectedQuest, bondBonus]);
+  }, [selectedServant, targetBond, pointsNeeded, selectedQuest, bondBonus]);
 
   const handleBonusChange = (e) => {
     const value = Math.max(0, Math.min(300, parseInt(e.target.value) || 0)); // Cap at 300%
@@ -141,31 +138,30 @@ const RunsCalculator = ({ selectedServant, currentBondPoints, targetBond }) => {
 
       {results && (
         <div className="results-container fade-in">
-          <div className="results-grid">
-            <div className="result-item">
-              <span className="result-label">Runs Needed:</span>
-              <span className="result-value">{results.runsNeeded.toLocaleString()}</span>
+          <div className="results-grid">            <div className="runs-item">
+              <span className="runs-label">Runs Needed:</span>
+              <span className="runs-value">{results.runsNeeded.toLocaleString()}</span>
             </div>
             
-            <div className="result-item">
-              <span className="result-label">Total AP Cost:</span>
-              <span className="result-value">{results.totalAP.toLocaleString()}</span>
+            <div className="runs-item">
+              <span className="runs-label">Total AP Cost:</span>
+              <span className="runs-value">{results.totalAP.toLocaleString()}</span>
             </div>
             
-            <div className="result-item">
-              <span className="result-label">Bond per Run:</span>
-              <span className="result-value">{results.bondPerRun.toLocaleString()}</span>
+            <div className="runs-item">
+              <span className="runs-label">Bond per Run:</span>
+              <span className="runs-value">{results.bondPerRun.toLocaleString()}</span>
             </div>
             
-            <div className="result-item">
-              <span className="result-label">Points Needed:</span>
-              <span className="result-value">{results.pointsNeeded.toLocaleString()}</span>
+            <div className="runs-item">
+              <span className="runs-label">Points Needed:</span>
+              <span className="runs-value">{results.pointsNeeded.toLocaleString()}</span>
             </div>
             
             {results.estimatedTime && (
-              <div className="result-item full-width">
-                <span className="result-label">Estimated Time:</span>
-                <span className="result-value">
+              <div className="runs-item full-width">
+                <span className="runs-label">Estimated Time:</span>
+                <span className="runs-value">
                   {results.estimatedTime.hours > 0 && `${results.estimatedTime.hours}h `}
                   {results.estimatedTime.minutes}m
                 </span>
@@ -173,9 +169,9 @@ const RunsCalculator = ({ selectedServant, currentBondPoints, targetBond }) => {
             )}
             
             {results.apPerDay > 0 && (
-              <div className="result-item full-width">
-                <span className="result-label">Days with Natural AP:</span>
-                <span className="result-value">{Math.ceil(results.apPerDay)} days</span>
+              <div className="runs-item full-width">
+                <span className="runs-label">Days with Natural AP:</span>
+                <span className="runs-value">{Math.ceil(results.apPerDay)} days</span>
               </div>
             )}
           </div>

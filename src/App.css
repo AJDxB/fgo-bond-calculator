@@ -14,6 +14,12 @@
   --placeholder-color: #969ca1;
   --divider-color: #ddd;
   --option-hover: #f4f6fa;
+
+  /* Result section variables */
+  --result-box-bg: #eef5ff;
+  --result-box-text: #204b86;
+  --result-description-text: #335dc2;
+  --result-value-text: #204b86;
 }
 
 [data-theme="dark"] {
@@ -29,6 +35,12 @@
   --placeholder-color: #888;
   --divider-color: #404040;
   --option-hover: #404040;
+
+  /* Result section variables */
+  --result-box-bg: #1e3a8a;
+  --result-box-text: #e2e8f0;
+  --result-description-text: #93c5fd;
+  --result-value-text: #e2e8f0;
 }
 
 /* Base App Container */
@@ -180,6 +192,59 @@
   box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
 }
 
+/* Result Section - Restored Design */
+.result-section {
+  margin-top: 2rem;
+}
+
+.result-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.result-box {
+  background-color: var(--result-box-bg);
+  border-radius: 14px;
+  padding: clamp(15px, 3.5vw, 19px) clamp(20px, 5vw, 26px);
+  color: var(--result-box-text);
+  text-align: center;
+  box-shadow: 0 2px 9px 0 rgba(70,90,140,0.09);
+  transition: all 0.3s ease;
+  margin-top: 2rem;
+}
+
+.result-box.goal-reached {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: 2px solid #065f46;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+.result-description {
+  color: var(--result-description-text);
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.1rem, 3vw, 1.36rem);
+  font-weight: 600;
+}
+
+.result-box.goal-reached .result-description {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.result-value {
+  font-size: clamp(1.6rem, 4.5vw, 2.2rem);
+  font-weight: bold;
+  color: var(--result-value-text);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  margin-top: 0.5rem;
+}
+
+.result-box.goal-reached .result-value {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
 /* Select Option Styling */
 .option-container {
   display: flex;
@@ -312,6 +377,14 @@
   }
 }
 
+@media (max-width: 700px) {
+  .form-row.bond-row {
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+}
+
 /* Animation for smooth transitions */
 .fade-in {
   animation: fadeIn 0.3s ease-in;
@@ -326,4 +399,32 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Display 'Current Bond Level' and 'Points Left to Next Level' side by side on desktop, stacked on mobile */
+.form-row.bond-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.bond-level-group, .bond-points-group {
+  flex: 1 1 0;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bond-level-group .form-label,
+.bond-points-group .form-label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.bond-level-group .form-select,
+.bond-points-group .form-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0;
 }

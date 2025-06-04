@@ -29,7 +29,8 @@ function App() {
   const [options, setOptions] = useState([]);
   const [selectedServant, setSelectedServant] = useState(null);
   const [bondLevels, setBondLevels] = useState([]);
-  const [currentBondPoints, setCurrentBondPoints] = useState("");
+  const [currentBondLevel, setCurrentBondLevel] = useState(1);
+  const [currentPointsLeft, setCurrentPointsLeft] = useState("");
   const [targetBond, setTargetBond] = useState(null);
   const [result, setResult] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -240,13 +241,17 @@ function App() {
   useEffect(() => {
     if (selectedServant && selectedServant.servant && selectedServant.servant.bondGrowth) {
       const bondGrowth = selectedServant.servant.bondGrowth;
-      setBondLevels(
-        bondGrowth.map((points, idx) => ({
+      // Add Bond 0 as an option for new servants
+      setBondLevels([
+        { value: 0, label: 'Bond 0 (0 pts)', points: 0 },
+        ...bondGrowth.map((points, idx) => ({
           value: idx + 1,
           label: `Bond ${idx + 1} (${points.toLocaleString()} pts)`,
           points,
         }))
-      );
+      ]);
+      setCurrentBondLevel(0);
+      setCurrentPointsLeft("");
       setTargetBond({
         value: 1,
         label: `Bond 1 (${bondGrowth[0].toLocaleString()} pts)`,
@@ -254,6 +259,8 @@ function App() {
       });
     } else {
       setBondLevels([]);
+      setCurrentBondLevel(1);
+      setCurrentPointsLeft("");
       setTargetBond(null);
     }
     setResult(null);
@@ -310,24 +317,56 @@ function App() {
     );
   };
 
-  // Auto-calculate when inputs change
+  // Calculate total bond points needed
   useEffect(() => {
-    if (selectedServant && bondLevels.length && targetBond) {
-      const currPoints = parseInt(currentBondPoints.replace(/,/g, "")) || 0;
-      const totalTarget = targetBond.points;
-      const needed = Math.max(0, totalTarget - currPoints);
-
-      setResult({
-        needed,
-        targetLabel: targetBond.label,
-        isGoalReached: currPoints >= totalTarget,
-        currentPoints: currPoints,
-        targetPoints: totalTarget
-      });
-    } else {
+    if (!selectedServant || currentBondLevel === null || currentBondLevel === undefined || !targetBond) {
       setResult(null);
+      return;
     }
-  }, [selectedServant, bondLevels, targetBond, currentBondPoints]);
+
+    const bondGrowth = selectedServant.servant.bondGrowth;
+    const currLevelIdx = currentBondLevel;  // Current bond level (0-based index)
+    const targetLevelIdx = targetBond.value; // Target bond level (0-based index)
+
+    // If target is less than or equal to current, no points needed
+    if (targetLevelIdx <= currLevelIdx) {
+      setResult({ totalPoints: 0 });
+      return;
+    }
+
+    // Get points left to next level (only used if points are specified)
+    let pointsLeft = parseInt(currentPointsLeft.replace(/,/g, ''), 10);
+    if (isNaN(pointsLeft) || pointsLeft < 0) {
+      pointsLeft = 0;
+    }
+
+    // Calculate points needed based on milestone differences
+    let totalPoints;
+    
+    if (currLevelIdx === 0) {
+      // From Bond 0, we need the full first milestone
+      totalPoints = bondGrowth[targetLevelIdx - 1];
+    } else {
+      // For levels after Bond 0, take the difference between target and current milestones
+      totalPoints = bondGrowth[targetLevelIdx - 1] - bondGrowth[currLevelIdx - 1];
+    }
+
+    // If user specified remaining points, subtract what they've already earned
+    if (pointsLeft > 0) {
+      // Calculate what they've already earned towards next level
+      const currentLevelTotal = bondGrowth[currLevelIdx - 1] || 0;
+      const nextLevelTotal = bondGrowth[currLevelIdx];
+      const levelDifference = nextLevelTotal - currentLevelTotal;
+      const earnedPoints = levelDifference - pointsLeft;
+      
+      // Subtract their earned progress from the total
+      totalPoints = totalPoints - earnedPoints;
+    }
+
+    setResult({
+      totalPoints,
+    });
+  }, [selectedServant, bondLevels, targetBond, currentBondLevel, currentPointsLeft]);
 
   return (
     <div className="app-container">
@@ -363,69 +402,90 @@ function App() {
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Current Cumulative Bond Points</label>
-            <input
-              type="text"
-              value={currentBondPoints}
-              onChange={(e) => {
-                const value = e.target.value.replace(/[^\d]/g, "");
-                const formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                setCurrentBondPoints(formatted);
-              }}
-              className="form-input"
-              placeholder="0"
-              inputMode="numeric"
-            />
+          <div className="form-row bond-row">
+            <div className="form-group bond-level-group">
+              <label className="form-label">Current Bond Level</label>
+              <select
+                value={currentBondLevel}
+                onChange={e => {
+                  setCurrentBondLevel(Number(e.target.value));
+                  setCurrentPointsLeft("");
+                }}
+                className="form-select"
+                disabled={!bondLevels.length}
+              >
+                {bondLevels.length === 0 && <option value="">Select a servant first</option>}
+                {bondLevels.map((level, idx) => (
+                  <option key={level.value} value={level.value}>{level.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group bond-points-group">
+              <label className="form-label">Points Left to Next Level</label>
+              <input
+                type="text"
+                value={currentPointsLeft}
+                onChange={e => {
+                  const value = e.target.value.replace(/[^\d]/g, "");
+                  const formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  setCurrentPointsLeft(formatted);
+                }}
+                className="form-input"
+                placeholder="0"
+                inputMode="numeric"
+                disabled={!bondLevels.length || currentBondLevel === bondLevels[bondLevels.length-1]?.value}
+              />
+            </div>
           </div>
 
           <div className="form-group">
             <label className="form-label">Target Bond Level</label>
             <select
               value={targetBond ? targetBond.value : ""}
-              onChange={(e) => {
-                const found = bondLevels.find((lvl) => String(lvl.value) === e.target.value);
+              onChange={e => {
+                const found = bondLevels.find(lvl => String(lvl.value) === e.target.value);
                 setTargetBond(found || null);
               }}
               className="form-select"
               disabled={!bondLevels.length}
             >
               {bondLevels.length === 0 && <option value="">Select a servant first</option>}
-              {bondLevels.map((level) => (
+              {bondLevels.map(level => (
                 <option key={level.value} value={level.value}>
                   {level.label}
                 </option>
               ))}
             </select>
           </div>
-        </div>
-
-        {result && (
-          <div className={`result-container fade-in ${result.isGoalReached ? 'goal-reached' : ''}`}>
-            {result.isGoalReached ? (
-              <>
-                <strong>Goal Reached!</strong><br />
-                You have already reached <b>{result.targetLabel}</b>!<br />
-                <span className="result-number success">
-                  {(result.currentPoints - result.targetPoints).toLocaleString()} points over target
-                </span>
-              </>
+        </div>        {/* Always show result section if servant and bond level are selected */}
+        {selectedServant && currentBondLevel !== null && currentBondLevel !== undefined && (
+          <div className="result-section">
+            {result && result.totalPoints !== null && result.totalPoints !== undefined ? (
+              <div className={`result-box ${result.totalPoints === 0 ? 'goal-reached' : ''}`}>
+                <div className="result-description">
+                  {result.totalPoints === 0 
+                    ? `Congratulations! You've reached Bond ${targetBond?.value}!`
+                    : `Bond points needed to reach Bond ${targetBond?.value} (${targetBond?.points?.toLocaleString()} pts):`
+                  }
+                </div>
+                <div className="result-value">
+                  {result.totalPoints.toLocaleString()}
+                </div>
+              </div>
             ) : (
-              <>
-                Bond points needed to reach <b>{result.targetLabel}</b>:<br />
-                <span className="result-number">
-                  {result.needed.toLocaleString()}
-                </span>
-              </>
+              <div className="result-row">Please enter valid values above.</div>
             )}
           </div>
         )}
+        {result && result.error && (
+          <div className="error-message">{result.error}</div>
+        )}
 
-        {/* Runs Calculator Component */}
-        <RunsCalculator 
+        {/* Runs Calculator Component */}        <RunsCalculator 
           selectedServant={selectedServant}
-          currentBondPoints={currentBondPoints}
           targetBond={targetBond}
+          pointsNeeded={result ? result.totalPoints : 0}
         />
 
         <footer className="footer-credit">
