@@ -22,7 +22,25 @@ import "./App.css";
 
 function capitalizeClass(className) {
   if (!className) return "";
-  return className.charAt(0).toUpperCase() + className.slice(1);
+  const specialCases = {
+    mooncancer: "MoonCancer",
+    alterego: "AlterEgo",
+    pretender: "Pretender",
+    shielder: "Shielder",
+    ruler: "Ruler",
+    avenger: "Avenger",
+    beast: "Beast",
+    foreigner: "Foreigner",
+    saber: "Saber",
+    archer: "Archer",
+    lancer: "Lancer",
+    rider: "Rider",
+    caster: "Caster",
+    assassin: "Assassin",
+    berserker: "Berserker",
+    loregrandcaster: "LoreGrandCaster"
+  };
+  return specialCases[className.toLowerCase()] || (className.charAt(0).toUpperCase() + className.slice(1));
 }
 
 function App() {
