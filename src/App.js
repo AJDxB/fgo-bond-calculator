@@ -197,7 +197,9 @@ function App() {
   useEffect(() => {
     let isMounted = true;    const fetchLocalServants = async () => {
       try {
+        console.log('Fetching from:', `${process.env.PUBLIC_URL}/servants.json`);
         const response = await axios.get(`${process.env.PUBLIC_URL}/servants.json`);
+        console.log('Data received:', response.data ? 'yes' : 'no');
         const filtered = response.data.filter(
           (servant) =>
             servant.bondGrowth &&
@@ -207,6 +209,7 @@ function App() {
             !(servant.name.toLowerCase().includes("solomon") && servant.className.toLowerCase().includes("caster")) &&
             (servant.cost > 0 || servant.className.toLowerCase() === "shielder")
         );
+        console.log('Filtered servants:', filtered.length);
         if (isMounted) {
           setServants(filtered);
           setOptions(
@@ -219,6 +222,7 @@ function App() {
           );
         }
       } catch (err) {
+        console.error('Error fetching servants:', err);
         setServants([]);
         setOptions([]);
       }
