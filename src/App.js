@@ -193,14 +193,6 @@ function App() {
       />
     );
   };
-
-  // Helper for checking if data is stale (older than 12 hours)
-  const isStale = (timestamp) => {
-    if (!timestamp) return true;
-    const now = Date.now();
-    return now - timestamp > 12 * 60 * 60 * 1000; // 12 hours
-  };
-
   // Fetch servants from local file
   useEffect(() => {
     let isMounted = true;
