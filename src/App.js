@@ -196,7 +196,8 @@ function App() {
   // Fetch servants from local file
   useEffect(() => {
     let isMounted = true;    const fetchLocalServants = async () => {
-      try {        const url = `${process.env.PUBLIC_URL}/servants.json`;
+      try {
+        const url = "servants.json";
         console.log('Fetching from:', url);
         const response = await axios.get(url);
         console.log('Data received:', response.data ? 'yes' : 'no');
