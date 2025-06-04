@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/fgo-bond-calculator/static/css/main.6eb38be0.css",
-    "main.js": "/fgo-bond-calculator/static/js/main.541ac28e.js",
+    "main.js": "/fgo-bond-calculator/static/js/main.bf7fc6ca.js",
     "static/js/453.b97aeb05.chunk.js": "/fgo-bond-calculator/static/js/453.b97aeb05.chunk.js",
     "static/media/fgo_calc_logo.png": "/fgo-bond-calculator/static/media/fgo_calc_logo.b9034b71446f37d275e4.png",
     "static/media/saintquartz.png": "/fgo-bond-calculator/static/media/saintquartz.22749b439f1ab28d8422.png",
     "index.html": "/fgo-bond-calculator/index.html",
     "main.6eb38be0.css.map": "/fgo-bond-calculator/static/css/main.6eb38be0.css.map",
-    "main.541ac28e.js.map": "/fgo-bond-calculator/static/js/main.541ac28e.js.map",
+    "main.bf7fc6ca.js.map": "/fgo-bond-calculator/static/js/main.bf7fc6ca.js.map",
     "453.b97aeb05.chunk.js.map": "/fgo-bond-calculator/static/js/453.b97aeb05.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6eb38be0.css",
-    "static/js/main.541ac28e.js"
+    "static/js/main.bf7fc6ca.js"
   ]
 }
