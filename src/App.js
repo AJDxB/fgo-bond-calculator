@@ -195,10 +195,9 @@ function App() {
   };
   // Fetch servants from local file
   useEffect(() => {
-    let isMounted = true;
-    const fetchLocalServants = async () => {
+    let isMounted = true;    const fetchLocalServants = async () => {
       try {
-        const response = await axios.get("/servants.json");
+        const response = await axios.get(`${process.env.PUBLIC_URL}/servants.json`);
         const filtered = response.data.filter(
           (servant) =>
             servant.bondGrowth &&
