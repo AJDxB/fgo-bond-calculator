@@ -197,8 +197,9 @@ function App() {
   useEffect(() => {
     let isMounted = true;    const fetchLocalServants = async () => {
       try {
-        console.log('Fetching from:', `${process.env.PUBLIC_URL}/servants.json`);
-        const response = await axios.get(`${process.env.PUBLIC_URL}/servants.json`);
+        const url = `${window.location.origin}${process.env.PUBLIC_URL}/servants.json`;
+        console.log('Fetching from:', url);
+        const response = await axios.get(url);
         console.log('Data received:', response.data ? 'yes' : 'no');
         const filtered = response.data.filter(
           (servant) =>
