@@ -110,19 +110,20 @@
 
 /* Form Elements */
 .form-group {
-  margin-bottom: clamp(15px, 3vw, 20px);
+  margin-bottom: 14px;
 }
 
 .form-group:last-of-type {
-  margin-bottom: clamp(18px, 4vw, 24px);
+  margin-bottom: 0;
 }
 
 .form-label {
   font-size: clamp(1.1rem, 2.8vw, 1.28rem);
-  font-weight: 400;
+  font-weight: 500;
   display: block;
-  margin-bottom: clamp(5px, 1.2vw, 7px);
+  margin-bottom: 8px;
   color: var(--text-color);
+  text-align: left;
 }
 
 .form-input {
@@ -380,8 +381,16 @@
 @media (max-width: 700px) {
   .form-row.bond-row {
     flex-direction: column;
-    gap: 0;
+    gap: 14px;
     align-items: stretch;
+    padding: 0;
+    margin-bottom: 14px;
+  }
+  .bond-level-group, .bond-points-group {
+    min-width: 0;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0;
   }
 }
 
@@ -404,13 +413,12 @@
 /* Display 'Current Bond Level' and 'Points Left to Next Level' side by side on desktop, stacked on mobile */
 .form-row.bond-row {
   display: flex;
-  gap: 24px;
+  gap: 14px;
   align-items: flex-start;
 }
 
 .bond-level-group, .bond-points-group {
   flex: 1 1 0;
-  min-width: 180px;
   display: flex;
   flex-direction: column;
 }

@@ -50,6 +50,14 @@
 .calculator-mode-toggle {
   margin-bottom: clamp(15px, 3vw, 20px);
   padding: 8px 0;
+  display: flex;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  background: var(--input-bg);
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid var(--border-color); /* Add border for clarity in light mode */
+  box-shadow: 0 1px 4px rgba(30,40,90,0.04); /* Subtle shadow for depth */
 }
 
 .quest-type-section,
@@ -208,6 +216,8 @@ input[type="text"] {
   background: var(--input-bg);
   padding: 4px;
   gap: 4px;
+  border: 1px solid var(--border-color); /* Add border for clarity in light mode */
+  box-shadow: 0 1px 4px rgba(30,40,90,0.04); /* Subtle shadow for depth */
 }
 
 .toggle-btn {
@@ -215,11 +225,15 @@ input[type="text"] {
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  background: transparent;
+  background: var(--option-hover); /* Faint background for inactive buttons in light mode */
   color: var(--text-color);
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 1rem;
+}
+
+[data-theme="dark"] .toggle-btn {
+  background: transparent; /* Keep dark mode as before */
 }
 
 .toggle-btn.active {
