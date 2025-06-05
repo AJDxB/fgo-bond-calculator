@@ -17,24 +17,36 @@ import "./RunsCalculator.css";
 
 // Quest data with base bond points
 const QUEST_DATA = {
-  daily_doors: { name: "Daily Doors (40 AP)", ap: 40, baseBond: 1395 },
-  daily_embers: { name: "Daily Embers (40 AP)", ap: 40, baseBond: 1395 },
-  daily_training: { name: "Daily Training (40 AP)", ap: 40, baseBond: 1395 },
-  free_quest_90plus: { name: "90+ Nodes (21-23 AP)", ap: 22, baseBond: 910 },
-  free_quest_90: { name: "90 Nodes (20-21 AP)", ap: 21, baseBond: 845 },
-  free_quest_80: { name: "80+ Nodes (18-19 AP)", ap: 19, baseBond: 760 },
-  event_high: { name: "Event Quests (High)", ap: 40, baseBond: 1820 },
-  event_medium: { name: "Event Quests (Medium)", ap: 30, baseBond: 1365 },
-  event_low: { name: "Event Quests (Low)", ap: 20, baseBond: 910 },
+  // Dailies
+  extreme_training: { name: "Extreme Training Grounds (40 AP)", ap: 40, baseBond: 815 },
+  extreme_treasure: { name: "Extreme Treasure Vault (40 AP)", ap: 40, baseBond: 715 },
+  extreme_embers: { name: "Extreme Ember Gathering (40 AP)", ap: 40, baseBond: 715 },
+  // Free Quests
+  free_quest_80: { name: "Free Quest Lv80 (21 AP)", ap: 21, baseBond: 815 },
+  free_quest_84: { name: "Free Quest Lv84 (22 AP)", ap: 22, baseBond: 855 },
+  // Bleached Earth
+  bleached_90pp: { name: "Bleached Earth 90++ (40 AP)", ap: 40, baseBond: 2636 },
+  bleached_90s: { name: "Bleached Earth 90* (40 AP)", ap: 40, baseBond: 3164 },
+  bleached_90ss: { name: "Bleached Earth 90** (40 AP)", ap: 40, baseBond: 3797 },
+  // Event Quests
+  event_90: { name: "Event Quest Lv90 (40 AP)", ap: 40, baseBond: 915 },
+  event_90p: { name: "Event Quest Lv90+ (40 AP)", ap: 40, baseBond: 1098 },
+  event_90pp: { name: "Event Quest Lv90++ (40 AP)", ap: 40, baseBond: 1318 },
 };
 
+// Set the default selected quest to the first key in QUEST_DATA
+const QUEST_KEYS = Object.keys(QUEST_DATA);
 const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
-  const [selectedQuest, setSelectedQuest] = useState("daily_doors");
+  const [selectedQuest, setSelectedQuest] = useState(QUEST_KEYS[0]);
   const [bondBonus, setBondBonus] = useState(0);
   const [results, setResults] = useState(null);
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [customBondPoints, setCustomBondPoints] = useState("");
   const [customAP, setCustomAP] = useState("");
+  const [heroicPortraitEnabled, setHeroicPortraitEnabled] = useState(false);
+  const [heroicPortraitMultiplier, setHeroicPortraitMultiplier] = useState(1);
+  const [frontlineBonusEnabled, setFrontlineBonusEnabled] = useState(false);
+  const [frontlineBonusPercent, setFrontlineBonusPercent] = useState(0.24);
 
   // Calculate runs when inputs change
   useEffect(() => {
@@ -56,7 +68,6 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
       if (isCustomMode) {
         const customPoints = parseInt(customBondPoints.replace(/,/g, ''), 10) || 0;
         const customAPValue = parseInt(customAP.replace(/,/g, ''), 10) || 0;
-        
         if (customPoints <= 0 || customAPValue <= 0) {
           setResults({
             runsNeeded: 0,
@@ -67,14 +78,17 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
           });
           return;
         }
-        
-        bondPerRun = Math.floor(customPoints * (1 + bondBonus / 100));
+        let base = Math.floor(customPoints * (1 + bondBonus / 100)) + (heroicPortraitEnabled ? 50 * heroicPortraitMultiplier : 0);
+        if (frontlineBonusEnabled) base = Math.floor(base * (1 + frontlineBonusPercent));
+        bondPerRun = base;
         runsNeeded = Math.ceil(points / bondPerRun);
         totalAP = runsNeeded * customAPValue;
         questName = "Custom Quest";
       } else {
         const quest = QUEST_DATA[selectedQuest];
-        bondPerRun = Math.floor(quest.baseBond * (1 + bondBonus / 100));
+        let base = Math.floor(quest.baseBond * (1 + bondBonus / 100)) + (heroicPortraitEnabled ? 50 * heroicPortraitMultiplier : 0);
+        if (frontlineBonusEnabled) base = Math.floor(base * (1 + frontlineBonusPercent));
+        bondPerRun = base;
         runsNeeded = Math.ceil(points / bondPerRun);
         totalAP = runsNeeded * quest.ap;
         questName = quest.name;
@@ -91,12 +105,12 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
         bondPerRun,
         questName,
         estimatedTime: { hours, minutes },
-        apPerDay: Math.floor(totalAP / (24 * 6)) // Assuming 1 AP per 6 minutes natural regen
+        apPerDay: Math.floor(totalAP / (24 * 12)) // 1 AP per 5 minutes = 12 AP/hour = 288 AP/day
       });
     };    if (selectedServant && targetBond && typeof pointsNeeded === "number") {
       calculateRuns();
     }
-  }, [selectedServant, targetBond, pointsNeeded, selectedQuest, bondBonus, isCustomMode, customBondPoints, customAP]);
+  }, [selectedServant, targetBond, pointsNeeded, selectedQuest, bondBonus, isCustomMode, customBondPoints, customAP, heroicPortraitEnabled, heroicPortraitMultiplier, frontlineBonusEnabled, frontlineBonusPercent]);
 
   const handleBonusChange = (e) => {
     const value = Math.max(0, Math.min(300, parseInt(e.target.value) || 0)); // Cap at 300%
@@ -132,8 +146,6 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             className={`toggle-btn ${!isCustomMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(false);
-              setCustomBondPoints("");
-              setCustomAP("");
             }}
           >
             Quest Type
@@ -142,8 +154,6 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             className={`toggle-btn ${isCustomMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(true);
-              setCustomBondPoints("");
-              setCustomAP("");
             }}
           >
             Custom Points
@@ -181,59 +191,106 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
                 onChange={(e) => setSelectedQuest(e.target.value)}
                 className="form-select"
               >
-                <optgroup label="Daily Quests">
-                  <option value="daily_doors">Daily Doors (40 AP)</option>
-                  <option value="daily_embers">Daily Embers (40 AP)</option>
-                  <option value="daily_training">Daily Training (40 AP)</option>
+                <optgroup label="Dailies">
+                  <option value="extreme_training">Extreme Training Grounds (40 AP, 815 Bond)</option>
+                  <option value="extreme_treasure">Extreme Treasure Vault (40 AP, 715 Bond)</option>
+                  <option value="extreme_embers">Extreme Ember Gathering (40 AP, 715 Bond)</option>
                 </optgroup>
                 <optgroup label="Free Quests">
-                  <option value="free_quest_90plus">90+ Nodes (21-23 AP)</option>
-                  <option value="free_quest_90">90 Nodes (20-21 AP)</option>
-                  <option value="free_quest_80">80+ Nodes (18-19 AP)</option>
+                  <option value="free_quest_80">Lv80 (21 AP, 815 Bond)</option>
+                  <option value="free_quest_84">Lv84 (22 AP, 855 Bond)</option>
+                </optgroup>
+                <optgroup label="Bleached Earth">
+                  <option value="bleached_90pp">Lv90++ (40 AP, 2636 Bond)</option>
+                  <option value="bleached_90s">Lv90* (40 AP, 3164 Bond)</option>
+                  <option value="bleached_90ss">Lv90** (40 AP, 3797 Bond)</option>
                 </optgroup>
                 <optgroup label="Event Quests">
-                  <option value="event_high">Event Quests (High)</option>
-                  <option value="event_medium">Event Quests (Medium)</option>
-                  <option value="event_low">Event Quests (Low)</option>
+                  <option value="event_90">Lv90 (40 AP, 915 Bond)</option>
+                  <option value="event_90p">Lv90+ (40 AP, 1098 Bond)</option>
+                  <option value="event_90pp">Lv90++ (40 AP, 1318 Bond)</option>
                 </optgroup>
-              </select>            </div>
-
-            <div className="form-group">
-              <label className="form-label">
-                Bond Bonus (%)
-                <span className="bonus-help">Include CE bonuses, event bonuses, etc.</span>
-              </label>
-              <input
-                type="number"
-                value={bondBonus}
-                onChange={handleBonusChange}
-                className="form-input"
-                placeholder="0"
-                min="0"
-                max="300"
-              />
+              </select>
             </div>
           </>
         )}
 
-        {/* Bond Bonus input for Custom Points mode */}
-        {isCustomMode && (
-          <div className="form-group">
-            <label className="form-label">
-              Bond Bonus (%)
-              <span className="bonus-help">Include CE bonuses, event bonuses, etc.</span>
+        {/* Universal options: Bond Bonus and Heroic Portrait bonus */}
+        <div className="form-group">
+          <label className="form-label">
+            Bond Bonus (%)
+            <span className="bonus-help">Include CE bonuses, event bonuses, etc.</span>
+          </label>
+          <input
+            type="number"
+            value={bondBonus}
+            onChange={handleBonusChange}
+            className="form-input"
+            placeholder="0"
+            min="0"
+            max="300"
+          />
+        </div>
+        <div className="form-group" style={{ display: 'flex', gap: '2em', alignItems: 'flex-end' }}>
+          {/* Heroic Portrait */}
+          <div style={{ flex: 1 }}>
+            <label className="form-label" htmlFor="heroicPortrait">
+              Heroic Portrait
+              <span className="bonus-help" style={{ marginLeft: 6 }}>
+                +50 per
+              </span>
             </label>
-            <input
-              type="number"
-              value={bondBonus}
-              onChange={handleBonusChange}
-              className="form-input"
-              placeholder="0"
-              min="0"
-              max="300"
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em' }}>
+              <input
+                type="checkbox"
+                id="heroicPortrait"
+                checked={heroicPortraitEnabled}
+                onChange={e => setHeroicPortraitEnabled(e.target.checked)}
+                style={{ marginRight: '0.5em', accentColor: 'var(--primary-color, #2962ff)' }}
+              />
+              <select
+                value={heroicPortraitMultiplier}
+                onChange={e => setHeroicPortraitMultiplier(Number(e.target.value))}
+                disabled={!heroicPortraitEnabled}
+                className="form-select"
+                style={{ minWidth: 50 }}
+              >
+                {[1,2,3,4,5,6].map(n => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+            </div>
           </div>
-        )}
+          {/* Frontline Bonus */}
+          <div style={{ flex: 1 }}>
+            <label className="form-label" htmlFor="frontlineBonus">
+              Frontline Bonus
+              <span className="bonus-help" style={{ marginLeft: 6 }}>
+                
+              </span>
+            </label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em' }}>
+              <input
+                type="checkbox"
+                id="frontlineBonus"
+                checked={frontlineBonusEnabled}
+                onChange={e => setFrontlineBonusEnabled(e.target.checked)}
+                style={{ marginRight: '0.5em', accentColor: 'var(--primary-color, #2962ff)' }}
+              />
+              <select
+                value={frontlineBonusPercent}
+                onChange={e => setFrontlineBonusPercent(Number(e.target.value))}
+                disabled={!frontlineBonusEnabled}
+                className="form-select"
+                style={{ minWidth: 70 }}
+              >
+                <option value={0.24}>24%</option>
+                <option value={0.20}>20%</option>
+                <option value={0.04}>4%</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
 
       {results && (
