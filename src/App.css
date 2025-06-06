@@ -55,6 +55,26 @@
   align-items: flex-start;
 }
 
+/* Tomoe Ice Effect */
+.tomoe-frost {
+  color: #a8d0ff !important;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.4), 
+               0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .tomoe-frost {
+  color: #b8e0ff !important;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.6), 
+               0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Ensure the ice color applies to the entire option */
+.tomoe-frost .option-name,
+.tomoe-frost .option-stars,
+.tomoe-frost .option-class {
+  color: inherit;
+}
+
 /* Main Card */
 .main-card {
   width: 100%;

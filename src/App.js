@@ -13,7 +13,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import Fuse from "fuse.js";
 import fgoLogo from "./fgo_calc_logo.png";
 import saintQuartzIcon from "./saintquartz.png";
@@ -109,8 +109,7 @@ function App() {
       ...provided,
       padding: "4px",
       maxHeight: "350px", // Limit max height to prevent excessive scrolling
-    }),
-    option: (provided, state) => ({
+    }),    option: (provided, state) => ({
       ...provided,
       display: "flex",
       alignItems: "center",
@@ -125,10 +124,7 @@ function App() {
       "&:hover": {
         backgroundColor: state.isSelected ? "var(--highlight-color, #3142b7)" : "var(--option-hover)",
       },
-      color: state.isSelected ? "#3142b7" : "var(--text-color)",
-      background: state.isFocused ? "var(--option-hover)" : "var(--card-bg)",
-      padding: "clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px)",
-      borderBottom: "1px solid var(--divider-color)",
+      position: "relative"
     }),
     singleValue: (provided) => ({
       ...provided,
@@ -343,6 +339,14 @@ function App() {
         servant: item,
       }))
     );
+  };  // Custom option component
+  const Option = ({ children, ...props }) => {
+    const isTomoe = props.data?.servant?.name?.includes("Tomoe Gozen") || false;
+    return (
+      <components.Option {...props} className={isTomoe ? 'tomoe-frost' : ''}>
+        {children}
+      </components.Option>
+    );
   };
 
   // Format option with CSS classes
@@ -469,6 +473,7 @@ function App() {
               onInputChange={handleInputChange}
               formatOptionLabel={formatOptionLabel}
               noOptionsMessage={() => "No servants found"}
+              components={{ Option }}
             />
           </div>
 
