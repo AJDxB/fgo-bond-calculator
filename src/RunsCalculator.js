@@ -7,7 +7,7 @@
  * and bond bonus calculations for farming efficiency.
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.2 - UI/UX improvements, toggle clarity, unified header styles
+ * @version 0.3.2 - Added Heroic Portrait bonus and Frontline Bonus
  * @created 2025-06-04
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
