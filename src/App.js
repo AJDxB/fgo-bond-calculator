@@ -6,7 +6,7 @@
  * runs calculator with custom points mode, and farming efficiency tools
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.2 - UI/UX improvements, toggle clarity, unified header styles
+ * @version 0.3.3 - Added JP server support, Beast class icon fix, improved dropdown UI
  * @created 2025-06-04
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
@@ -21,8 +21,7 @@ import RunsCalculator from "./RunsCalculator";
 import "./App.css";
 
 function capitalizeClass(className) {
-  if (!className) return "";
-  const specialCases = {
+  if (!className) return "";  const specialCases = {
     mooncancer: "MoonCancer",
     alterego: "AlterEgo",
     pretender: "Pretender",
@@ -30,6 +29,7 @@ function capitalizeClass(className) {
     ruler: "Ruler",
     avenger: "Avenger",
     beast: "Beast",
+    beastEresh: "Beast",
     foreigner: "Foreigner",
     saber: "Saber",
     archer: "Archer",
@@ -52,6 +52,10 @@ function App() {
   const [currentPointsLeft, setCurrentPointsLeft] = useState("");
   const [targetBond, setTargetBond] = useState(null);
   const [result, setResult] = useState(null);
+  const [isJPServer, setIsJPServer] = useState(() => {
+    const saved = localStorage.getItem('fgo-calculator-jp-mode');
+    return saved !== null ? JSON.parse(saved) : false;
+  });
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // Initialize from localStorage or default to false
     const saved = localStorage.getItem('fgo-calculator-dark-mode');
@@ -63,26 +67,48 @@ function App() {
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
     localStorage.setItem('fgo-calculator-dark-mode', JSON.stringify(isDarkMode));
   }, [isDarkMode]);
+  // Save JP server preference and clear data when switching
+  useEffect(() => {
+    localStorage.setItem('fgo-calculator-jp-mode', JSON.stringify(isJPServer));
+    // Clear selected servant when switching servers
+    setSelectedServant(null);
+    console.log('Switched to', isJPServer ? 'JP' : 'NA', 'server');
+  }, [isJPServer]);
 
   // Custom styles for react-select (keeping these as they're component-specific)
   const customStyles = {
     control: (provided) => ({
       ...provided,
-      width: "100%",
-      minHeight: "clamp(44px, 8vw, 52px)",
+      width: "100%",      minHeight: "clamp(44px, 8vw, 52px)",
       fontSize: "clamp(1.1rem, 3vw, 1.35rem)",
       borderRadius: "10px",
-      boxShadow: "none",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
       borderColor: "var(--border-color)",
       backgroundColor: "var(--input-bg)",
       marginBottom: 16,
-    }),
-    menu: (provided) => ({
+      "&:hover": {
+        borderColor: "var(--highlight-color, #3142b7)",
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+      },
+      "&:focus-within": {
+        borderColor: "var(--highlight-color, #3142b7)",
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+      },
+    }),    menu: (provided) => ({
       ...provided,
       width: "100%",
       borderRadius: "10px",
       zIndex: 9999,
       backgroundColor: "var(--card-bg)",
+      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+      border: "1px solid var(--border-color)",
+      marginTop: "4px",
+      overflow: "hidden",
+    }),
+    menuList: (provided) => ({
+      ...provided,
+      padding: "4px",
+      maxHeight: "350px", // Limit max height to prevent excessive scrolling
     }),
     option: (provided, state) => ({
       ...provided,
@@ -91,6 +117,14 @@ function App() {
       justifyContent: "space-between",
       fontSize: "clamp(1rem, 2.8vw, 1.22rem)",
       fontWeight: state.isSelected ? "bold" : "normal",
+      backgroundColor: state.isSelected ? "var(--highlight-color, #3142b7)" : "transparent",
+      color: state.isSelected ? "#fff" : "var(--text-color)",
+      cursor: "pointer",
+      padding: "10px 12px",
+      borderRadius: "6px",
+      "&:hover": {
+        backgroundColor: state.isSelected ? "var(--highlight-color, #3142b7)" : "var(--option-hover)",
+      },
       color: state.isSelected ? "#3142b7" : "var(--text-color)",
       background: state.isFocused ? "var(--option-hover)" : "var(--card-bg)",
       padding: "clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px)",
@@ -139,9 +173,14 @@ function App() {
   };
 
   // Helper function to get class icon with fallback
-  const getClassIcon = (servant) => {
-    const className = servant.className.toLowerCase();
+  const getClassIcon = (servant) => {    const className = servant.className.toLowerCase();
     const servantName = servant.name.toLowerCase();
+    
+    // Handle beast-related classes first
+    if (className === 'beasteresh' || className.startsWith('beast')) {
+      const rarityFolder = getRarityFolder(servant.rarity);
+      return `${process.env.PUBLIC_URL}/ServantClassImages/${rarityFolder}/Class-Beast-${rarityFolder}.png`;
+    }
     
     if (specialCases[servantName] || servantName.includes("aŋra") || servantName.includes("mainiiu")) {
       const special = specialCases[servantName] || { rarity: "Silver", class: "avenger" };
@@ -210,13 +249,14 @@ function App() {
         className="class-icon"
       />
     );
-  };
-  // Fetch servants from local file
+  };  // Fetch servants from local file
   useEffect(() => {
-    let isMounted = true;    const fetchLocalServants = async () => {
+    let isMounted = true;
+    const fetchLocalServants = async () => {
       try {
-        const url = "servants.json";
+        const url = isJPServer ? "servants_jp.json" : "servants.json";
         console.log('Fetching from:', url);
+        console.log('Current server:', isJPServer ? 'JP' : 'NA');
         const response = await axios.get(url);
         console.log('Data received:', response.data ? 'yes' : 'no');
         const filtered = response.data.filter(
@@ -250,7 +290,7 @@ function App() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isJPServer]); // Re-fetch when server changes
 
   // Update bond levels when servant changes
   useEffect(() => {
@@ -385,13 +425,13 @@ function App() {
 
   return (
     <div className="app-container">
-      <div className="main-card">
-        <button
-          onClick={() => setIsDarkMode(!isDarkMode)}
-          className="theme-toggle"
-        >
-          {isDarkMode ? "☀" : "☽"}
-        </button>
+      <div className="main-card">        <button
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="theme-toggle"
+            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {isDarkMode ? "☀" : "☽"}
+          </button>
 
         <div className="logo-container">
           <img
@@ -399,6 +439,21 @@ function App() {
             alt="FGO Bond Level Calculator"
             className="logo"
           />
+        </div>
+
+        <div className="calculator-mode-toggle server-toggle">
+          <button 
+            onClick={() => setIsJPServer(false)}
+            className={`toggle-btn ${!isJPServer ? 'active' : ''}`}
+          >
+            NA Server
+          </button>
+          <button 
+            onClick={() => setIsJPServer(true)}
+            className={`toggle-btn ${isJPServer ? 'active' : ''}`}
+          >
+            JP Server
+          </button>
         </div>
 
         <div>
@@ -511,7 +566,7 @@ function App() {
             aria-hidden="true"
           /> by <a href="https://github.com/AJDxB" target="_blank" rel="noopener noreferrer">AJDxB</a>
           <span className="footer-separator"> | </span>
-          <span className="footer-version">v0.3.2</span>
+          <span className="footer-version">v0.3.3</span>
         </footer>
       </div>
     </div>

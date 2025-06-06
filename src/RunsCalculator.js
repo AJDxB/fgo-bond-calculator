@@ -7,7 +7,7 @@
  * and bond bonus calculations for farming efficiency.
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.2 - Added Heroic Portrait bonus and Frontline Bonus
+ * @version 0.3.3 - Enhanced dropdown styling and accessibility, support for JP server data
  * @created 2025-06-04
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
@@ -33,6 +33,9 @@ const QUEST_DATA = {
   event_90p: { name: "Event Quest Lv90+ (40 AP)", ap: 40, baseBond: 1098 },
   event_90pp: { name: "Event Quest Lv90++ (40 AP)", ap: 40, baseBond: 1318 },
 };
+
+// Helper function to check if a quest is a Bleached Earth quest
+const isBleachedEarthQuest = (questKey) => questKey.startsWith('bleached_');
 
 // Set the default selected quest to the first key in QUEST_DATA
 const QUEST_KEYS = Object.keys(QUEST_DATA);
@@ -97,15 +100,19 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
       // Calculate estimated time (assuming 1 run = 3 minutes average)
       const estimatedMinutes = runsNeeded * 3;
       const hours = Math.floor(estimatedMinutes / 60);
-      const minutes = estimatedMinutes % 60;
+      const minutes = estimatedMinutes % 60;      // Special calculation for Bleached Earth quests (3 runs per day limit)
+      const isBleached = !isCustomMode && isBleachedEarthQuest(selectedQuest);
+      const daysNeeded = isBleached ? Math.ceil(runsNeeded / 3) : Math.ceil(totalAP / (24 * 12));
 
-      setResults({        runsNeeded,
+      setResults({
+        runsNeeded,
         totalAP,
         pointsNeeded: points,
         bondPerRun,
         questName,
         estimatedTime: { hours, minutes },
-        apPerDay: Math.floor(totalAP / (24 * 12)) // 1 AP per 5 minutes = 12 AP/hour = 288 AP/day
+        apPerDay: daysNeeded,
+        isBleachedEarth: isBleached
       });
     };    if (selectedServant && targetBond && typeof pointsNeeded === "number") {
       calculateRuns();
@@ -252,11 +259,10 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
                 value={heroicPortraitMultiplier}
                 onChange={e => setHeroicPortraitMultiplier(Number(e.target.value))}
                 disabled={!heroicPortraitEnabled}
-                className="form-select"
-                style={{ minWidth: 50 }}
+                className="form-select"                style={{ minWidth: 50 }}
               >
-                {[1,2,3,4,5,6].map(n => (
-                  <option key={n} value={n}>{n}</option>
+                {[1,2].map(n => (
+                  <option key={n} value={n}>{`${n} CE${n > 1 ? 's' : ''}`}</option>
                 ))}
               </select>
             </div>
@@ -324,17 +330,30 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
                 </span>
               </div>
             )}
-            
-            {results.apPerDay > 0 && (
+              {results.apPerDay > 0 && (
               <div className="runs-item full-width">
-                <span className="runs-label">Days with Natural AP:</span>
-                <span className="runs-value">{Math.ceil(results.apPerDay)} days</span>
+                <span className="runs-label">
+                  {results.isBleachedEarth ? "Days Required:" : "Days with Natural AP:"}
+                </span>
+                <span className="runs-value">
+                  {Math.ceil(results.apPerDay)} days
+                  {results.isBleachedEarth && 
+                    <span className="bonus-help" style={{ display: 'block', fontSize: '0.85em', color: 'var(--text-muted)' }}>
+                      (Based on 3 runs per day limit for Bleached Earth quests)
+                    </span>
+                  }
+                </span>
               </div>
             )}
           </div>
           
           <div className="quest-info">
             Running: <strong>{results.questName}</strong>
+            {results.isBleachedEarth && (
+              <div className="quest-note" style={{ marginTop: '0.5em', fontSize: '0.9em', color: 'var(--text-muted)' }}>
+                Note: Bleached Earth quests are limited to 3 runs per day
+              </div>
+            )}
           </div>
         </div>
       )}

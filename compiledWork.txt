@@ -1,0 +1,374 @@
+FGO Bond Calculator - Project Compiled Work Log
+====================================================
+
+Project History & Motivation
+---------------------------
+- **Origin:** Created to address the lack of reliable, up-to-date, and user-friendly FGO bond calculators, especially for global players who need accurate quest/bonus data and modern UI/UX.
+- **Main Contributor:** AJDxB (ajdxb4787@gmail.com). See GitHub contributors for others.
+- **Inspiration:** Community feedback, Atlas Academy data, and the need for a tool that supports new FGO features and bonuses.
+- **Notable Forks/Inspiration:** Inspired by other FGO calculators, but built from scratch for maintainability and extensibility.
+
+Detailed Component Descriptions
+------------------------------
+- **App.js**: Root React component. Handles theme switching (dark/light), server selection (NA/JP), layout, and renders the main calculator. Manages global state for theme and server choice, loads appropriate servant data file, and passes props to children.
+- **RunsCalculator.js**: Core logic for bond calculation. Handles user input (servant, bond points, quest, bonuses), performs calculations, and displays results. Contains logic for bonus stacking (additive/multiplicative), quest selection, and custom points mode. Manages state for all calculator fields.
+- **RunsCalculator.css**: Styles for the calculator, including responsive design, bonus UI, and theme support. Contains custom classes for all calculator UI elements and adapts to mobile/desktop.
+- **App.css**: Global styles for the app, including layout, typography, and theme variables.
+- **servants.json**: Local data file with all servant info (id, name, class, rarity, bond points, etc.), updated via GitHub Actions for speed and reliability.
+- **fetch_quests.js / fetch_servants.js**: Node scripts to fetch and update quest/servant data from Atlas Academy. Used in CI/CD and for manual updates.
+- **public/**: Static assets (images, icons, manifest, etc.) for deployment. Includes class icons, logos, and manifest files for PWA support.
+- **ServantClassImages/**: Contains all class icons, organized by rarity (Bronze/Silver/Gold) for use in the UI.
+
+Data Flow & Architecture
+------------------------
+- **Data Fetching:** Servant and quest data is fetched from Atlas Academy and stored locally in `public/servants.json` and internal quest data files. Data is updated via GitHub Actions and fetch scripts.
+- **State Management:** Uses React hooks (useState, useEffect) for local state. No external state management library.
+- **Calculation Logic:** All bond/quest/bonus calculations are performed in RunsCalculator.js. Bonus stacking is handled according to FGO rules (additive for most, multiplicative for Heroic Portrait/Frontline).
+- **Theming:** Theme (dark/light) is managed via CSS variables and localStorage. User preference is persisted across sessions.
+- **UI Rendering:** Responsive design using CSS clamp(), flexbox, and grid. All UI adapts to mobile and desktop.
+
+Detailed Data Flow Description
+-----------------------------
+- **Overview:**
+    - The FGO Bond Calculator app processes data through several key stages: data fetching, local storage, state management, calculation, and UI rendering. This section provides a step-by-step description of how data flows from source to user interface.
+
+1. **Data Fetching and Preparation:**
+    - **Servant Data:**
+        - The app now supports both NA and JP servers with separate data files:
+            - `fetch_servants.js` retrieves NA server data and saves to `public/servants.json`
+            - `fetch_servants_jp.js` retrieves JP server data and saves to `public/servants_jp.json`
+        - Each script processes and filters data from the Atlas Academy API, keeping only the fields required by the app (e.g., id, name, class, rarity, bond points, traits).
+        - The scripts are run both manually (by maintainers) and automatically (via GitHub Actions) to keep both NA and JP data up to date.
+        - Users can switch between NA and JP data using a server selection toggle in the UI.
+    - **Quest Data:**
+        - Quest data (AP cost, base bond points, etc.) is hardcoded in `RunsCalculator.js` as a constant object, since it changes infrequently and is small in size.
+
+2. **App Initialization:**
+    - On app load, React components are initialized.
+    - The main component (`App.js`) sets up global state (e.g., theme) and renders the calculator UI.
+    - The `RunsCalculator.js` component loads servant data from `public/servants.json` (served as a static asset) and quest data from its internal constant.
+
+3. **User Interaction and State Management:**
+    - The user selects a servant, target bond level, and quest type, or enters custom bond/AP values.
+    - The user enters any bond bonus percentages (CE, event, etc.) and toggles Heroic Portrait and Frontline bonuses.
+    - All user inputs are managed via React `useState` hooks within `RunsCalculator.js`.
+    - When any input changes, a `useEffect` hook triggers recalculation of results.
+
+4. **Calculation Logic:**
+    - The calculator determines the base bond points per run from the selected quest or custom input.
+    - It applies additive percentage bonuses, then flat bonuses (Heroic Portrait), then multiplicative bonuses (Frontline), following the documented order of operations.
+    - The number of runs, total AP, bond per run, and estimated time are computed.
+    - Results are stored in local component state.
+
+5. **UI Rendering:**
+    - The calculator UI displays the current servant, quest, bonuses, and calculated results.
+    - All results update in real time as the user changes inputs.
+    - The UI uses CSS for responsive design and theming, adapting to mobile and desktop.
+
+6. **Data Update Flow:**
+    - When new servants are released or data needs updating, maintainers run `fetch_servants.js` or wait for the scheduled GitHub Action.
+    - The updated `servants.json` is committed and pushed to the repository, and deployed to GitHub Pages.
+    - The app automatically serves the latest data on next load.
+
+**Summary Table:**
+| Stage                | Source/Trigger                | Data Location           | Consumed By           |
+|----------------------|-------------------------------|------------------------|-----------------------|
+| Fetch NA Servants    | fetch_servants.js, GitHub CI  | public/servants.json   | RunsCalculator.js     |
+| Fetch JP Servants    | fetch_servants_jp.js, CI      | public/servants_jp.json| RunsCalculator.js     |
+| Fetch Quests         | Hardcoded in code             | RunsCalculator.js      | RunsCalculator.js     |
+| User Input           | UI (React forms)              | React state            | RunsCalculator.js     |
+| Calculation          | useEffect in RunsCalculator   | React state            | RunsCalculator.js     |
+| UI Rendering         | React render cycle            | React state            | User (browser)        |
+| Data Update/Deploy   | Maintainer/CI                 | public/servants.json   | All users             |
+
+- **Note:** All calculations and data processing are performed client-side. No user data is stored or transmitted.
+
+Deployment & CI/CD
+------------------
+- **Deployment:** Uses `gh-pages` npm package to deploy the build to the `gh-pages` branch for GitHub Pages hosting. The homepage is set in package.json.
+- **CI/CD:** GitHub Actions workflow runs twice daily to fetch and update servant data. Workflow files are in `.github/workflows/` (not shown above, but present in repo).
+- **Common Issues:** Tag conflicts (e.g., v0.3.1 already exists) can block deployment. Solution: delete the remote tag before redeploying.
+- **PowerShell Policy:** On Windows, set execution policy to RemoteSigned for npm scripts to work: `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`.
+- **Manual Data Update:** Run fetch_quests.js or fetch_servants.js to update data locally, then commit and push.
+
+Testing
+-------
+- **Test Files:** Located in `src/` (e.g., App.test.js, setupTests.js). Uses React Testing Library and Jest.
+- **How to Run:** `npm test` runs all tests. Tests cover component rendering and basic logic.
+- **Coverage:** Basic coverage for UI and calculation logic. No e2e tests. More tests recommended for edge cases and bonus stacking.
+
+Known Issues & TODOs
+--------------------
+- **Deployment:** Tag conflicts with gh-pages. Always check for existing tags before deploying.
+- **Data Updates:** Atlas Academy API changes may break fetch scripts. Monitor API changes.
+- **UI/UX:** Some advanced FGO bonuses/events not yet supported. UI could be further improved for accessibility.
+- **Testing:** Increase test coverage, especially for calculation edge cases.
+- **Performance:** Large data files may slow down initial load on slow connections.
+- **Feature Requests:** See GitHub Issues for open requests and suggestions.
+
+User & Contributor Guidance
+---------------------------
+- **Request Features/Bugs:** Use GitHub Issues for all requests and bug reports.
+- **Add New Quests/Servants:** Update the relevant data files (servants.json, quest data) and commit changes. Use fetch scripts for bulk updates.
+- **Update Dependencies:** Use `npm update` and test thoroughly before deploying.
+- **Pull Requests:** Fork, branch, and submit PRs with clear descriptions. Follow code style and include tests if possible.
+
+External Integrations
+---------------------
+- **Atlas Academy API:** Used for all servant and quest data.
+    - All endpoints, usage instructions, and data structure are documented at: https://api.atlasacademy.io/docs
+    - Always consult the official documentation for the latest endpoints and query parameters.
+    - Note: The app's fetch scripts are configured to use the recommended endpoints from the docs; update scripts as needed if the API changes.
+- **GitHub Actions:** Automates data updates and can be extended for CI/CD.
+
+UI/UX Design
+------------
+- **Design Rationale:** Focus on clarity, speed, and mobile-friendliness. Dropdowns for all selections, styled bonus multipliers, and clear result displays.
+- **Accessibility:** Uses semantic HTML and ARIA labels where possible. Further improvements possible.
+- **Adding UI Features:** Add new components to src/, update CSS, and test on both mobile and desktop.
+
+Versioning & Tagging
+--------------------
+- **Tagging:** Tags are created for each release (v0.1.0, v0.2.0, etc.). Use `git tag vX.Y.Z` and `git push origin vX.Y.Z`.
+- **Release Process:** Update version in package.json, App.js, and other relevant files. Update changelog in README.md. Tag and deploy.
+- **Naming Conventions:** Semantic versioning (major.minor.patch).
+
+Security & Privacy
+------------------
+- **User Data:** No user data is stored or transmitted. All calculations are client-side.
+- **Data Updates:** Only maintainers can trigger GitHub Actions for data updates.
+- **Dependencies:** Kept up to date to avoid vulnerabilities.
+
+Changelog & Tags
+----------------
+### Version 0.3.3 - JP Server & UI Enhancements
+- Fixed Beast Ereshkigal class icon display to use proper "Class-Beast-Gold.png" 
+- Added special handling for Beast class variants in icon rendering logic
+- Added JP server support with separate servant data file (servants_jp.json)
+- Added server selection toggle for switching between NA and JP data
+- Enhanced dropdown menu UX with improved styling, scrolling, and visual consistency
+- Fixed menu clipping issues and improved overall visual hierarchy
+- Tag: v0.3.3
+
+### Version 0.3.2- Major Quest Data, Bonus, and UI Overhaul
+- Replaced and improved quest data and quest selection UI in Runs Calculator
+- Added Heroic Portrait bonus and Frontline Bonus (multiplicative) with styled UI and multiplier dropdowns
+- Various bugfixes and consistency improvements for quest, bonus, and calculation logic
+- Tag: v0.3.2
+
+### Version 0.3.1 - Local Data, Custom Points & UI Enhancements
+- Added Custom Points mode to Runs Calculator for flexible farming calculations
+- Switched to local servant data (`public/servants.json`) for faster and more reliable access
+- Added GitHub Actions workflow for automated data updates
+- Optimized data size by storing only required fields
+- Tag: v0.3.1
+
+### Version 0.3.0 - Runs to Max Calculator & Auto-calculations
+- Added quest runs calculator with multiple quest types
+- Implemented automatic calculations without manual button clicks
+- Added bond bonus calculation for CEs and event bonuses
+- Enhanced result display with quest efficiency metrics
+- Added persistent dark/light mode preference using localStorage
+- Improved code organization by separating CSS from JavaScript
+- Added goal reached detection with enhanced visual feedback
+- Tag: v0.3.0
+
+### Version 0.2.2 - Responsive Design & Image Fixes
+- Implemented fully responsive design using CSS clamp() functions
+- Fixed class icon paths for GitHub Pages deployment
+- Added proper mobile scaling while maintaining desktop appearance
+- Fixed desktop centering issues with flexbox layout
+- Enhanced image fallback system with emoji alternatives
+- Tag: v0.2.2
+
+### Version 0.2.1 - Deployment Improvements
+- Updated site title and favicon
+- Improved metadata for web deployment
+- Tag: v0.2.1
+
+### Version 0.2.0 - UI Overhaul and Enhanced Search
+- Added dark/light mode toggle
+- Implemented fuzzy search for servants
+- Smart filtering of unplayable servants
+- Enhanced UI with class icons and rarity stars
+- Improved spacing and typography
+- Tag: v0.2.0
+
+### Version 0.1.0 - Initial Release
+- Basic bond point calculation
+- Servant selection dropdown
+- Responsive design
+- Tag: v0.1.0
+
+
+Challenges & Solutions
+---------------------
+- **Quest Data Accuracy**: Ensured quest data is up-to-date and matches in-game values. Migrated to local data for reliability.
+- **Bonus Calculation Logic**: Implemented complex bonus stacking (additive/multiplicative) for CEs, Heroic Portrait, and Frontline bonuses.
+- **UI Consistency**: Refactored UI for clarity, added styled dropdowns, and improved mobile responsiveness.
+- **Deployment Issues**: Faced issues with gh-pages tag conflicts (e.g., v0.3.1 tag already exists). Solution: Remove conflicting tags before deployment.
+- **Class Icon Issues**: Fixed Beast Ereshkigal's incorrect class icon by:
+  1. Identifying the incorrect class name normalization in App.js for "beastEresh"
+  2. Adding logic to detect and handle beast-related class variations
+  3. Implementing a consistent fallback to "Class-Beast-Gold.png" for all Beast classes
+  4. Solution ensures proper icon display while maintaining extensibility for future Beast-class servants
+- **Dropdown Menu UX**: Resolved dropdown menu clipping and visual consistency issues by:
+  1. Implementing proper z-index management to prevent overlay issues
+  2. Adding responsive height limits to prevent excessive scrolling
+  3. Enhancing visual hierarchy with shadows, borders, and hover states
+  4. Improving accessibility with better focus states and consistent spacing
+  5. Solution provides better user experience across all screen sizes and themes
+- **Class Icon Issues**: Fixed Beast Ereshkigal's incorrect class icon by:
+  1. Identifying the incorrect class name normalization in App.js for "beastEresh"
+  2. Adding logic to detect and handle beast-related class variations
+  3. Implementing a consistent fallback to "Class-Beast-Gold.png" for all Beast classes
+  4. Solution ensures proper icon display while maintaining extensibility for future Beast-class servants
+- **Dropdown Menu UX**: Resolved dropdown menu clipping and visual consistency issues by:
+  1. Implementing proper z-index management to prevent overlay issues
+  2. Adding responsive height limits to prevent excessive scrolling
+  3. Enhancing visual hierarchy with shadows, borders, and hover states
+  4. Improving accessibility with better focus states and consistent spacing
+  5. Solution provides better user experience across all screen sizes and themes
+- **PowerShell Execution Policy**: On Windows, npm scripts may fail due to PowerShell policy. Solution: Set-ExecutionPolicy RemoteSigned for CurrentUser.
+- **Automated Data Updates**: Set up GitHub Actions to fetch and update servant data twice daily, reducing manual maintenance.
+- **Performance**: Optimized data size and loading for faster app startup.
+
+
+Links & References
+------------------
+- Atlas Academy API: https://atlasacademy.io/
+- GitHub Actions Docs: https://docs.github.com/en/actions
+- React Docs: https://react.dev/
+- gh-pages Docs: https://www.npmjs.com/package/gh-pages
+
+
+How to Contribute
+-----------------
+- Fork the repo and create a new branch for your feature or fix
+- Submit pull requests with clear descriptions
+- Issues and suggestions are welcome via GitHub Issues
+
+
+License
+-------
+MIT License (see LICENSE file)
+
+
+For Next Agent
+--------------
+- Review this file for project history, structure, and known issues
+- Check the README.md for up-to-date usage and changelog
+- If deployment fails due to tag conflicts, delete the remote tag and try again
+- For Windows, ensure PowerShell execution policy allows npm scripts
+- All code and data is in the repo; see src/ for main components and public/ for assets
+- For data updates, see fetch_quests.js and fetch_servants.js
+- For UI/logic, see RunsCalculator.js and App.js
+- For CI/CD, see .github/workflows/ (if not present, check repo online)
+- For advanced troubleshooting, check GitHub Issues and Pull Requests
+
+This file is intended to be a comprehensive, non-code summary of the project for maintainers and future contributors.
+
+fetch_servants.js Usage
+----------------------
+- **Purpose:** Downloads the latest FGO servant data from Atlas Academy and saves it locally as `public/servants.json` for use by the app.
+- **How to Run:**
+    - Open a terminal in the project root directory.
+    - Run the script with Node.js:
+      ```powershell
+      node fetch_servants.js
+      ```
+- **What It Does:**
+    - Fetches servant data from the Atlas Academy API (see https://api.atlasacademy.io/docs for the current endpoint).
+    - Processes and filters the data to include only the fields required by the app (e.g., id, name, class, rarity, bond points, etc.).
+    - Saves the processed data to `public/servants.json`.
+- **Output:**
+    - Overwrites `public/servants.json` with the latest servant data.
+- **Configuration:**
+    - No environment variables or arguments are required by default.
+    - If the API endpoint changes, update the URL in `fetch_servants.js`.
+- **Troubleshooting:**
+    - If the script fails, check:
+        - Your internet connection.
+        - That the Atlas Academy API is online and the endpoint is correct.
+        - That you have write permissions to the `public/` directory.
+    - If the API structure changes, update the script to match the new data format.
+- **When to Use:**
+    - Run this script whenever you want to update the local servant data (e.g., after new servants are released or for regular maintenance).
+    - The script is also run automatically by GitHub Actions for scheduled updates.
+
+GitHub Actions Workflow Details
+------------------------------
+- **Workflow Files:** Located in `.github/workflows/` (e.g., `update-servants.yml`).
+- **Purpose:** Automates the process of updating local servant data by running `fetch_servants.js` on a schedule or on demand.
+- **Triggers:**
+    - **Scheduled:** Runs automatically at set intervals (e.g., twice daily) to fetch the latest servant data.
+    - **Manual:** Can be triggered manually from the GitHub Actions tab if immediate update is needed.
+    - **On Push:** May also run on push to main or specific branches (if configured).
+- **Steps Performed:**
+    1. **Checkout:** Checks out the repository code.
+    2. **Set Up Node.js:** Installs the required Node.js version (see `package.json` for version).
+    3. **Install Dependencies:** Runs `npm ci` to install dependencies cleanly.
+    4. **Run fetch_servants.js:** Executes the script to fetch and update `public/servants.json`.
+    5. **Commit & Push:** If there are changes to `public/servants.json`, commits and pushes them back to the repository.
+    6. **(Optional) Deploy:** May trigger deployment to GitHub Pages if configured.
+- **Secrets & Permissions:**
+    - Requires `GITHUB_TOKEN` or a personal access token with repo write permissions to push changes.
+    - No external secrets are required for public Atlas Academy API access.
+- **Logs & Troubleshooting:**
+    - Workflow logs are available in the GitHub Actions tab for each run.
+    - If the workflow fails, check logs for API errors, permission issues, or script errors.
+- **Customization:**
+    - To change the schedule, edit the `cron` expression in the workflow YAML file.
+    - To add more steps (e.g., run tests, deploy), modify the workflow as needed.
+
+Servant Data Structure Example
+-----------------------------
+- The local servant data is stored in `public/servants.json` as an array of servant objects.
+- Each servant object contains only the fields required by the app for bond calculation and display.
+- **Example servant object:**
+  ```json
+  {
+    "id": 100100,
+    "name": "Artoria Pendragon",
+    "className": "Saber",
+    "rarity": 5,
+    "bondPoints": [500, 1500, 3000, 5000, 7000, 15000, 20000, 30000, 40000],
+    "traits": ["King", "Arthur", "Dragon"]
+  }
+  ```
+- **Field descriptions:**
+    - `id`: Unique servant ID (number).
+    - `name`: Servant's display name (string).
+    - `className`: FGO class (e.g., "Saber", "Archer") (string).
+    - `rarity`: Star rarity (number, 1-5).
+    - `bondPoints`: Array of cumulative bond points required for each bond level (array of numbers).
+    - `traits`: Array of trait strings (optional, used for filtering or bonus logic).
+- **Note:** The actual fields may vary slightly depending on the current needs of the app. Check `fetch_servants.js` and `RunsCalculator.js` for the latest structure and usage.
+
+Bonus Calculation Logic
+----------------------
+- **Overview:**
+    - The app supports multiple types of bond point bonuses, including Craft Essences (CEs), Heroic Portrait, and Frontline Bonus.
+    - Users can select and stack bonuses using the UI toggles and input fields in the Runs Calculator.
+- **Types of Bonuses:**
+    - **Craft Essence (CE) Bonus:** Additive percentage bonus. User enters the CE bond bonus percentage manually in the Bond Bonus (%) input field.
+    - **Event/Other Additive Bonuses:** Any event or campaign bonuses are also added additively as percentages if present (entered manually).
+    - **Heroic Portrait Bonus:** Flat additive bonus. If selected, adds +50 bond points per copy (multiplied by the number selected) after percentage-based additive bonuses, before multiplicative bonuses.
+    - **Frontline Bonus:** Multiplicative bonus. If selected, multiplies the total bond points after all additive bonuses (including Heroic Portrait).
+- **Order of Operations:**
+    1. **Base bond points** are determined by the selected quest.
+    2. **Additive percentage bonuses** (CE, event, etc.) are summed and applied to the base bond points.
+    3. **Flat bonuses** (Heroic Portrait: +50 per copy) are added to the result from step 2.
+    4. **Multiplicative bonuses** (Frontline, etc.) are applied to the sum from step 3.
+    5. The final bond points per run are rounded/floored as per FGO rules (if applicable).
+- **UI Implementation:**
+    - Users enter CE and event bonuses as a percentage in the Bond Bonus (%) input field, and select Heroic Portrait and Frontline bonuses using toggles and dropdowns.
+    - The UI displays the total bonus applied and the resulting bond points per run.
+    - Bonus multipliers and their effects are visually indicated for clarity.
+- **Edge Cases:**
+    - If multiple multiplicative bonuses are selected, they are multiplied together (e.g., 1.1 × 1.2 = 1.32x total multiplier).
+    - If no bonuses are selected, only the base bond points are used.
+    - The app ensures that bonuses are not double-counted and that only valid combinations are allowed.
+- **Maintenance:**
+    - Bonus values and stacking logic are defined in `RunsCalculator.js`.
+    - If FGO introduces new bonus types or changes stacking rules, update the logic in `RunsCalculator.js` and the UI as needed.

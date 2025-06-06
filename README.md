@@ -15,7 +15,8 @@ Data provided by [Atlas Academy](https://atlasacademy.io/).
 
 ## Features
 
-- Bond point calculation for all FGO servants
+- Bond point calculation for all FGO servants (both NA and JP servers)
+- Server selection toggle between NA and JP data
 - Real-time quest runs calculator for farming efficiency
 - Fuzzy search for servant selection
 - Dark/light mode toggle with persistent preference
@@ -23,7 +24,7 @@ Data provided by [Atlas Academy](https://atlasacademy.io/).
 - Multiple quest types with AP costs and time estimates
 - Filters out enemy-only and temporary servants
 - Fully responsive design for mobile and desktop
-- Local servant data loaded from `public/servants.json` for fast, reliable access
+- Local servant data loaded from separate NA/JP JSON files for fast, reliable access
 - Automated servant data updates via GitHub Actions workflow (twice daily)
 - Custom Points mode to Runs Calculator for flexible farming calculations
 
@@ -74,6 +75,14 @@ Contributions, issues, and suggestions are welcome.
 - FGO community for inspiration and feedback
 
 ## Changelog
+
+### v0.3.3 - JP Server & UI Enhancements
+- Fixed Beast Ereshkigal class icon display to use proper "Class-Beast-Gold.png"
+- Added special handling for Beast class variants in icon rendering logic
+- Added JP server support with separate servant data file (servants_jp.json)
+- Added server selection toggle for switching between NA and JP data
+- Enhanced dropdown menu UX with improved styling, scrolling, and visual consistency
+- Fixed menu clipping issues and improved overall visual hierarchy
 
 ### v0.3.2 - Major Quest Data, Bonus, and UI Overhaul
 - Replaced and improved quest data and quest selection UI in Runs Calculator

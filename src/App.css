@@ -363,6 +363,30 @@
   letter-spacing: 0.01em;
 }
 
+/* Header Controls for Server Toggle */
+/* Import calculator mode toggle styles for server toggle */
+.server-toggle {
+  margin: 1rem auto 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Update existing theme-toggle button to match new layout */
+.theme-toggle {
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--option-hover);
+}
+
 /* Responsive Utilities */
 @media (max-width: 768px) {
   .main-card {
