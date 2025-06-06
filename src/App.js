@@ -6,7 +6,7 @@
  * runs calculator with custom points mode, and farming efficiency tools
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.1 - Added Custom Points mode, local data, and improved documentation
+ * @version 0.3.2 - UI/UX improvements, toggle clarity, unified header styles
  * @created 2025-06-04
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
@@ -511,7 +511,7 @@ function App() {
             aria-hidden="true"
           /> by <a href="https://github.com/AJDxB" target="_blank" rel="noopener noreferrer">AJDxB</a>
           <span className="footer-separator"> | </span>
-          <span className="footer-version">v0.3.1</span>
+          <span className="footer-version">v0.3.2</span>
         </footer>
       </div>
     </div>

@@ -75,6 +75,11 @@ Contributions, issues, and suggestions are welcome.
 
 ## Changelog
 
+### v0.3.2 - Major Quest Data, Bonus, and UI Overhaul
+- Replaced and improved quest data and quest selection UI in Runs Calculator
+- Added Heroic Portrait bonus and Frontline Bonus (multiplicative) with styled UI and multiplier dropdowns
+- Various bugfixes and consistency improvements for quest, bonus, and calculation logic
+
 ### v0.3.1 - Local Data, Custom Points & UI Enhancements
 - Added Custom Points mode to Runs Calculator for flexible farming calculations
 - Switched to local servant data (`public/servants.json`) for faster and more reliable access
