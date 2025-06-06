@@ -142,6 +142,7 @@ Security & Privacy
 Changelog & Tags
 ----------------
 ### Version 0.3.3 - JP Server & UI Enhancements
+- Fixed Calculations concerning Bleached Earth Quests being only 3 times per day
 - Fixed Beast Ereshkigal class icon display to use proper "Class-Beast-Gold.png" 
 - Added special handling for Beast class variants in icon rendering logic
 - Added JP server support with separate servant data file (servants_jp.json)
