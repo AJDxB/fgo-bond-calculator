@@ -46,7 +46,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages --add --dotfiles -d build",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix"
   },
