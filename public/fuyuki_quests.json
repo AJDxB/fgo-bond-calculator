@@ -1,0 +1,508 @@
+{
+  "warId": 100,
+  "warName": "Singularity F",
+  "warLongName": "Singularity F\nFlame Contaminated City: Fuyuki ",
+  "questCount": 32,
+  "consumeTypeStats": {
+    "ap": 32
+  },
+  "afterClearStats": {
+    "close": 24,
+    "repeatLast": 8
+  },
+  "quests": [
+    {
+      "questId": 1000000,
+      "questName": "Prologue",
+      "questType": "main",
+      "bond": {
+        "1": 0
+      },
+      "spotId": 10001,
+      "spotName": "Unknown Coordinates X-A",
+      "ap": 0,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000001,
+      "questName": "Burning City",
+      "questType": "main",
+      "bond": {
+        "1": 0
+      },
+      "spotId": 10001,
+      "spotName": "Unknown Coordinates X-A",
+      "ap": 5,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000002,
+      "questName": "To the Spirit Meridian",
+      "questType": "main",
+      "bond": {
+        "1": 0
+      },
+      "spotId": 10002,
+      "spotName": "Unknown Coordinates X-B",
+      "ap": 5,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000003,
+      "questName": "Investigate the Bridge",
+      "questType": "main",
+      "bond": {
+        "1": 50,
+        "2": 50,
+        "3": 50
+      },
+      "spotId": 10003,
+      "spotName": "Unknown Coordinates X-C",
+      "ap": 5,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000004,
+      "questName": "Investigate the Port Ruin",
+      "questType": "main",
+      "bond": {
+        "1": 70,
+        "2": 70
+      },
+      "spotId": 10004,
+      "spotName": "Unknown Coordinates X-D",
+      "ap": 6,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000005,
+      "questName": "Investigate the Church Ruin",
+      "questType": "main",
+      "bond": {
+        "1": 70,
+        "2": 70
+      },
+      "spotId": 10005,
+      "spotName": "Unknown Coordinates X-E",
+      "ap": 6,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000006,
+      "questName": "Shadow Servant",
+      "questType": "main",
+      "bond": {
+        "1": 110,
+        "2": 110,
+        "3": 110
+      },
+      "spotId": 10003,
+      "spotName": "Unknown Coordinates X-C",
+      "ap": 7,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000007,
+      "questName": "Toward the Greater Grail",
+      "questType": "main",
+      "bond": {
+        "1": 130,
+        "2": 130
+      },
+      "spotId": 10002,
+      "spotName": "Unknown Coordinates X-B",
+      "ap": 7,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000008,
+      "questName": "Mash's Training",
+      "questType": "main",
+      "bond": {
+        "1": 150,
+        "2": 150,
+        "3": 150,
+        "4": 150,
+        "5": 150
+      },
+      "spotId": 10006,
+      "spotName": "Unknown Coordinates X-F",
+      "ap": 7,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000009,
+      "questName": "The Dark Cave",
+      "questType": "main",
+      "bond": {
+        "1": 150,
+        "2": 150,
+        "3": 150
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 7,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000010,
+      "questName": "Facing the Greater Grail",
+      "questType": "main",
+      "bond": {
+        "1": 170,
+        "2": 170,
+        "3": 170
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 8,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 1000011,
+      "questName": "Grand Order",
+      "questType": "main",
+      "bond": {
+        "1": 210
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 8,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91100101,
+      "questName": "Reasons to Fight",
+      "questType": "friendship",
+      "bond": {
+        "1": 430,
+        "2": 430
+      },
+      "spotId": 10001,
+      "spotName": "Unknown Coordinates X-A",
+      "ap": 10,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91100201,
+      "questName": "Generations of Alter",
+      "questType": "friendship",
+      "bond": {
+        "1": 430,
+        "2": 430,
+        "3": 430
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 10,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91100202,
+      "questName": "Two Sides of a Coin",
+      "questType": "friendship",
+      "bond": {
+        "1": 830,
+        "2": 830,
+        "3": 830
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 15,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91100601,
+      "questName": "Bouquet of Meetings",
+      "questType": "friendship",
+      "bond": {
+        "1": 1230,
+        "2": 1230
+      },
+      "spotId": 10005,
+      "spotName": "Unknown Coordinates X-E",
+      "ap": 18,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91100602,
+      "questName": "The Bouquet of Resolve",
+      "questType": "friendship",
+      "bond": {
+        "1": 1430,
+        "2": 1430
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 20,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91200101,
+      "questName": "To be a Master",
+      "questType": "friendship",
+      "bond": {
+        "1": 430,
+        "2": 430,
+        "3": 430
+      },
+      "spotId": 10002,
+      "spotName": "Unknown Coordinates X-B",
+      "ap": 10,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91200102,
+      "questName": "Unlimited Blade Works",
+      "questType": "friendship",
+      "bond": {
+        "1": 830,
+        "2": 830
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 15,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91200201,
+      "questName": "What's Worthy",
+      "questType": "friendship",
+      "bond": {
+        "1": 430,
+        "2": 430,
+        "3": 430,
+        "4": 430
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 10,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91300301,
+      "questName": "Scorched Earth",
+      "questType": "friendship",
+      "bond": {
+        "1": 1230
+      },
+      "spotId": 10002,
+      "spotName": "Unknown Coordinates X-B",
+      "ap": 18,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 91700102,
+      "questName": "The 13th Labor",
+      "questType": "friendship",
+      "bond": {
+        "1": 830,
+        "2": 830
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 15,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 93000001,
+      "questName": "The Residential Ruin",
+      "questType": "free",
+      "bond": {
+        "1": 25,
+        "2": 25,
+        "3": 25
+      },
+      "spotId": 10001,
+      "spotName": "Unknown Coordinates X-A",
+      "ap": 3,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "repeatLast"
+    },
+    {
+      "questId": 93000002,
+      "questName": "Ground Zero",
+      "questType": "free",
+      "bond": {
+        "1": 35,
+        "2": 35,
+        "3": 35
+      },
+      "spotId": 10002,
+      "spotName": "Unknown Coordinates X-B",
+      "ap": 4,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "repeatLast"
+    },
+    {
+      "questId": 93000003,
+      "questName": "Giant Bridge",
+      "questType": "free",
+      "bond": {
+        "1": 35,
+        "2": 35,
+        "3": 35
+      },
+      "spotId": 10003,
+      "spotName": "Unknown Coordinates X-C",
+      "ap": 4,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "repeatLast"
+    },
+    {
+      "questId": 93000004,
+      "questName": "Blood Soaken Port",
+      "questType": "free",
+      "bond": {
+        "1": 55,
+        "2": 55,
+        "3": 55
+      },
+      "spotId": 10004,
+      "spotName": "Unknown Coordinates X-D",
+      "ap": 5,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "repeatLast"
+    },
+    {
+      "questId": 93000005,
+      "questName": "Church of Wandering Corpses",
+      "questType": "free",
+      "bond": {
+        "1": 75,
+        "2": 75,
+        "3": 75
+      },
+      "spotId": 10005,
+      "spotName": "Unknown Coordinates X-E",
+      "ap": 5,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "repeatLast"
+    },
+    {
+      "questId": 93000006,
+      "questName": "Burnt-Down Schoolhouse",
+      "questType": "free",
+      "bond": {
+        "1": 95,
+        "2": 95,
+        "3": 95
+      },
+      "spotId": 10006,
+      "spotName": "Unknown Coordinates X-F",
+      "ap": 6,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "repeatLast"
+    },
+    {
+      "questId": 93000007,
+      "questName": "Blazing Forest",
+      "questType": "free",
+      "bond": {
+        "1": 415,
+        "2": 415,
+        "3": 415
+      },
+      "spotId": 10007,
+      "spotName": "Unknown Coordinates X-G",
+      "ap": 15,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "repeatLast"
+    },
+    {
+      "questId": 93000008,
+      "questName": "Massive Cavern",
+      "questType": "free",
+      "bond": {
+        "1": 115,
+        "2": 115,
+        "3": 115
+      },
+      "spotId": 10008,
+      "spotName": "Mobile Coordinate No.0",
+      "ap": 7,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "repeatLast"
+    },
+    {
+      "questId": 93000009,
+      "questName": "Danger Zone",
+      "questType": "free",
+      "bond": {
+        "1": 830
+      },
+      "spotId": 10007,
+      "spotName": "Unknown Coordinates X-G",
+      "ap": 15,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    },
+    {
+      "questId": 911100101,
+      "questName": "Unlimited Raise/Dead",
+      "questType": "friendship",
+      "bond": {
+        "1": 1830
+      },
+      "spotId": 10002,
+      "spotName": "Unknown Coordinates X-B",
+      "ap": 23,
+      "consumeType": "ap",
+      "consumeItem": [],
+      "afterClear": "close"
+    }
+  ]
+}

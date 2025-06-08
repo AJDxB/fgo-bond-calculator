@@ -3,16 +3,20 @@ const path = require('path');
 const fetch = require('node-fetch');
 
 /**
- * @typedef {'NA' | 'JP' | 'KR' | 'TW' | 'CN'} Region
- * @typedef {{ 
+ * @typedef {'NA' | 'JP' | 'KR' | 'TW' | 'CN'} Region * @typedef {{ 
  *   questId: number, 
  *   questName: string, 
  *   questType: string, 
  *   bond: Record<number, number>,
  *   warId: number,
  *   warName: string,
+ *   warLongName: string,
  *   spotId: number,
- *   spotName: string
+ *   spotName: string,
+ *   ap: number,
+ *   consumeType: string,
+ *   consumeItem: Array<{ item: { id: number, name: string }, amount: number }>,
+ *   afterClear: string
  * }} QuestBondData
  */
 
@@ -22,55 +26,53 @@ const fetch = require('node-fetch');
  * @returns {Promise<QuestBondData[]>}
  */
 async function getQuestBondMapping(region) {
-    const baseUrl = `https://git.atlasacademy.io/atlasacademy/fgo-game-data/raw/branch/${region}/master`;
-      try {        // Fetch data with small delays to avoid timeouts
+    try {
         const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         
-        const questData = await fetch(`${baseUrl}/mstQuest.json`).then(r => r.json());
+        // Fetch the nice war data which includes wars, spots, and quests
+        const warData = await fetch(`https://api.atlasacademy.io/export/${region}/nice_war.json`).then(r => r.json());
         await delay(1000);
-        const phaseData = await fetch(`${baseUrl}/mstQuestPhase.json`).then(r => r.json());
-        await delay(1000);
-        const warData = await fetch(`${baseUrl}/mstWar.json`).then(r => r.json());
-        await delay(1000);
-        const spotData = await fetch(`${baseUrl}/mstSpot.json`).then(r => r.json());
-        await delay(1000);
-        const enums = await fetch(`https://api.atlasacademy.io/export/${region}/nice_enums.json`).then(r => r.json());
-
-        // Create a map of questId to phases
-        const reversePhaseMapping = new Map();
+        
+        // Just fetch phase data for bond points
+        const phaseData = await fetch(
+            `https://git.atlasacademy.io/atlasacademy/fgo-game-data/raw/branch/${region}/master/mstQuestPhase.json`
+        ).then(r => r.json());
+        
+        // Create a map for bond points
+        const questPhaseMap = new Map();
         for (const phase of phaseData) {
-            if (!reversePhaseMapping.has(phase.questId)) {
-                reversePhaseMapping.set(phase.questId, []);
+            if (!questPhaseMap.has(phase.questId)) {
+                questPhaseMap.set(phase.questId, new Map());
             }
-            reversePhaseMapping.get(phase.questId).push(phase);
-        }        // Create maps for war and spot lookups
-        const warMap = new Map(warData.map(war => [war.id, war]));
-        const spotMap = new Map(spotData.map(spot => [spot.id, spot]));
-
-        // Map quest data
-        const mappedData = questData.map(quest => {
-            const phases = (reversePhaseMapping.get(quest.id) || [])
-                .sort((a, b) => a.phase - b.phase);
-
-            const bondMapping = {};
-            for (const phase of phases) {
-                bondMapping[phase.phase] = phase.friendshipExp;
+            questPhaseMap.get(phase.questId).set(phase.phase, phase.friendshipExp);
+        }        // Process all wars, spots, and quests
+        const mappedData = [];
+        for (const war of warData) {
+            for (const spot of war.spots) {
+                for (const quest of (spot.quests || [])) {
+                    // Get bond points for each phase of this quest
+                    const questPhases = questPhaseMap.get(quest.id) || new Map();
+                    const bondMapping = {};
+                    questPhases.forEach((bond, phase) => {
+                        bondMapping[phase] = bond;
+                    });                    mappedData.push({
+                        questId: quest.id,
+                        questName: quest.name,
+                        questType: quest.type,
+                        bond: bondMapping,
+                        warId: war.id,
+                        warName: war.name,
+                        warLongName: war.longName,
+                        spotId: spot.id,
+                        spotName: spot.name,
+                        ap: quest.consumeType === 'ap' ? (quest.consume || 0) : 0,
+                        consumeType: quest.consumeType || 'none',
+                        consumeItem: quest.consumeItem || [],
+                        afterClear: quest.afterClear || ""
+                    });
+                }
             }
-
-            const spot = spotMap.get(quest.spotId);
-            const war = spot ? warMap.get(spot.warId) : null;
-
-            return {                questId: quest.id,
-                questName: quest.name,
-                questType: enums.NiceQuestType?.[quest.type] ?? String(quest.type),
-                bond: bondMapping,
-                warId: war?.id || 0,
-                warName: war?.name || "",
-                warLongName: war?.longName || "",
-                spotId: spot?.id || 0,
-                spotName: spot?.name || ""
-            };
-        });
+        }
 
         // Save to public/quests.json
         const outputPath = path.join(__dirname, 'public', `quests${region === 'JP' ? '_jp' : ''}.json`);
