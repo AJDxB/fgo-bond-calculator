@@ -2,7 +2,11 @@
  * RunsCalculator.js
  * FGO Bond Calculator - Quest Runs Calculator Component
  * 
- * Calculates the number of quest runs needed to reach target bond levels.
+ * Calculates th            'Lostbelt No.6': 'LB6 - Avalon le Fae',
+            'Heian-kyo': 'Heian-kyo',
+            'Traum': 'Traum',
+            'Lostbelt No.7': 'LB7 - Nahui Mictlān',
+            'Paper Moon': 'Paper Moon',ber of quest runs needed to reach target bond levels.
  * Includes quest selection, custom points mode, AP costs, time estimates,
  * and bond bonus calculations for farming efficiency.
  * 
@@ -56,15 +60,82 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
 
   // Memoize quest options
   const questOptions = React.useMemo(() => {
-    // Group quests by warLongName
     const groupedQuests = filteredQuests.reduce((acc, quest) => {
-      const warLongName = quest.warLongName.replace(/\n/g, " - ");
-      if (!acc[warLongName]) {
-        acc[warLongName] = [];
+      // Special handling for Lostbelt 5 to differentiate between Atlantis and Olympus
+      let warDisplayName;
+      if (quest.warLongName.includes('Ancient Ocean of the Dreadnought Gods, Atlantis')) {
+        warDisplayName = 'LB5.1 - Atlantis';
+      } else if (quest.warLongName.includes('Interstellar Mountainous City, Olympus')) {
+        warDisplayName = 'LB5.2 - Olympus';
+      } else if (quest.warLongName.includes('Golden Sea of Trees, Nahui Mictlān')) {
+        warDisplayName = 'LB7 - Nahui Mictlān';
+      } else if (quest.warLongName.includes('Zero Compass Inner Domain')) {
+        warDisplayName = 'Paper Moon';
+      } else if (quest.warLongName.includes('Naraka Mandala')) {
+        warDisplayName = 'Heian-kyo';
+      } else if (quest.warLongName.includes('Realm of the Thanatos Impulse')) {
+        warDisplayName = 'Traum';
+      }
+        else {
+        // Get the full war name including any subtitles
+        const fullWarName = quest.warLongName;
+
+        // Special handling for Pseudo-Singularity/EoR format
+        if (fullWarName.startsWith('Pseudo-Singularity I:') || fullWarName.startsWith('Epic of Remnant I:')) {
+          warDisplayName = 'EoR 1 - Shinjuku';
+        } else if (fullWarName.startsWith('Pseudo-Singularity II:') || fullWarName.startsWith('Epic of Remnant II:')) {
+          warDisplayName = 'EoR 2 - Agartha';
+        } else if (fullWarName.startsWith('Pseudo-Singularity III:') || fullWarName.startsWith('Epic of Remnant III:') || 
+                   fullWarName.includes('Pseudo-Parallel World')) {
+          warDisplayName = 'EoR 3 - Shimousa';
+        } else if (fullWarName.startsWith('Pseudo-Singularity IV') || fullWarName.startsWith('Epic of Remnant IV:')) {
+          warDisplayName = 'EoR 4 - Salem';
+        } else {
+          // For all other cases, get base war name and apply mapping
+          let warLongName = quest.warLongName.split('\n')[0];  // Take first part before any newlines
+
+          // Apply simplified naming
+          const warNameMap = {
+            'Singularity F': 'Singularity F - Fuyuki',
+            'First Singularity': '1st Singularity - Orleans',
+            'Second Singularity': '2nd Singularity - Septem',
+            'Third Singularity': '3rd Singularity - Okeanos',
+            'Fourth Singularity': '4th Singularity - London',
+            'Fifth Singularity': '5th Singularity - E Pluribus Unum',
+            'Sixth Singularity': '6th Singularity - Camelot',
+            'Seventh Singularity': '7th Singularity - Babylonia',
+            // Standardize all EoR/Pseudo-Singularity names to simplified EoR format
+            'Epic of Remnant I': 'EoR 1 - Shinjuku',
+            'Epic of Remnant II': 'EoR 2 - Agartha',
+            'Epic of Remnant III': 'EoR 3 - Shimousa',
+            'Epic of Remnant IV': 'EoR 4 - Salem',
+            'Pseudo-Singularity I': 'EoR 1 - Shinjuku',
+            'Pseudo-Singularity II': 'EoR 2 - Agartha',
+            'Pseudo-Singularity III': 'EoR 3 - Shimousa',
+            'Pseudo-Singularity IV': 'EoR 4 - Salem',
+            'Lostbelt No.1': 'LB1 - Anastasia',
+            'Lostbelt No.2': 'LB2 - Götterdämmerung',
+            'Lostbelt No.3': 'LB3 - SIN',
+            'Lostbelt No.4': 'LB4 - Yuga Kshetra',
+            'Lostbelt No.6': 'LB6 - Avalon le Fae',
+            'Heian-kyo': 'Heian-kyo',
+            'Traum': 'Traum',
+            'Lostbelt No.7': 'LB7 - Nahui Mictlān',
+            'Paper Moon': 'Paper Moon',
+            'Isolated Realm of the Far East, Imperial Capital': 'Imperial Capital'
+          };
+          
+          // Replace with simplified name if it exists in the map
+          warDisplayName = warNameMap[warLongName] || warLongName;
+        }
+      }
+
+      if (!acc[warDisplayName]) {
+        acc[warDisplayName] = [];
       }
       // Get first bond level value
       const firstBondValue = quest.bond[Object.keys(quest.bond)[0]];
-      acc[warLongName].push({
+      acc[warDisplayName].push({
         ...quest,
         displayName: `${quest.spotName} (${quest.ap} AP, ${firstBondValue} Bond)`
       });
@@ -310,7 +381,7 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
         ) : isQuestMode ? (
           <>
             <div className="form-group">
-              <label className="form-label">Free Quests (Repeatable)</label>
+              <label className="form-label">Free Quests</label>
               <select
                 value={selectedQuestFromData}
                 onChange={(e) => setSelectedQuestFromData(e.target.value)}
