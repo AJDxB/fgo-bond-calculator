@@ -44,12 +44,84 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
   const [bondBonus, setBondBonus] = useState(0);
   const [results, setResults] = useState(null);
   const [isCustomMode, setIsCustomMode] = useState(false);
+  const [isQuestMode, setIsQuestMode] = useState(false);
   const [customBondPoints, setCustomBondPoints] = useState("");
   const [customAP, setCustomAP] = useState("");
   const [heroicPortraitEnabled, setHeroicPortraitEnabled] = useState(false);
   const [heroicPortraitMultiplier, setHeroicPortraitMultiplier] = useState(1);
   const [frontlineBonusEnabled, setFrontlineBonusEnabled] = useState(false);
   const [frontlineBonusPercent, setFrontlineBonusPercent] = useState(0.24);
+  const [filteredQuests, setFilteredQuests] = useState([]);
+  const [selectedQuestFromData, setSelectedQuestFromData] = useState("");
+
+  // Memoize quest options
+  const questOptions = React.useMemo(() => {
+    // Group quests by warLongName
+    const groupedQuests = filteredQuests.reduce((acc, quest) => {
+      const warLongName = quest.warLongName.replace(/\n/g, " - ");
+      if (!acc[warLongName]) {
+        acc[warLongName] = [];
+      }
+      // Get first bond level value
+      const firstBondValue = quest.bond[Object.keys(quest.bond)[0]];
+      acc[warLongName].push({
+        ...quest,
+        displayName: `${quest.spotName} (${quest.ap} AP, ${firstBondValue} Bond)`
+      });
+      return acc;
+    }, {});
+
+    // Sort quests within each group by AP cost
+    Object.values(groupedQuests).forEach(group => {
+      group.sort((a, b) => a.ap - b.ap);
+    });
+
+    // Return formatted optgroups
+    return Object.entries(groupedQuests).map(([warLongName, quests]) => ({
+      warLongName,
+      quests
+    }));
+  }, [filteredQuests]);
+    // Load quest data for Quest Mode
+  useEffect(() => {
+    const loadQuestData = async () => {
+      try {
+        // Handle both development and production environments
+        const publicUrl = process.env.PUBLIC_URL || '';
+        const response = await fetch(`${publicUrl}/quests.json`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Filter quests: afterClear "repeatLast"/"resetInterval", consumeType "ap", questType "free"
+        const filtered = data.filter(quest => 
+          quest.questType === "free" &&
+          quest.consumeType === "ap" &&
+          (quest.afterClear === "repeatLast" || quest.afterClear === "resetInterval")
+        );
+        
+        setFilteredQuests(filtered);
+        
+        // Set default selection to first quest if available
+        if (filtered.length > 0) {
+          setSelectedQuestFromData(`${filtered[0].questId}`);
+        }      } catch (error) {
+        console.error('Error loading quest data:', error);
+        setFilteredQuests([]);
+        // Show user-friendly error in the UI
+        setResults({
+          runsNeeded: 0,
+          totalAP: 0,
+          pointsNeeded: 0,
+          bondPerRun: 0,
+          message: "Failed to load quest data. Please refresh the page or try again later."
+        });
+      }
+    };
+
+    loadQuestData();
+  }, []);
 
   // Calculate runs when inputs change
   useEffect(() => {
@@ -87,6 +159,41 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
         runsNeeded = Math.ceil(points / bondPerRun);
         totalAP = runsNeeded * customAPValue;
         questName = "Custom Quest";
+      } else if (isQuestMode) {
+        // Handle Quest Mode selection
+        const selectedQuestData = filteredQuests.find(q => q.questId.toString() === selectedQuestFromData);
+        if (!selectedQuestData) {
+          setResults({
+            runsNeeded: 0,
+            totalAP: 0,
+            pointsNeeded: 0,
+            bondPerRun: 0,
+            message: "Please select a quest"
+          });
+          return;
+        }
+        
+        // Get bond points for the first available bond level (usually level 1)
+        const bondLevels = Object.keys(selectedQuestData.bond);
+        const baseBondPoints = selectedQuestData.bond[bondLevels[0]] || 0;
+        
+        if (baseBondPoints <= 0) {
+          setResults({
+            runsNeeded: 0,
+            totalAP: 0,
+            pointsNeeded: 0,
+            bondPerRun: 0,
+            message: "Selected quest has no bond points"
+          });
+          return;
+        }
+        
+        let base = Math.floor(baseBondPoints * (1 + bondBonus / 100)) + (heroicPortraitEnabled ? 50 * heroicPortraitMultiplier : 0);
+        if (frontlineBonusEnabled) base = Math.floor(base * (1 + frontlineBonusPercent));
+        bondPerRun = base;
+        runsNeeded = Math.ceil(points / bondPerRun);
+        totalAP = runsNeeded * selectedQuestData.ap;
+        questName = `${selectedQuestData.questName} (${selectedQuestData.spotName})`;
       } else {
         const quest = QUEST_DATA[selectedQuest];
         let base = Math.floor(quest.baseBond * (1 + bondBonus / 100)) + (heroicPortraitEnabled ? 50 * heroicPortraitMultiplier : 0);
@@ -117,7 +224,7 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
     };    if (selectedServant && targetBond && typeof pointsNeeded === "number") {
       calculateRuns();
     }
-  }, [selectedServant, targetBond, pointsNeeded, selectedQuest, bondBonus, isCustomMode, customBondPoints, customAP, heroicPortraitEnabled, heroicPortraitMultiplier, frontlineBonusEnabled, frontlineBonusPercent]);
+  }, [selectedServant, targetBond, pointsNeeded, selectedQuest, bondBonus, isCustomMode, isQuestMode, customBondPoints, customAP, heroicPortraitEnabled, heroicPortraitMultiplier, frontlineBonusEnabled, frontlineBonusPercent, selectedQuestFromData, filteredQuests]);
 
   const handleBonusChange = (e) => {
     const value = Math.max(0, Math.min(300, parseInt(e.target.value) || 0)); // Cap at 300%
@@ -148,24 +255,34 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
   return (
     <div className="runs-calculator">
       <h3 className="runs-title">Runs to Max Calculator</h3>
-        <div className="runs-form">        <div className="calculator-mode-toggle">
-          <button 
-            className={`toggle-btn ${!isCustomMode ? 'active' : ''}`}
+        <div className="runs-form">        <div className="calculator-mode-toggle">          <button 
+            className={`toggle-btn ${!isCustomMode && !isQuestMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(false);
+              setIsQuestMode(false);
             }}
           >
-            Quest Type
+            Quick List
+          </button>
+          <button 
+            className={`toggle-btn ${isQuestMode && !isCustomMode ? 'active' : ''}`}
+            onClick={() => {
+              setIsCustomMode(false);
+              setIsQuestMode(true);
+            }}
+          >
+            Quest Mode
           </button>
           <button 
             className={`toggle-btn ${isCustomMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(true);
+              setIsQuestMode(false);
             }}
           >
             Custom Points
           </button>
-        </div>        {isCustomMode ? (
+        </div>{isCustomMode ? (
           <>
             <div className="custom-inputs-row">
               <div className="form-group">
@@ -189,10 +306,33 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
                 />
               </div>
             </div>
-          </>) : (
+          </>
+        ) : isQuestMode ? (
           <>
             <div className="form-group">
-              <label className="form-label">Quest Type</label>
+              <label className="form-label">Free Quests (Repeatable)</label>
+              <select
+                value={selectedQuestFromData}
+                onChange={(e) => setSelectedQuestFromData(e.target.value)}
+                className="form-select"
+              >                {filteredQuests.length === 0 ? (
+                  <option value="">Loading quests...</option>
+                ) : (
+                  questOptions.map(({ warLongName, quests }) => (
+                    <optgroup key={warLongName} label={warLongName}>
+                      {quests.map((quest) => (
+                        <option key={quest.questId} value={quest.questId}>
+                          {quest.displayName}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))
+                )}
+              </select>
+            </div>
+          </>) : (
+          <>
+            <div className="form-group">              <label className="form-label">Quest List</label>
               <select
                 value={selectedQuest}
                 onChange={(e) => setSelectedQuest(e.target.value)}

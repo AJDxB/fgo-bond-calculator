@@ -82,7 +82,7 @@
   margin: 0;
 }
 
-/* Remove margin from the last form-group to match Quest Type spacing */
+/* Remove margin from the last form-group to match Quick List spacing */
 .runs-form > :last-child.form-group {
   margin-bottom: 0;
 }
@@ -264,7 +264,7 @@ input[type="text"] {
   margin-bottom: 16px;
 }
 
-/* Remove margin from the last form-group to match Quest Type spacing */
+/* Remove margin from the last form-group to match Quick List spacing */
 .runs-form > :last-child.form-group {
   margin-bottom: 0;
 }
