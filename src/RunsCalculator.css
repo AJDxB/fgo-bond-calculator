@@ -216,32 +216,55 @@ input[type="text"] {
   background: var(--input-bg);
   padding: 4px;
   gap: 4px;
-  border: 1px solid var(--border-color); /* Add border for clarity in light mode */
-  box-shadow: 0 1px 4px rgba(30,40,90,0.04); /* Subtle shadow for depth */
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 4px rgba(30,40,90,0.04);
 }
 
-.toggle-btn {
+.calc-toggle-btn {
   flex: 1;
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  background: var(--option-hover); /* Faint background for inactive buttons in light mode */
+  background: var(--option-hover);
   color: var(--text-color);
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 1rem;
 }
 
-[data-theme="dark"] .toggle-btn {
-  background: transparent; /* Keep dark mode as before */
+[data-theme="dark"] .calc-toggle-btn {
+  background: transparent;
 }
 
-.toggle-btn.active {
+/* Quick List - Green */
+.calc-toggle-btn.active:nth-child(1) {
+  background: #2e7d32; /* Darker green for light mode */
+  color: white;
+}
+
+[data-theme="dark"] .calc-toggle-btn.active:nth-child(1) {
+  background: #4caf50; /* Lighter green for dark mode */
+  color: white;
+}
+
+/* Quest Mode - Blue */
+.calc-toggle-btn.active:nth-child(2) {
   background: var(--highlight-color, #3142b7);
   color: white;
 }
 
-.toggle-btn:hover:not(.active) {
+/* Custom Points - Red */
+.calc-toggle-btn.active:nth-child(3) {
+  background: #c62828; /* Darker red for light mode */
+  color: white;
+}
+
+[data-theme="dark"] .calc-toggle-btn.active:nth-child(3) {
+  background: #ef5350; /* Lighter red for dark mode */
+  color: white;
+}
+
+.calc-toggle-btn:hover:not(.active) {
   background: var(--option-hover);
 }
 
@@ -324,4 +347,46 @@ input[type="text"] {
   color: var(--text-color);
   opacity: 0.7;
   white-space: nowrap;
+}
+
+/* React Select Overrides */
+.quest-select .quest-select__control {
+  border-color: var(--border-color);
+  background-color: var(--input-bg);
+  box-shadow: none;
+}
+
+.quest-select .quest-select__control:hover {
+  border-color: var(--highlight-color, #3142b7);
+}
+
+.quest-select .quest-select__control--is-focused {
+  border-color: var(--highlight-color, #3142b7);
+  box-shadow: 0 0 0 1px var(--highlight-color, #3142b7);
+}
+
+.quest-select .quest-select__menu {
+  z-index: 10;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+.quest-select .quest-select__group-heading {
+  color: var(--text-color);
+}
+
+.quest-select .quest-select__option {
+  color: var(--text-color);
+}
+
+.quest-select .quest-select__single-value {
+  color: var(--text-color);
+}
+
+.quest-select .quest-select__input {
+  color: var(--text-color);
+}
+
+.quest-select .quest-select__placeholder {
+  color: var(--text-muted, #666);
 }

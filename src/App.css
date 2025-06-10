@@ -386,9 +386,14 @@
 /* Header Controls for Server Toggle */
 /* Import calculator mode toggle styles for server toggle */
 .server-toggle {
-  margin: 1rem auto 2rem;
-  width: 100%;
-  max-width: 400px;
+  display: flex;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  background: var(--input-bg);
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 4px rgba(30,40,90,0.04);
 }
 
 /* Update existing theme-toggle button to match new layout */
@@ -404,6 +409,31 @@
 }
 
 .theme-toggle:hover {
+  background: var(--option-hover);
+}
+
+.server-btn {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--option-hover);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+[data-theme="dark"] .server-btn {
+  background: transparent;
+}
+
+.server-btn.active {
+  background: var(--highlight-color, #3142b7);
+  color: white;
+}
+
+.server-btn:hover:not(.active) {
   background: var(--option-hover);
 }
 

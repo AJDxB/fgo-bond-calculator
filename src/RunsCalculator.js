@@ -17,6 +17,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import Select from "react-select";
 import "./RunsCalculator.css";
 
 // Quest data with base bond points
@@ -145,12 +146,14 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
     // Sort quests within each group by AP cost
     Object.values(groupedQuests).forEach(group => {
       group.sort((a, b) => a.ap - b.ap);
-    });
-
-    // Return formatted optgroups
+    });    // Return formatted options for React Select
     return Object.entries(groupedQuests).map(([warLongName, quests]) => ({
-      warLongName,
-      quests
+      label: warLongName,
+      options: quests.map(quest => ({
+        value: quest.questId.toString(),
+        label: quest.displayName,
+        quest: quest
+      }))
     }));
   }, [filteredQuests]);
     // Load quest data for Quest Mode
@@ -326,8 +329,7 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
   return (
     <div className="runs-calculator">
       <h3 className="runs-title">Runs to Max Calculator</h3>
-        <div className="runs-form">        <div className="calculator-mode-toggle">          <button 
-            className={`toggle-btn ${!isCustomMode && !isQuestMode ? 'active' : ''}`}
+        <div className="runs-form">        <div className="calculator-mode-toggle">          <button            className={`calc-toggle-btn ${!isCustomMode && !isQuestMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(false);
               setIsQuestMode(false);
@@ -336,7 +338,7 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             Quick List
           </button>
           <button 
-            className={`toggle-btn ${isQuestMode && !isCustomMode ? 'active' : ''}`}
+            className={`calc-toggle-btn ${isQuestMode && !isCustomMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(false);
               setIsQuestMode(true);
@@ -345,7 +347,7 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             Quest Mode
           </button>
           <button 
-            className={`toggle-btn ${isCustomMode ? 'active' : ''}`}
+            className={`calc-toggle-btn ${isCustomMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(true);
               setIsQuestMode(false);
@@ -379,27 +381,72 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             </div>
           </>
         ) : isQuestMode ? (
-          <>
-            <div className="form-group">
-              <label className="form-label">Free Quests</label>
-              <select
-                value={selectedQuestFromData}
-                onChange={(e) => setSelectedQuestFromData(e.target.value)}
-                className="form-select"
-              >                {filteredQuests.length === 0 ? (
-                  <option value="">Loading quests...</option>
-                ) : (
-                  questOptions.map(({ warLongName, quests }) => (
-                    <optgroup key={warLongName} label={warLongName}>
-                      {quests.map((quest) => (
-                        <option key={quest.questId} value={quest.questId}>
-                          {quest.displayName}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))
-                )}
-              </select>
+          <>            <div className="form-group">              <label className="form-label">Free Quests</label>              <Select
+                className="quest-select"
+                classNamePrefix="quest-select"
+                value={questOptions
+                  .flatMap(group => group.options)
+                  .find(opt => opt.value === selectedQuestFromData.toString()) || null}
+                onChange={(option) => setSelectedQuestFromData(option ? option.value : '')}
+                options={questOptions}
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    padding: "2px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border-color)",
+                    backgroundColor: "var(--input-bg)",
+                    minHeight: "42px",
+                    boxShadow: "none",
+                    "&:hover": {
+                      borderColor: "var(--highlight-color, #3142b7)",
+                    },
+                  }),
+                  menu: (provided) => ({
+                    ...provided,
+                    backgroundColor: "var(--card-bg)",
+                    border: "1px solid var(--border-color)",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+                  }),
+                  option: (provided, state) => ({
+                    ...provided,
+                    backgroundColor: state.isFocused 
+                      ? "var(--option-hover)"
+                      : state.isSelected
+                        ? "var(--highlight-color, #3142b7)"
+                        : "transparent",
+                    color: state.isSelected ? "white" : "var(--text-color)",
+                    "&:hover": {
+                      backgroundColor: "var(--option-hover)",
+                    },
+                  }),
+                  groupHeading: (provided) => ({
+                    ...provided,
+                    color: "var(--text-color)",
+                    fontWeight: "600",
+                    fontSize: "0.9rem",
+                    textTransform: "none",
+                    padding: "8px 12px 4px",
+                  }),
+                  input: (provided) => ({
+                    ...provided,
+                    color: "var(--text-color)",
+                  }),
+                  singleValue: (provided) => ({
+                    ...provided,
+                    color: "var(--text-color)",
+                  }),
+                  placeholder: (provided) => ({
+                    ...provided,
+                    color: "var(--text-muted, #666)",
+                  }),
+                }}
+                isSearchable
+                placeholder={filteredQuests.length === 0 ? "Loading quests..." : "Search for a quest..."}
+                isDisabled={filteredQuests.length === 0}
+                noOptionsMessage={() => "No quests found"}
+              />
             </div>
           </>) : (
           <>

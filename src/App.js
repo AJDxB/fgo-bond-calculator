@@ -443,18 +443,16 @@ function App() {
             alt="FGO Bond Level Calculator"
             className="logo"
           />
-        </div>
-
-        <div className="calculator-mode-toggle server-toggle">
+        </div>        <div className="server-toggle">
           <button 
             onClick={() => setIsJPServer(false)}
-            className={`toggle-btn ${!isJPServer ? 'active' : ''}`}
+            className={`server-btn ${!isJPServer ? 'active' : ''}`}
           >
             NA Server
           </button>
           <button 
             onClick={() => setIsJPServer(true)}
-            className={`toggle-btn ${isJPServer ? 'active' : ''}`}
+            className={`server-btn ${isJPServer ? 'active' : ''}`}
           >
             JP Server
           </button>
