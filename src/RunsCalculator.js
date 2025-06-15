@@ -20,6 +20,7 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import "./RunsCalculator.css";
 import "./QuestSelect.css";
+import InfoTooltip from "./InfoTooltip";
 
 // Quest data with base bond points
 const QUEST_DATA = {
@@ -84,8 +85,18 @@ const quickListOptions = [
   }
 ];
 
+// Change the isBleachedEarthQuest function to handle both modes
+const isBleachedEarthQuest = (questKey, questData = null) => {
+  if (questData) {
+    // Quest Mode - Check if the quest name contains "Bleached Earth"
+    return questData.questName.includes("Bleached Earth");
+  }
+  // Quick List Mode - Check by quest key
+  return questKey.startsWith('bleached_');
+};
+
 // Helper function to check if a quest is a Bleached Earth quest
-const isBleachedEarthQuest = (questKey) => questKey.startsWith('bleached_');
+// const isBleachedEarthQuest = (questKey) => questKey.startsWith('bleached_');
 
 // Set the default selected quest to the first key in QUEST_DATA
 const QUEST_KEYS = Object.keys(QUEST_DATA);
@@ -108,21 +119,74 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
   // Memoize quest options
   const questOptions = React.useMemo(() => {
     const groupedQuests = filteredQuests.reduce((acc, quest) => {
-      let warDisplayName = quest.warName;
-      
-      // War name mapping for better readability
-      if (warDisplayName) {
-        const warNameMap = {
-          'Arc 1.5 Epic of Remnant': 'Epic of Remnant',
-          'Lostbelt': 'Cosmos in the Lostbelt',
-          'Lostbelt No.6': 'LB6 - Avalon le Fae',
-          'Lostbelt No.7': 'LB7 - Nahui Mictlān',
-          'Isolated Realm of the Far East, Imperial Capital': 'Imperial Capital'
-        };
-        
-        warDisplayName = warNameMap[warDisplayName] || warDisplayName;
+      // Special handling for Lostbelt 5 to differentiate between Atlantis and Olympus
+      let warDisplayName;
+      if (quest.warLongName.includes('Ancient Ocean of the Dreadnought Gods, Atlantis')) {
+        warDisplayName = 'LB5.1 - Atlantis';
+      } else if (quest.warLongName.includes('Interstellar Mountainous City, Olympus')) {
+        warDisplayName = 'LB5.2 - Olympus';
+      } else if (quest.warLongName.includes('Golden Sea of Trees, Nahui Mictlān')) {
+        warDisplayName = 'LB7 - Nahui Mictlān';
+      } else if (quest.warLongName.includes('Zero Compass Inner Domain')) {
+        warDisplayName = 'Paper Moon';
+      } else if (quest.warLongName.includes('Naraka Mandala')) {
+        warDisplayName = 'Heian-kyo';
+      } else if (quest.warLongName.includes('Realm of the Thanatos Impulse')) {
+        warDisplayName = 'Traum';
+      } else {
+        // Get the full war name including any subtitles
+        const fullWarName = quest.warLongName;
+
+        // Special handling for Pseudo-Singularity/EoR format
+        if (fullWarName.startsWith('Pseudo-Singularity I:') || fullWarName.startsWith('Epic of Remnant I:')) {
+          warDisplayName = 'EoR 1 - Shinjuku';
+        } else if (fullWarName.startsWith('Pseudo-Singularity II:') || fullWarName.startsWith('Epic of Remnant II:')) {
+          warDisplayName = 'EoR 2 - Agartha';
+        } else if (fullWarName.startsWith('Pseudo-Singularity III:') || fullWarName.startsWith('Epic of Remnant III:') || 
+                   fullWarName.includes('Pseudo-Parallel World')) {
+          warDisplayName = 'EoR 3 - Shimousa';
+        } else if (fullWarName.startsWith('Pseudo-Singularity IV') || fullWarName.startsWith('Epic of Remnant IV:')) {
+          warDisplayName = 'EoR 4 - Salem';
+        } else {
+          // For all other cases, get base war name and apply mapping
+          let warLongName = quest.warLongName.split('\n')[0];  // Take first part before any newlines
+
+          // Apply simplified naming
+          const warNameMap = {
+            'Singularity F': 'Singularity F - Fuyuki',
+            'First Singularity': '1st Singularity - Orleans',
+            'Second Singularity': '2nd Singularity - Septem',
+            'Third Singularity': '3rd Singularity - Okeanos',
+            'Fourth Singularity': '4th Singularity - London',
+            'Fifth Singularity': '5th Singularity - E Pluribus Unum',
+            'Sixth Singularity': '6th Singularity - Camelot',
+            'Seventh Singularity': '7th Singularity - Babylonia',
+            // Standardize all EoR/Pseudo-Singularity names to simplified EoR format
+            'Epic of Remnant I': 'EoR 1 - Shinjuku',
+            'Epic of Remnant II': 'EoR 2 - Agartha',
+            'Epic of Remnant III': 'EoR 3 - Shimousa',
+            'Epic of Remnant IV': 'EoR 4 - Salem',
+            'Pseudo-Singularity I': 'EoR 1 - Shinjuku',
+            'Pseudo-Singularity II': 'EoR 2 - Agartha',
+            'Pseudo-Singularity III': 'EoR 3 - Shimousa',
+            'Pseudo-Singularity IV': 'EoR 4 - Salem',
+            'Lostbelt No.1': 'LB1 - Anastasia',
+            'Lostbelt No.2': 'LB2 - Götterdämmerung',
+            'Lostbelt No.3': 'LB3 - SIN',
+            'Lostbelt No.4': 'LB4 - Yuga Kshetra',
+            'Lostbelt No.6': 'LB6 - Avalon le Fae',
+            'Heian-kyo': 'Heian-kyo',
+            'Traum': 'Traum',
+            'Lostbelt No.7': 'LB7 - Nahui Mictlān',
+            'Paper Moon': 'Paper Moon',
+            'Isolated Realm of the Far East, Imperial Capital': 'Imperial Capital'
+          };
+          
+          // Replace with simplified name if it exists in the map
+          warDisplayName = warNameMap[warLongName] || warLongName;
+        }
       }
-      
+
       if (!acc[warDisplayName]) {
         acc[warDisplayName] = [];
       }
@@ -267,7 +331,53 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
         bondPerRun = base;
         runsNeeded = Math.ceil(points / bondPerRun);
         totalAP = runsNeeded * selectedQuestData.ap;
-        questName = `${selectedQuestData.questName} (${selectedQuestData.spotName})`;
+        // Get war display name with the same mapping used in the quest options        // Get war display name using the same mapping logic as in the quest options
+        let warDisplayName;
+        if (selectedQuestData.warLongName.includes('Ancient Ocean of the Dreadnought Gods, Atlantis')) {
+          warDisplayName = 'LB5.1 - Atlantis';
+        } else if (selectedQuestData.warLongName.includes('Interstellar Mountainous City, Olympus')) {
+          warDisplayName = 'LB5.2 - Olympus';
+        } else if (selectedQuestData.warLongName.includes('Golden Sea of Trees, Nahui Mictlān')) {
+          warDisplayName = 'LB7 - Nahui Mictlān';
+        } else if (selectedQuestData.warLongName.includes('Zero Compass Inner Domain')) {
+          warDisplayName = 'Paper Moon';
+        } else if (selectedQuestData.warLongName.includes('Naraka Mandala')) {
+          warDisplayName = 'Heian-kyo';
+        } else if (selectedQuestData.warLongName.includes('Realm of the Thanatos Impulse')) {
+          warDisplayName = 'Traum';
+        } else if (selectedQuestData.warLongName.startsWith('Pseudo-Singularity I:') || selectedQuestData.warLongName.startsWith('Epic of Remnant I:')) {
+          warDisplayName = 'EoR 1 - Shinjuku';
+        } else if (selectedQuestData.warLongName.startsWith('Pseudo-Singularity II:') || selectedQuestData.warLongName.startsWith('Epic of Remnant II:')) {
+          warDisplayName = 'EoR 2 - Agartha';
+        } else if (selectedQuestData.warLongName.startsWith('Pseudo-Singularity III:') || selectedQuestData.warLongName.startsWith('Epic of Remnant III:') || 
+                   selectedQuestData.warLongName.includes('Pseudo-Parallel World')) {
+          warDisplayName = 'EoR 3 - Shimousa';
+        } else if (selectedQuestData.warLongName.startsWith('Pseudo-Singularity IV') || selectedQuestData.warLongName.startsWith('Epic of Remnant IV:')) {
+          warDisplayName = 'EoR 4 - Salem';
+        } else {
+          // For all other cases, use the same mapping as the quest options
+          const warNameMap = {
+            'Singularity F': 'Singularity F - Fuyuki',
+            'First Singularity': '1st Singularity - Orleans',
+            'Second Singularity': '2nd Singularity - Septem',
+            'Third Singularity': '3rd Singularity - Okeanos',
+            'Fourth Singularity': '4th Singularity - London',
+            'Fifth Singularity': '5th Singularity - E Pluribus Unum',
+            'Sixth Singularity': '6th Singularity - Camelot',
+            'Seventh Singularity': '7th Singularity - Babylonia',
+            'Lostbelt No.1': 'LB1 - Anastasia',
+            'Lostbelt No.2': 'LB2 - Götterdämmerung',
+            'Lostbelt No.3': 'LB3 - SIN',
+            'Lostbelt No.4': 'LB4 - Yuga Kshetra',
+            'Lostbelt No.6': 'LB6 - Avalon le Fae',
+            'Heian-kyo': 'Heian-kyo',
+            'Traum': 'Traum',
+            'Lostbelt No.7': 'LB7 - Nahui Mictlān',
+            'Paper Moon': 'Paper Moon',
+            'Isolated Realm of the Far East, Imperial Capital': 'Imperial Capital'
+          };          warDisplayName = warNameMap[selectedQuestData.warLongName.split('\n')[0]] || selectedQuestData.warLongName;
+        }
+        questName = `${warDisplayName} - ${selectedQuestData.spotName}`;
       } else {
         const quest = QUEST_DATA[selectedQuest];
         let base = Math.floor(quest.baseBond * (1 + bondBonus / 100)) + (heroicPortraitEnabled ? 50 * heroicPortraitMultiplier : 0);
@@ -281,8 +391,17 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
       // Calculate estimated time (assuming 1 run = 3 minutes average)
       const estimatedMinutes = runsNeeded * 3;
       const hours = Math.floor(estimatedMinutes / 60);
-      const minutes = estimatedMinutes % 60;      // Special calculation for Bleached Earth quests (3 runs per day limit)
-      const isBleached = !isCustomMode && isBleachedEarthQuest(selectedQuest);
+      const minutes = estimatedMinutes % 60;
+      
+      // Special calculation for Bleached Earth quests (3 runs per day limit)
+      let isBleached = false;
+      if (isQuestMode) {
+        const selectedQuestData = filteredQuests.find(q => q.questId.toString() === selectedQuestFromData);
+        isBleached = selectedQuestData ? isBleachedEarthQuest(null, selectedQuestData) : false;
+      } else if (!isCustomMode) {
+        isBleached = isBleachedEarthQuest(selectedQuest);
+      }
+      
       const daysNeeded = isBleached ? Math.ceil(runsNeeded / 3) : Math.ceil(totalAP / (24 * 12));
 
       setResults({
@@ -534,10 +653,9 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
         )}
 
         {/* Universal options: Bond Bonus and Heroic Portrait bonus */}
-        <div className="form-group">
-          <label className="form-label">
+        <div className="form-group">          <label className="form-label">
             Bond Bonus (%)
-            <span className="bonus-help">Include CE bonuses, event bonuses, etc.</span>
+            <InfoTooltip text="Include CE bonuses (Chaldea Lunchtime, etc.), event bonuses, and other bond point multipliers" />
           </label>
           <input
             type="number"
@@ -643,11 +761,9 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             )}
               {results.apPerDay > 0 && (
               <div className="runs-item full-width">
-                <span className="runs-label">
-                  {results.isBleachedEarth ? "Days Required:" : "Days with Natural AP:"}
+                <span className="runs-label">                  {results.isBleachedEarth ? "Days Required:" : "Days with Natural AP:"}
                 </span>
-                <span className="runs-value">
-                  {Math.ceil(results.apPerDay)} days
+                <span className="runs-value">                  {Math.ceil(results.apPerDay)} {Math.ceil(results.apPerDay) === 1 ? 'Day' : 'Days'}
                   {results.isBleachedEarth && 
                     <span className="bonus-help" style={{ display: 'block', fontSize: '0.85em', color: 'var(--text-muted)' }}>
                       (Based on 3 runs per day limit for Bleached Earth quests)
