@@ -8,6 +8,10 @@ on:
 jobs:
   update-servants:
     runs-on: ubuntu-latest
+    outputs:
+      na_updated: ${{ steps.na-update.outputs.updated }}
+      jp_updated: ${{ steps.jp-update.outputs.updated }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,13 +22,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci      - name: Fetch and update NA servants data
-        run: node fetch_servants.js
+        run: |
+          echo "Installing dependencies..."
+          npm ci
+        continue-on-error: false
+
+      - name: Fetch and update NA servants data
+        id: na-update
+        run: |
+          echo "Fetching NA servant data..."
+          node fetch_servants.js
+        continue-on-error: false
 
       - name: Fetch and update JP servants data
-        run: node fetch_servants_jp.js
+        id: jp-update
+        run: |
+          echo "Fetching JP servant data..."
+          node fetch_servants_jp.js
+        continue-on-error: false
+
+      - name: Verify data files
+        run: |
+          if [ ! -f "public/servants.json" ] || [ ! -f "public/servants_jp.json" ]; then
+            echo "Error: One or more servant data files are missing!"
+            exit 1
+          fi
+          echo "Both servant data files present and updated successfully"
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -32,3 +58,15 @@ jobs:
           commit_message: 'chore: update servant data (automated)'
           branch: ${{ github.ref_name }}
           file_pattern: 'public/servants*.json'
+          commit_options: '--no-verify'
+          status_options: '--untracked-files=no'
+          add_options: '--force'
+          push_options: '--force'
+          skip_dirty_check: false
+          create_branch: false
+          
+      - name: Handle Failure
+        if: failure()
+        run: |
+          echo "::error::Servant data update failed. Check the logs above for details."
+          exit 1
