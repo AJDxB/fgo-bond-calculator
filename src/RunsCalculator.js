@@ -19,6 +19,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import "./RunsCalculator.css";
+import "./QuestSelect.css";
 
 // Quest data with base bond points
 const QUEST_DATA = {
@@ -39,11 +40,56 @@ const QUEST_DATA = {
   event_90pp: { name: "Event Quest Lv90++ (40 AP)", ap: 40, baseBond: 1318 },
 };
 
+// Helper function to format quest options
+const formatQuickListOption = (name, ap, bond) => (
+  <div className="quest-option">
+    <span className="quest-name">{name}</span>
+    <span className="quest-ap">{ap} AP</span>
+    <span className="quest-bond">{bond} Bond</span>
+  </div>
+);
+
+// Quick List options with formatted display
+const quickListOptions = [
+  {
+    label: "Dailies",
+    options: [
+      { value: "extreme_training", label: formatQuickListOption("Extreme Training Grounds", 40, 815) },
+      { value: "extreme_treasure", label: formatQuickListOption("Extreme Treasure Vault", 40, 715) },
+      { value: "extreme_embers", label: formatQuickListOption("Extreme Ember Gathering", 40, 715) }
+    ]
+  },
+  {
+    label: "Free Quests",
+    options: [
+      { value: "free_quest_80", label: formatQuickListOption("Lv80", 21, 815) },
+      { value: "free_quest_84", label: formatQuickListOption("Lv84", 22, 855) }
+    ]
+  },
+  {
+    label: "Bleached Earth",
+    options: [
+      { value: "bleached_90pp", label: formatQuickListOption("Lv90++", 40, 2636) },
+      { value: "bleached_90s", label: formatQuickListOption("Lv90*", 40, 3164) },
+      { value: "bleached_90ss", label: formatQuickListOption("Lv90**", 40, 3797) }
+    ]
+  },
+  {
+    label: "Event Quests",
+    options: [
+      { value: "event_90", label: formatQuickListOption("Lv90", 40, 915) },
+      { value: "event_90p", label: formatQuickListOption("Lv90+", 40, 1098) },
+      { value: "event_90pp", label: formatQuickListOption("Lv90++", 40, 1318) }
+    ]
+  }
+];
+
 // Helper function to check if a quest is a Bleached Earth quest
 const isBleachedEarthQuest = (questKey) => questKey.startsWith('bleached_');
 
 // Set the default selected quest to the first key in QUEST_DATA
 const QUEST_KEYS = Object.keys(QUEST_DATA);
+
 const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
   const [selectedQuest, setSelectedQuest] = useState(QUEST_KEYS[0]);
   const [bondBonus, setBondBonus] = useState(0);
@@ -62,91 +108,45 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
   // Memoize quest options
   const questOptions = React.useMemo(() => {
     const groupedQuests = filteredQuests.reduce((acc, quest) => {
-      // Special handling for Lostbelt 5 to differentiate between Atlantis and Olympus
-      let warDisplayName;
-      if (quest.warLongName.includes('Ancient Ocean of the Dreadnought Gods, Atlantis')) {
-        warDisplayName = 'LB5.1 - Atlantis';
-      } else if (quest.warLongName.includes('Interstellar Mountainous City, Olympus')) {
-        warDisplayName = 'LB5.2 - Olympus';
-      } else if (quest.warLongName.includes('Golden Sea of Trees, Nahui Mictlān')) {
-        warDisplayName = 'LB7 - Nahui Mictlān';
-      } else if (quest.warLongName.includes('Zero Compass Inner Domain')) {
-        warDisplayName = 'Paper Moon';
-      } else if (quest.warLongName.includes('Naraka Mandala')) {
-        warDisplayName = 'Heian-kyo';
-      } else if (quest.warLongName.includes('Realm of the Thanatos Impulse')) {
-        warDisplayName = 'Traum';
+      let warDisplayName = quest.warName;
+      
+      // War name mapping for better readability
+      if (warDisplayName) {
+        const warNameMap = {
+          'Arc 1.5 Epic of Remnant': 'Epic of Remnant',
+          'Lostbelt': 'Cosmos in the Lostbelt',
+          'Lostbelt No.6': 'LB6 - Avalon le Fae',
+          'Lostbelt No.7': 'LB7 - Nahui Mictlān',
+          'Isolated Realm of the Far East, Imperial Capital': 'Imperial Capital'
+        };
+        
+        warDisplayName = warNameMap[warDisplayName] || warDisplayName;
       }
-        else {
-        // Get the full war name including any subtitles
-        const fullWarName = quest.warLongName;
-
-        // Special handling for Pseudo-Singularity/EoR format
-        if (fullWarName.startsWith('Pseudo-Singularity I:') || fullWarName.startsWith('Epic of Remnant I:')) {
-          warDisplayName = 'EoR 1 - Shinjuku';
-        } else if (fullWarName.startsWith('Pseudo-Singularity II:') || fullWarName.startsWith('Epic of Remnant II:')) {
-          warDisplayName = 'EoR 2 - Agartha';
-        } else if (fullWarName.startsWith('Pseudo-Singularity III:') || fullWarName.startsWith('Epic of Remnant III:') || 
-                   fullWarName.includes('Pseudo-Parallel World')) {
-          warDisplayName = 'EoR 3 - Shimousa';
-        } else if (fullWarName.startsWith('Pseudo-Singularity IV') || fullWarName.startsWith('Epic of Remnant IV:')) {
-          warDisplayName = 'EoR 4 - Salem';
-        } else {
-          // For all other cases, get base war name and apply mapping
-          let warLongName = quest.warLongName.split('\n')[0];  // Take first part before any newlines
-
-          // Apply simplified naming
-          const warNameMap = {
-            'Singularity F': 'Singularity F - Fuyuki',
-            'First Singularity': '1st Singularity - Orleans',
-            'Second Singularity': '2nd Singularity - Septem',
-            'Third Singularity': '3rd Singularity - Okeanos',
-            'Fourth Singularity': '4th Singularity - London',
-            'Fifth Singularity': '5th Singularity - E Pluribus Unum',
-            'Sixth Singularity': '6th Singularity - Camelot',
-            'Seventh Singularity': '7th Singularity - Babylonia',
-            // Standardize all EoR/Pseudo-Singularity names to simplified EoR format
-            'Epic of Remnant I': 'EoR 1 - Shinjuku',
-            'Epic of Remnant II': 'EoR 2 - Agartha',
-            'Epic of Remnant III': 'EoR 3 - Shimousa',
-            'Epic of Remnant IV': 'EoR 4 - Salem',
-            'Pseudo-Singularity I': 'EoR 1 - Shinjuku',
-            'Pseudo-Singularity II': 'EoR 2 - Agartha',
-            'Pseudo-Singularity III': 'EoR 3 - Shimousa',
-            'Pseudo-Singularity IV': 'EoR 4 - Salem',
-            'Lostbelt No.1': 'LB1 - Anastasia',
-            'Lostbelt No.2': 'LB2 - Götterdämmerung',
-            'Lostbelt No.3': 'LB3 - SIN',
-            'Lostbelt No.4': 'LB4 - Yuga Kshetra',
-            'Lostbelt No.6': 'LB6 - Avalon le Fae',
-            'Heian-kyo': 'Heian-kyo',
-            'Traum': 'Traum',
-            'Lostbelt No.7': 'LB7 - Nahui Mictlān',
-            'Paper Moon': 'Paper Moon',
-            'Isolated Realm of the Far East, Imperial Capital': 'Imperial Capital'
-          };
-          
-          // Replace with simplified name if it exists in the map
-          warDisplayName = warNameMap[warLongName] || warLongName;
-        }
-      }
-
+      
       if (!acc[warDisplayName]) {
         acc[warDisplayName] = [];
       }
+      
       // Get first bond level value
       const firstBondValue = quest.bond[Object.keys(quest.bond)[0]];
       acc[warDisplayName].push({
         ...quest,
-        displayName: `${quest.spotName} (${quest.ap} AP, ${firstBondValue} Bond)`
+        displayName: (
+          <div className="quest-option">
+            <span className="quest-name">{quest.spotName}</span>
+            <span className="quest-ap">{quest.ap} AP</span>
+            <span className="quest-bond">{firstBondValue} Bond</span>
+          </div>
+        )
       });
       return acc;
     }, {});
 
-    // Sort quests within each group by AP cost
+    // Sort quests within each group
     Object.values(groupedQuests).forEach(group => {
       group.sort((a, b) => a.ap - b.ap);
-    });    // Return formatted options for React Select
+    });
+
     return Object.entries(groupedQuests).map(([warLongName, quests]) => ({
       label: warLongName,
       options: quests.map(quest => ({
@@ -408,15 +408,22 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
                     border: "1px solid var(--border-color)",
                     borderRadius: "8px",
                     boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+                    overflow: "hidden",
+                  }),
+                  menuList: (provided) => ({
+                    ...provided,
+                    padding: "4px",
                   }),
                   option: (provided, state) => ({
                     ...provided,
-                    backgroundColor: state.isFocused 
-                      ? "var(--option-hover)"
-                      : state.isSelected
-                        ? "var(--highlight-color, #3142b7)"
+                    backgroundColor: state.isSelected 
+                      ? "var(--highlight-color, #3142b7)"
+                      : state.isFocused 
+                        ? "var(--option-hover)"
                         : "transparent",
                     color: state.isSelected ? "white" : "var(--text-color)",
+                    cursor: "pointer",
+                    padding: "8px 12px",
                     "&:hover": {
                       backgroundColor: "var(--option-hover)",
                     },
@@ -449,33 +456,79 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
               />
             </div>
           </>) : (
-          <>
-            <div className="form-group">              <label className="form-label">Quest List</label>
-              <select
-                value={selectedQuest}
-                onChange={(e) => setSelectedQuest(e.target.value)}
-                className="form-select"
-              >
-                <optgroup label="Dailies">
-                  <option value="extreme_training">Extreme Training Grounds (40 AP, 815 Bond)</option>
-                  <option value="extreme_treasure">Extreme Treasure Vault (40 AP, 715 Bond)</option>
-                  <option value="extreme_embers">Extreme Ember Gathering (40 AP, 715 Bond)</option>
-                </optgroup>
-                <optgroup label="Free Quests">
-                  <option value="free_quest_80">Lv80 (21 AP, 815 Bond)</option>
-                  <option value="free_quest_84">Lv84 (22 AP, 855 Bond)</option>
-                </optgroup>
-                <optgroup label="Bleached Earth">
-                  <option value="bleached_90pp">Lv90++ (40 AP, 2636 Bond)</option>
-                  <option value="bleached_90s">Lv90* (40 AP, 3164 Bond)</option>
-                  <option value="bleached_90ss">Lv90** (40 AP, 3797 Bond)</option>
-                </optgroup>
-                <optgroup label="Event Quests">
-                  <option value="event_90">Lv90 (40 AP, 915 Bond)</option>
-                  <option value="event_90p">Lv90+ (40 AP, 1098 Bond)</option>
-                  <option value="event_90pp">Lv90++ (40 AP, 1318 Bond)</option>
-                </optgroup>
-              </select>
+          <>            <div className="form-group">
+              <label className="form-label">Quest List</label>
+              <Select
+                className="quest-select"
+                classNamePrefix="quest-select"
+                value={quickListOptions
+                  .flatMap(group => group.options)
+                  .find(opt => opt.value === selectedQuest) || null}
+                onChange={(option) => setSelectedQuest(option ? option.value : '')}
+                options={quickListOptions}
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    padding: "2px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border-color)",
+                    backgroundColor: "var(--input-bg)",
+                    minHeight: "42px",
+                    boxShadow: "none",
+                    "&:hover": {
+                      borderColor: "var(--highlight-color, #3142b7)",
+                    },
+                  }),
+                  menu: (provided) => ({
+                    ...provided,
+                    backgroundColor: "var(--card-bg)",
+                    border: "1px solid var(--border-color)",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+                    overflow: "hidden",
+                  }),
+                  menuList: (provided) => ({
+                    ...provided,
+                    padding: "4px",
+                  }),
+                  option: (provided, state) => ({
+                    ...provided,
+                    backgroundColor: state.isSelected 
+                      ? "var(--highlight-color, #3142b7)"
+                      : state.isFocused 
+                        ? "var(--option-hover)"
+                        : "transparent",
+                    color: state.isSelected ? "white" : "var(--text-color)",
+                    cursor: "pointer",
+                    padding: "8px 12px",
+                    "&:hover": {
+                      backgroundColor: "var(--option-hover)",
+                    },
+                  }),
+                  groupHeading: (provided) => ({
+                    ...provided,
+                    color: "var(--text-color)",
+                    fontWeight: "600",
+                    fontSize: "0.9rem",
+                    textTransform: "none",
+                    padding: "8px 12px 4px",
+                  }),
+                  input: (provided) => ({
+                    ...provided,
+                    color: "var(--text-color)",
+                  }),
+                  singleValue: (provided) => ({
+                    ...provided,
+                    color: "var(--text-color)",
+                  }),
+                  placeholder: (provided) => ({
+                    ...provided,
+                    color: "var(--text-muted, #666)",
+                  }),
+                }}
+                isSearchable
+                placeholder="Select a quest..."
+              />
             </div>
           </>
         )}
