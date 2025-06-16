@@ -10,22 +10,30 @@ Project History & Motivation
 
 Detailed Component Descriptions
 ------------------------------
-- **App.js**: Root React component. Handles theme switching (dark/light), server selection (NA/JP), layout, and renders the main calculator. Manages global state for theme and server choice, loads appropriate servant data file, and passes props to children.
-- **RunsCalculator.js**: Core logic for bond calculation. Handles user input (servant, bond points, quest, bonuses), performs calculations, and displays results. Contains logic for bonus stacking (additive/multiplicative), quest selection, and custom points mode. Manages state for all calculator fields.
-- **RunsCalculator.css**: Styles for the calculator, including responsive design, bonus UI, and theme support. Contains custom classes for all calculator UI elements and adapts to mobile/desktop.
-- **App.css**: Global styles for the app, including layout, typography, and theme variables.
-- **servants.json**: Local data file with all servant info (id, name, class, rarity, bond points, etc.), updated via GitHub Actions for speed and reliability.
-- **fetch_quests.js / fetch_servants.js**: Node scripts to fetch and update quest/servant data from Atlas Academy. Used in CI/CD and for manual updates.
-- **public/**: Static assets (images, icons, manifest, etc.) for deployment. Includes class icons, logos, and manifest files for PWA support.
+- **App.js**: Root React component. Handles theme switching (dark/light), server selection (NA/JP), layout, and renders the main calculator. Manages global state for theme and server choice, loads appropriate servant data file, and passes props to children. Updated to v0.3.4 with enhanced server toggle UI.
+- **RunsCalculator.js**: Core logic for bond calculation with three modes (Quick List, Quest Mode, Custom Points). Handles user input (servant, bond points, quest, bonuses), performs calculations, and displays results. Contains logic for bonus stacking (additive/multiplicative), quest selection, and custom points mode. Manages state for all calculator fields. Enhanced in v0.3.4 with Quest Mode using FGO quest database.
+- **RunsCalculator.css**: Styles for the calculator, including responsive design, bonus UI, and theme support. Contains custom classes for all calculator UI elements and adapts to mobile/desktop. Updated in v0.3.4 with color-coded calculator modes and improved React Select styling.
+- **App.css**: Global styles for the app, including layout, typography, and theme variables. Enhanced in v0.3.4 with improved server toggle styling and Quest Mode component integration.
+- **InfoTooltip.js**: New in v0.3.4. Reusable tooltip component for interactive help with click-based activation, mobile responsiveness, and accessibility features. Used throughout the app for contextual help.
+- **InfoTooltip.css**: New in v0.3.4. Styles for the InfoTooltip component with responsive design, backdrop overlays, and theme compatibility.
+- **QuestSelect.css**: New in v0.3.4. Modular styles for Quest Mode dropdown layout with mobile-responsive grid system and quest option formatting.
+- **servants.json**: Local data file with all NA servant info (id, name, class, rarity, bond points, etc.), updated via GitHub Actions for speed and reliability.
+- **servants_jp.json**: Local data file with all JP servant info, separate from NA data for server-specific differences.
+- **quests.json**: New in v0.3.4. Comprehensive NA FGO quest database with 50,000+ quests including bond points, AP costs, war information, and quest types.
+- **quests_jp.json**: New in v0.3.4. Comprehensive JP FGO quest database with similar structure to NA version.
+- **fetch_servants.js / fetch_servants_jp.js**: Node scripts to fetch and update servant data from Atlas Academy for NA and JP servers respectively.
+- **fetch_all_quests.js**: New in v0.3.4. Node script to fetch comprehensive quest database from Atlas Academy API for both servers. Creates quest data files with proper filtering and organization.
+- **public/**: Static assets (images, icons, manifest, etc.) for deployment. Includes class icons, logos, and manifest files for PWA support. Now includes quest data files.
 - **ServantClassImages/**: Contains all class icons, organized by rarity (Bronze/Silver/Gold) for use in the UI.
 
 Data Flow & Architecture
 ------------------------
-- **Data Fetching:** Servant and quest data is fetched from Atlas Academy and stored locally in `public/servants.json` and internal quest data files. Data is updated via GitHub Actions and fetch scripts.
-- **State Management:** Uses React hooks (useState, useEffect) for local state. No external state management library.
+- **Data Fetching:** Servant and quest data is fetched from Atlas Academy and stored locally. Servant data in `public/servants.json` and `public/servants_jp.json`, quest data in `public/quests.json` and `public/quests_jp.json`. Data is updated via GitHub Actions and fetch scripts.
+- **State Management:** Uses React hooks (useState, useEffect) for local state. No external state management library. Three calculator modes: Quick List (predefined), Quest Mode (real database), Custom Points (user input).
 - **Calculation Logic:** All bond/quest/bonus calculations are performed in RunsCalculator.js. Bonus stacking is handled according to FGO rules (additive for most, multiplicative for Heroic Portrait/Frontline).
 - **Theming:** Theme (dark/light) is managed via CSS variables and localStorage. User preference is persisted across sessions.
-- **UI Rendering:** Responsive design using CSS clamp(), flexbox, and grid. All UI adapts to mobile and desktop.
+- **UI Rendering:** Responsive design using CSS clamp(), flexbox, and grid. All UI adapts to mobile and desktop. Color-coded calculator modes for better UX.
+- **Component Architecture:** Modular design with reusable components (InfoTooltip, RunsCalculator, etc.) and separate CSS files for maintainability.
 
 Detailed Data Flow Description
 -----------------------------
@@ -39,26 +47,36 @@ Detailed Data Flow Description
             - `fetch_servants_jp.js` retrieves JP server data and saves to `public/servants_jp.json`
         - Each script processes and filters data from the Atlas Academy API, keeping only the fields required by the app (e.g., id, name, class, rarity, bond points, traits).
         - The scripts are run both manually (by maintainers) and automatically (via GitHub Actions) to keep both NA and JP data up to date.
-        - Users can switch between NA and JP data using a server selection toggle in the UI.
-    - **Quest Data:**
-        - Quest data (AP cost, base bond points, etc.) is hardcoded in `RunsCalculator.js` as a constant object, since it changes infrequently and is small in size.
+        - Users can switch between NA and JP data using a server selection toggle in the UI.    - **Quest Data:**
+        - As of v0.3.4, quest data is now sourced from comprehensive database files:
+            - `fetch_all_quests.js` retrieves complete quest database from Atlas Academy API
+            - Creates `public/quests.json` (NA) and `public/quests_jp.json` (JP) with 50,000+ quests each
+            - Quest data includes: questId, questName, questType, bond points per phase, warId, warName, warLongName, spotId, spotName, AP cost, consumeType, consumeItem, afterClear
+            - Quest Mode filters for Free Quests with afterClear "repeatLast" or "resetInterval" only
+            - War name mapping provides user-friendly display names for story chapters
+        - Legacy quest data (hardcoded in RunsCalculator.js) is still used for Quick List mode for speed and reliability
 
 2. **App Initialization:**
     - On app load, React components are initialized.
-    - The main component (`App.js`) sets up global state (e.g., theme) and renders the calculator UI.
-    - The `RunsCalculator.js` component loads servant data from `public/servants.json` (served as a static asset) and quest data from its internal constant.
+    - The main component (`App.js`) sets up global state (e.g., theme, server selection) and renders the calculator UI.
+    - The `RunsCalculator.js` component loads servant data from appropriate server file and quest data based on selected calculator mode.
+    - Quest Mode loads quest database asynchronously for improved performance.
 
 3. **User Interaction and State Management:**
-    - The user selects a servant, target bond level, and quest type, or enters custom bond/AP values.
+    - The user selects a servant, target bond level, and calculator mode (Quick List/Quest Mode/Custom Points).
+    - Quest Mode allows searching through 50,000+ FGO quests with filtering by war/chapter.
     - The user enters any bond bonus percentages (CE, event, etc.) and toggles Heroic Portrait and Frontline bonuses.
+    - InfoTooltip components provide contextual help for complex features.
     - All user inputs are managed via React `useState` hooks within `RunsCalculator.js`.
     - When any input changes, a `useEffect` hook triggers recalculation of results.
 
 4. **Calculation Logic:**
-    - The calculator determines the base bond points per run from the selected quest or custom input.
+    - The calculator determines the base bond points per run from the selected quest (Quick List/Quest Mode) or custom input.
+    - Quest Mode dynamically calculates bond points based on selected quest's phase data.
     - It applies additive percentage bonuses, then flat bonuses (Heroic Portrait), then multiplicative bonuses (Frontline), following the documented order of operations.
+    - Special handling for Bleached Earth quests with daily run limits.
     - The number of runs, total AP, bond per run, and estimated time are computed.
-    - Results are stored in local component state.
+    - Results are stored in local component state with color-coded display based on calculator mode.
 
 5. **UI Rendering:**
     - The calculator UI displays the current servant, quest, bonuses, and calculated results.
@@ -66,8 +84,10 @@ Detailed Data Flow Description
     - The UI uses CSS for responsive design and theming, adapting to mobile and desktop.
 
 6. **Data Update Flow:**
-    - When new servants are released or data needs updating, maintainers run `fetch_servants.js` or wait for the scheduled GitHub Action.
-    - The updated `servants.json` is committed and pushed to the repository, and deployed to GitHub Pages.
+    - When new servants are released or data needs updating, maintainers run fetch scripts or wait for the scheduled GitHub Action.
+    - `fetch_servants.js` and `fetch_servants_jp.js` update servant data files.
+    - `fetch_all_quests.js` updates quest database files with latest Atlas Academy data.
+    - The updated files are committed and pushed to the repository, and deployed to GitHub Pages.
     - The app automatically serves the latest data on next load.
 
 **Summary Table:**
@@ -75,11 +95,13 @@ Detailed Data Flow Description
 |----------------------|-------------------------------|------------------------|-----------------------|
 | Fetch NA Servants    | fetch_servants.js, GitHub CI  | public/servants.json   | RunsCalculator.js     |
 | Fetch JP Servants    | fetch_servants_jp.js, CI      | public/servants_jp.json| RunsCalculator.js     |
-| Fetch Quests         | Hardcoded in code             | RunsCalculator.js      | RunsCalculator.js     |
+| Fetch NA Quests      | fetch_all_quests.js           | public/quests.json     | RunsCalculator.js     |
+| Fetch JP Quests      | fetch_all_quests.js           | public/quests_jp.json  | RunsCalculator.js     |
+| Quick List Quests    | Hardcoded in code             | RunsCalculator.js      | RunsCalculator.js     |
 | User Input           | UI (React forms)              | React state            | RunsCalculator.js     |
 | Calculation          | useEffect in RunsCalculator   | React state            | RunsCalculator.js     |
 | UI Rendering         | React render cycle            | React state            | User (browser)        |
-| Data Update/Deploy   | Maintainer/CI                 | public/servants.json   | All users             |
+| Data Update/Deploy   | Maintainer/CI                 | public/ data files     | All users             |
 
 - **Note:** All calculations and data processing are performed client-side. No user data is stored or transmitted.
 
@@ -90,6 +112,75 @@ Deployment & CI/CD
 - **Common Issues:** Tag conflicts (e.g., v0.3.1 already exists) can block deployment. Solution: delete the remote tag before redeploying.
 - **PowerShell Policy:** On Windows, set execution policy to RemoteSigned for npm scripts to work: `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`.
 - **Manual Data Update:** Run fetch_quests.js or fetch_servants.js to update data locally, then commit and push.
+
+Naming Conventions & Architectural Patterns
+------------------------------------------
+
+### File Naming Conventions:
+- **React Components:** PascalCase (e.g., `RunsCalculator.js`, `InfoTooltip.js`)
+- **CSS Files:** Match component name (e.g., `RunsCalculator.css`, `InfoTooltip.css`)
+- **Data Files:** Lowercase with underscores (e.g., `servants.json`, `quests_jp.json`)
+- **Fetch Scripts:** Lowercase with underscores (e.g., `fetch_servants.js`, `fetch_all_quests.js`)
+- **Test Scripts:** Lowercase with underscores in test_scripts folder (e.g., `test_quest_mode.js`)
+
+### Code Organization Patterns:
+- **Component Structure:** Each major component has its own JS and CSS file
+- **Shared Styles:** Global variables in App.css, component-specific styles in separate files
+- **State Management:** Local state with useState/useEffect, no global state library
+- **Data Fetching:** Separate fetch scripts for each data type and server
+- **File Headers:** Standardized JSDoc format with @author, @version, @created, @github
+
+### Variable Naming:
+- **React State:** camelCase descriptive names (e.g., `selectedServant`, `isCustomMode`)
+- **CSS Classes:** kebab-case with component prefix (e.g., `.runs-calculator`, `.info-tooltip-wrapper`)
+- **CSS Variables:** Double dash prefix (e.g., `--bg-color`, `--text-color`)
+- **Constants:** UPPER_SNAKE_CASE (e.g., `QUEST_DATA`, `MAX_RETRIES`)
+
+### Function Naming:
+- **Event Handlers:** `handle` prefix (e.g., `handleBonusChange`, `handleQuestSelect`)
+- **Utility Functions:** Descriptive verbs (e.g., `formatQuickListOption`, `isBleachedEarthQuest`)
+- **API Functions:** Action-oriented (e.g., `fetchWithRetry`, `getQuestBondMapping`)
+
+### Component Architecture:
+- **Main App:** App.js handles global state (theme, server selection)
+- **Calculator Logic:** RunsCalculator.js contains all calculation and form logic
+- **Reusable UI:** InfoTooltip.js for help system, can be used anywhere
+- **Styling:** Modular CSS with theme variables for consistent theming
+
+### Data Structure Patterns:
+- **Quest Data:** Consistent schema across NA/JP with questId, questName, bond, ap, warLongName
+- **Servant Data:** Minimal required fields only for performance
+- **Options Arrays:** Value/label objects for React Select compatibility
+- **Grouped Options:** Label/options structure for categorized dropdowns
+
+### Calculator Modes:
+- **Quick List (Green):** Predefined popular quests for speed
+- **Quest Mode (Blue):** FGO database with search/filter
+- **Custom Points (Red):** User-defined values for flexibility
+
+### Error Handling Patterns:
+- **API Calls:** Retry logic with exponential backoff
+- **Data Loading:** Graceful degradation with loading states
+- **User Input:** Validation and sanitization before calculation
+- **File Operations:** Try/catch with meaningful error messages
+
+### Performance Patterns:
+- **Data Loading:** Lazy loading for large quest database
+- **React Rendering:** useMemo for expensive calculations
+- **State Updates:** Batch related state changes
+- **CSS:** Efficient selectors and minimal reflows
+
+### Testing Patterns:
+- **Unit Tests:** Component rendering and calculation logic
+- **Integration Tests:** User workflow testing
+- **Data Tests:** Validation of fetch script outputs
+- **Manual Testing:** Cross-browser and mobile device testing
+
+### Deployment Patterns:
+- **Version Control:** Semantic versioning with git tags
+- **CI/CD:** GitHub Actions for automated data updates
+- **Static Hosting:** GitHub Pages for free hosting
+- **Asset Management:** Public folder for static assets
 
 Testing
 -------
@@ -141,6 +232,39 @@ Security & Privacy
 
 Changelog & Tags
 ----------------
+### Version 0.3.4 - Quest Mode & Advanced UI Components
+- **Quest Mode Implementation:** Added comprehensive FGO quest database integration using Atlas Academy API
+  - New `fetch_all_quests.js` script to fetch complete quest database for both NA and JP servers
+  - Created `public/quests.json` and `public/quests_jp.json` with 50,000+ quests each
+  - Implemented quest filtering for Free Quests with repeatLast/resetInterval only
+  - Added war name mapping and quest organization by story chapters and regions
+  - Enhanced Quest Mode dropdown with AP/Bond display and mobile-responsive layout
+- **InfoTooltip Component:** New reusable interactive tooltip system
+  - Click-based tooltips with mobile responsiveness and backdrop overlay
+  - Context-sensitive help for bond bonus calculations and quest selection
+  - Proper accessibility with ARIA labels and keyboard navigation
+  - Theme-compatible styling with CSS variable integration
+- **Enhanced Server Toggle UI:** Improved visual design and user experience
+  - Better styling integration with existing theme system
+  - Clear visual feedback for active server selection
+  - Consistent padding and hover states with other UI elements
+- **Color-Coded Calculator Modes:** Visual distinction between calculator modes
+  - Quick List: Green theme for predefined popular quests
+  - Quest Mode: Blue theme for FGO quest database
+  - Custom Points: Red theme for user-defined quest data
+  - Improved user experience and mode identification
+- **React Select Integration:** Upgraded dropdown system for Quest Mode
+  - Better theme compatibility with CSS variables
+  - Enhanced styling for quest options with AP and bond point display
+  - Improved mobile responsiveness and accessibility
+  - Fixed z-index and overlay issues from previous versions
+- **Code Organization & Documentation:** Enhanced maintainability
+  - Added comprehensive JSDoc headers to all new components
+  - Standardized version headers across all files with @author, @created, @github
+  - Created QuestSelect.css for modular quest dropdown styling
+  - Improved component separation and reusability
+- Tag: v0.3.4
+
 ### Version 0.3.3 - JP Server & UI Enhancements
 - Fixed Calculations concerning Bleached Earth Quests being only 3 times per day
 - Fixed Beast Ereshkigal class icon display to use proper "Class-Beast-Gold.png" 
@@ -219,20 +343,34 @@ Challenges & Solutions
   3. Enhancing visual hierarchy with shadows, borders, and hover states
   4. Improving accessibility with better focus states and consistent spacing
   5. Solution provides better user experience across all screen sizes and themes
-- **Class Icon Issues**: Fixed Beast Ereshkigal's incorrect class icon by:
-  1. Identifying the incorrect class name normalization in App.js for "beastEresh"
-  2. Adding logic to detect and handle beast-related class variations
-  3. Implementing a consistent fallback to "Class-Beast-Gold.png" for all Beast classes
-  4. Solution ensures proper icon display while maintaining extensibility for future Beast-class servants
-- **Dropdown Menu UX**: Resolved dropdown menu clipping and visual consistency issues by:
-  1. Implementing proper z-index management to prevent overlay issues
-  2. Adding responsive height limits to prevent excessive scrolling
-  3. Enhancing visual hierarchy with shadows, borders, and hover states
-  4. Improving accessibility with better focus states and consistent spacing
-  5. Solution provides better user experience across all screen sizes and themes
+- **Quest Database Integration (v0.3.4)**: Challenges integrating 50,000+ quest database:
+  1. Performance issues with large JSON files resolved through lazy loading and filtering
+  2. Quest data normalization across different quest types and phases
+  3. War name mapping for user-friendly display without overwhelming UI
+  4. Memory optimization by filtering irrelevant quests before loading into UI
+  5. Mobile responsiveness for complex quest dropdown layouts
+- **InfoTooltip Mobile UX (v0.3.4)**: Mobile tooltip interaction challenges:
+  1. Click-outside detection conflicts with touch events
+  2. Tooltip positioning on small screens resolved with fixed positioning
+  3. Backdrop overlay implementation for mobile modal-like experience
+  4. Accessibility compliance with ARIA labels and keyboard navigation
+- **React Select Theme Integration (v0.3.4)**: Dropdown styling challenges:
+  1. CSS variable integration with third-party React Select component
+  2. Dynamic theming support for both light and dark modes
+  3. Custom option rendering for quest data with AP and bond information
+  4. Mobile responsive grid layouts within dropdown options
+- **Calculator Mode Distinction (v0.3.4)**: User experience improvements:
+  1. Color-coded modes to help users distinguish between different calculators
+  2. Visual feedback for active mode selection
+  3. Consistent styling patterns across all three modes
+  4. Performance optimization for mode switching without data loss
 - **PowerShell Execution Policy**: On Windows, npm scripts may fail due to PowerShell policy. Solution: Set-ExecutionPolicy RemoteSigned for CurrentUser.
 - **Automated Data Updates**: Set up GitHub Actions to fetch and update servant data twice daily, reducing manual maintenance.
 - **Performance**: Optimized data size and loading for faster app startup.
+- **Version Header Standardization (v0.3.4)**: Implemented consistent documentation:
+  1. Standardized JSDoc headers across all files with @author, @version, @created, @github
+  2. Version tracking for better maintenance and debugging
+  3. Clear component ownership and creation dates for future development
 
 
 Links & References
@@ -257,15 +395,48 @@ MIT License (see LICENSE file)
 
 For Next Agent
 --------------
-- Review this file for project history, structure, and known issues
-- Check the README.md for up-to-date usage and changelog
-- If deployment fails due to tag conflicts, delete the remote tag and try again
-- For Windows, ensure PowerShell execution policy allows npm scripts
-- All code and data is in the repo; see src/ for main components and public/ for assets
-- For data updates, see fetch_quests.js and fetch_servants.js
-- For UI/logic, see RunsCalculator.js and App.js
-- For CI/CD, see .github/workflows/ (if not present, check repo online)
-- For advanced troubleshooting, check GitHub Issues and Pull Requests
+- **Current Version:** v0.3.4 with Quest Mode, InfoTooltip component, and enhanced UI
+- **Project Structure:** React app with modular components and CSS, hosted on GitHub Pages
+- **Key Components:** App.js (main), RunsCalculator.js (logic), InfoTooltip.js (help system)
+- **Data Sources:** Atlas Academy API for servants and quests, local JSON files for performance
+- **Calculator Modes:** Quick List (green), Quest Mode (blue), Custom Points (red)
+- **Review this file for project history, structure, and known issues**
+- **Check the README.md for up-to-date usage and changelog**
+- **File Organization:** Follow naming conventions in "Naming Conventions & Architectural Patterns" section
+- **Code Standards:** Use standardized JSDoc headers with @author, @version, @created, @github
+- **Data Updates:** Use fetch_servants.js, fetch_servants_jp.js, fetch_all_quests.js for data updates
+- **Deployment:** If deployment fails due to tag conflicts, delete the remote tag and try again
+- **Windows Environment:** Ensure PowerShell execution policy allows npm scripts (Set-ExecutionPolicy RemoteSigned -Scope CurrentUser)
+- **Component Development:** Each major component should have its own JS and CSS file with proper documentation
+- **State Management:** Use React hooks (useState/useEffect), no external state management library
+- **Styling:** Use CSS variables for theming, modular CSS files, responsive design with clamp()
+- **Performance:** Large data files require lazy loading and filtering for optimal performance
+- **Testing:** Run `npm test` for unit tests, manual testing on mobile and desktop required
+- **All code and data is in the repo; see src/ for main components and public/ for assets**
+- **For data updates, see fetch scripts in root directory**
+- **For UI/logic, see RunsCalculator.js and App.js**
+- **For CI/CD, see .github/workflows/ (if not present, check repo online)**
+- **For advanced troubleshooting, check GitHub Issues and Pull Requests**
+- **Quest Database:** Contains 50,000+ quests per server, filtered for Free Quests only in Quest Mode
+- **InfoTooltip Usage:** Click-based tooltips with mobile responsiveness, use throughout app for help
+- **Color Coding:** Green (Quick List), Blue (Quest Mode), Red (Custom Points) for visual distinction
+- **Server Support:** Full NA/JP server support with separate data files and server toggle UI
+
+**Quick Start for New Features:**
+1. Create component file (PascalCase.js) and CSS file (PascalCase.css)
+2. Add JSDoc header with author, version, created, github
+3. Use CSS variables for theming compatibility
+4. Test on both mobile and desktop
+5. Update this file with changes and challenges faced
+6. Update README.md changelog section
+7. Update version numbers in package.json and App.js footer
+
+**Common Issues:**
+- Large quest database requires filtering and lazy loading
+- React Select styling needs CSS variable integration for theming
+- Mobile tooltips need special positioning and backdrop handling
+- Git tag conflicts during deployment (delete remote tag first)
+- Windows PowerShell execution policy may block npm scripts
 
 This file is intended to be a comprehensive, non-code summary of the project for maintainers and future contributors.
 
@@ -321,6 +492,69 @@ GitHub Actions Workflow Details
 - **Customization:**
     - To change the schedule, edit the `cron` expression in the workflow YAML file.
     - To add more steps (e.g., run tests, deploy), modify the workflow as needed.
+
+Quest Data Structure & Implementation (v0.3.4)
+--------------------------------------------
+- **Quest Database Files:** `public/quests.json` (NA) and `public/quests_jp.json` (JP) contain comprehensive quest data
+- **Data Source:** Fetched from Atlas Academy API using `fetch_all_quests.js` script
+- **File Size:** 50,000+ quests per server, ~10-15MB each (requires lazy loading)
+- **Quest Object Structure:**
+  ```json
+  {
+    "questId": 93030101,
+    "questName": "Lv80 敵影の英霊",
+    "questType": "free",
+    "bond": {
+      "1": 815,
+      "2": 815,
+      "3": 815
+    },
+    "warId": 303,
+    "warName": "Lostbelt No.3",
+    "warLongName": "Lostbelt No.3\n人智統合真国 シン",
+    "spotId": 30301,
+    "spotName": "大都",
+    "ap": 21,
+    "consumeType": "ap",
+    "consumeItem": [],
+    "afterClear": "repeatLast"
+  }
+  ```
+- **Field Descriptions:**
+    - `questId`: Unique quest identifier from Atlas Academy
+    - `questName`: Display name of the quest
+    - `questType`: Type of quest (free, main, event, friendship, etc.)
+    - `bond`: Object mapping phase numbers to bond point values
+    - `warId`: Identifier for the war/chapter
+    - `warName`: Short war name
+    - `warLongName`: Full war name with subtitle
+    - `spotId`: Location identifier within the war
+    - `spotName`: Location display name
+    - `ap`: AP cost to run the quest
+    - `consumeType`: Resource type consumed (usually "ap")
+    - `consumeItem`: Array of additional items consumed
+    - `afterClear`: What happens after clearing (repeatLast, resetInterval, close)
+
+- **Quest Mode Filtering:** Only includes quests where:
+    - `questType === "free"` (Free Quests only)
+    - `consumeType === "ap"` (AP-based quests)
+    - `afterClear === "repeatLast" || afterClear === "resetInterval"` (Repeatable quests)
+
+- **War Name Mapping:** User-friendly display names for better UX:
+  ```javascript
+  const warNameMap = {
+    'Lostbelt No.1': 'LB1 - Anastasia',
+    'Lostbelt No.2': 'LB2 - Götterdämmerung',
+    'Lostbelt No.3': 'LB3 - SIN',
+    // ... etc
+  };
+  ```
+
+- **Performance Considerations:**
+    - Quest data loaded asynchronously to avoid blocking UI
+    - Filtered on load to reduce memory usage
+    - Grouped by war for organized dropdown display
+    - React Select virtualization for large option lists
 
 Servant Data Structure Example
 -----------------------------

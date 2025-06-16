@@ -1,3 +1,13 @@
+/**
+ * InfoTooltip.js
+ * FGO Bond Calculator - Reusable Tooltip Component
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.4 - New component for click-based help tooltips with mobile responsiveness
+ * @created 2025-06-16
+ * @github https://github.com/AJDxB/fgo-bond-calculator
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import './InfoTooltip.css';
 

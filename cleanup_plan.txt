@@ -1,0 +1,168 @@
+FGO Bond Calculator Cleanup Plan
+============================
+
+1. Code Organization
+------------------
+- Split App.js into smaller components:
+  * ServantSelector (servant selection logic)
+  * BondLevelSelector (bond level input)
+  * ResultDisplay (bond calculation results)
+  * ThemeToggle (dark/light mode)
+  * ServerToggle (NA/JP server selection)
+  * Header (logo and version)
+  * Footer (credits)
+
+2. File Structure
+---------------
+/src
+  /components
+    /servant-selector
+      ServantSelector.js
+      ServantSelector.css
+    /bond-level
+      BondLevelSelector.js
+      BondLevelSelector.css
+    /result-display
+      ResultDisplay.js
+      ResultDisplay.css
+    /runs-calculator
+      RunsCalculator.js
+      RunsCalculator.css
+    /common
+      ThemeToggle.js
+      ServerToggle.js
+      Header.js
+      Footer.js
+  /assets
+    /images
+      fgo_calc_logo.png
+      saintquartz.png
+    /icons
+      class-icons/
+  /data
+    servant-data.js
+    bond-calculations.js
+  /utils
+    formatting.js
+    calculations.js
+    constants.js
+  /hooks
+    useTheme.js
+    useServantData.js
+    useBondCalculations.js
+  /styles
+    theme.css
+    variables.css
+    common.css
+
+3. Component Organization
+-----------------------
+- Each component should:
+  * Have its own folder
+  * Include component file
+  * Include styles file
+  * Include test file
+  * Include README.md for documentation
+  * Follow single responsibility principle
+
+4. Data Management
+----------------
+- Move servant data fetching logic to custom hook
+- Create data transformation utilities
+- Implement proper error handling
+- Add data caching
+- Consider using React Query for data fetching
+- Add loading states and error boundaries
+
+5. Documentation
+--------------
+- Add JSDoc comments for all components
+- Create component documentation with examples
+- Document data flow and state management
+- Add inline comments for complex logic
+- Create contribution guidelines
+- Update README.md with setup instructions
+
+6. Testing
+---------
+- Add unit tests for:
+  * Bond calculations
+  * Servant filtering
+  * Data transformation
+  * Component rendering
+- Add integration tests for:
+  * Servant selection flow
+  * Bond calculation flow
+  * Theme switching
+  * Server switching
+- Add E2E tests for critical paths
+- Setup test coverage reporting
+
+7. Version Control
+----------------
+- Update .gitignore for build artifacts
+- Add commit message guidelines
+- Setup pre-commit hooks for linting
+- Add branch protection rules
+- Document Git workflow
+
+8. Build Process
+--------------
+- Optimize build configuration
+- Add source maps for development
+- Configure code splitting
+- Setup proper asset optimization
+- Add bundle analysis
+- Configure CI/CD pipeline
+
+9. Performance Improvements
+------------------------
+- Implement React.memo for expensive components
+- Add proper loading states
+- Optimize images and assets
+- Implement code splitting
+- Add service worker for offline support
+- Cache API responses
+
+10. Accessibility
+---------------
+- Add ARIA labels
+- Improve keyboard navigation
+- Add proper focus management
+- Ensure proper color contrast
+- Add screen reader support
+- Test with accessibility tools
+
+11. Error Handling
+----------------
+- Add error boundaries
+- Implement proper error logging
+- Add user-friendly error messages
+- Handle API errors gracefully
+- Add fallback UI for errors
+
+12. Future Features
+-----------------
+- Quest location recommendations
+- Bond CE benefits calculator
+- Team composition suggestions
+- Progress tracking
+- Data export/import
+- Account management
+- Multi-servant planning
+
+Implementation Priority:
+1. Code organization and component splitting
+2. Documentation
+3. Testing setup
+4. Performance improvements
+5. Error handling
+6. Accessibility improvements
+7. Future features
+
+Next Steps:
+1. Create new directory structure
+2. Split App.js into components
+3. Setup testing environment
+4. Add initial documentation
+5. Implement error boundaries

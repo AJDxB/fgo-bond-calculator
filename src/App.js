@@ -6,7 +6,7 @@
  * runs calculator with custom points mode, and farming efficiency tools
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.3 - Added JP server support, Beast class icon fix, improved dropdown UI
+ * @version 0.3.4 - Added Quest Mode with FGO quest data, enhanced server toggle UI
  * @created 2025-06-04
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
@@ -569,7 +569,7 @@ function App() {
             aria-hidden="true"
           /> by <a href="https://github.com/AJDxB" target="_blank" rel="noopener noreferrer">AJDxB</a>
           <span className="footer-separator"> | </span>
-          <span className="footer-version">v0.3.3</span>
+          <span className="footer-version">v0.3.4</span>
         </footer>
       </div>
     </div>

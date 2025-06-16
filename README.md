@@ -27,8 +27,9 @@ Data provided by [Atlas Academy](https://atlasacademy.io/).
 - Local servant data loaded from separate NA/JP JSON files for fast, reliable access
 - Automated servant data updates via GitHub Actions workflow (twice daily)
 - Custom Points mode to Runs Calculator for flexible farming calculations
-
-## Getting Started
+- Quest Mode with FGO quest database from Atlas Academy API
+- Interactive help tooltips with mobile-responsive design
+- Color-coded calculator modes for better visual distinction
 
 ### Requirements
 
@@ -54,10 +55,14 @@ npm run deploy
 ## Usage
 
 1. Select a servant from the dropdown
-2. Enter your current cumulative bond points
+2. Enter your current bond level and points left to next level
 3. Select your target bond level
-4. View automatic calculation results and quest runs needed
-5. Adjust quest type and bond bonuses for optimal farming strategy
+4. Choose from **three calculator modes**:
+   - **Quick List** (Green): Pre-defined popular quests
+   - **Quest Mode** (Blue): Search FGO quest database  
+   - **Custom Points** (Red): Enter your own quest data
+5. View automatic calculation results and quest runs needed
+6. Adjust bond bonuses and quest selection for optimal farming strategy
 
 ## License
 
@@ -75,6 +80,17 @@ Contributions, issues, and suggestions are welcome.
 - FGO community for inspiration and feedback
 
 ## Changelog
+
+### v0.3.4 - Quest Mode & UI Enhancements  
+- Added **Quest Mode** with FGO quest database integration from Atlas Academy API
+- Implemented comprehensive quest filtering for Free Quests (repeatLast/resetInterval)
+- Added **InfoTooltip component** for interactive help with mobile-responsive design
+- Enhanced server toggle UI with improved styling and visual feedback
+- Added color-coded calculator modes (Quick List - Green, Quest Mode - Blue, Custom Points - Red)
+- Upgraded React Select integration with better theme compatibility
+- Added new quest data fetcher script (`fetch_all_quests.js`) for comprehensive quest database
+- Improved mobile responsiveness for Quest Mode dropdown layouts
+- Enhanced component integration and code organization
 
 ### v0.3.3 - JP Server & UI Enhancements
 - Fixed Calculations concerning Bleached Earth Quests being only 3 times per day

@@ -1,3 +1,13 @@
+/**
+ * fetch_all_quests.js
+ * FGO Bond Calculator - Quest Data Fetcher
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.4 - New script to fetch comprehensive FGO quest database from Atlas Academy API
+ * @created 2025-06-16
+ * @github https://github.com/AJDxB/fgo-bond-calculator
+ */
+
 const fs = require('fs').promises;
 const path = require('path');
 const fetch = require('node-fetch');

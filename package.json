@@ -1,6 +1,6 @@
 {
   "name": "fgo-bond-calculator",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "description": "A React web app for Fate/Grand Order players to calculate bond points and plan quest runs efficiently for both NA and JP servers.",
   "homepage": "https://ajdxb.github.io/fgo-bond-calculator",

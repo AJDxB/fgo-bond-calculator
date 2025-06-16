@@ -11,7 +11,7 @@
  * and bond bonus calculations for farming efficiency.
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.3 - Enhanced dropdown styling and accessibility, support for JP server data
+ * @version 0.3.4 - Added Quest Mode with FGO quest database, InfoTooltip integration, React Select upgrade
  * @created 2025-06-04
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */

@@ -3,7 +3,9 @@
  * Fetches and processes JP servant data from Atlas Academy API
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.3
+ * @version 0.3.4 - Enhanced error handling and CI/CD integration
+ * @created 2025-06-04
+ * @github https://github.com/AJDxB/fgo-bond-calculator
  */
 
 const axios = require('axios');
