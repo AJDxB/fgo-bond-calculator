@@ -19,6 +19,7 @@ import "./App.css";
 import RunsCalculator from "./RunsCalculator";
 import ServantSelector from "./components/core/ServantSelector";
 import BondLevelSelector from "./components/core/BondLevelSelector";
+import BondProgressDisplay from "./components/core/BondProgressDisplay";
 
 function App() {
   const [selectedServant, setSelectedServant] = useState(null);
@@ -205,32 +206,18 @@ function App() {
                 </option>
               ))}
             </select>
-          </div>
-        </div>        {/* Always show result section if servant and bond level are selected */}
-        {selectedServant && currentBondLevel !== null && currentBondLevel !== undefined && (
-          <div className="result-section">
-            {result && result.totalPoints !== null && result.totalPoints !== undefined ? (
-              <div className={`result-box ${result.totalPoints === 0 ? 'goal-reached' : ''}`}>
-                <div className="result-description">
-                  {result.totalPoints === 0 
-                    ? `Congratulations! You've reached Bond ${targetBond?.value}!`
-                    : `Bond points needed to reach Bond ${targetBond?.value} (${targetBond?.points?.toLocaleString()} pts):`
-                  }
-                </div>
-                <div className="result-value">
-                  {result.totalPoints.toLocaleString()}
-                </div>
-              </div>
-            ) : (
-              <div className="result-row">Please enter valid values above.</div>
-            )}
-          </div>
-        )}
-        {result && result.error && (
-          <div className="error-message">{result.error}</div>
-        )}
+          </div>        </div>
 
-        {/* Runs Calculator Component */}        <RunsCalculator 
+        {/* Bond Progress Display Component */}
+        <BondProgressDisplay
+          selectedServant={selectedServant}
+          currentBondLevel={currentBondLevel}
+          targetBond={targetBond}
+          result={result}
+        />
+
+        {/* Runs Calculator Component */}
+        <RunsCalculator
           selectedServant={selectedServant}
           targetBond={targetBond}
           pointsNeeded={result ? result.totalPoints : 0}
