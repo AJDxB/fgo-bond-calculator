@@ -34,22 +34,6 @@
   transition: background 0.3s ease;
 }
 
-/* Logo Container */
-.logo-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: clamp(15px, 3vw, 20px);
-  margin-top: clamp(-8px, -1.5vw, -10px);
-}
-
-.logo {
-  width: clamp(280px, 70vw, 500px);
-  height: auto;
-  display: block;
-  background: transparent;
-  filter: drop-shadow(0 4px 18px rgba(90,120,180,0.10));
-}
-
 /* Form Elements */
 .form-group {
   margin-bottom: 14px;
@@ -143,52 +127,6 @@
 
 .class-emoji {
   font-size: clamp(1rem, 2.5vw, 1.2em);
-}
-
-/* Footer Credit */
-.footer-credit {
-  text-align: center;
-  margin-top: 2rem;
-  color: var(--text-color, #888);
-  font-size: 0.95em;
-}
-
-.footer-icon {
-  height: 1.15em;
-  vertical-align: text-bottom;
-  margin: 0 0.2em;
-  display: inline-block;
-  font-size: 1.15em;
-}
-
-.footer-credit a {
-  color: #6cf !important; /* Always light blue */
-  text-decoration: underline;
-  transition: color 0.2s;
-}
-
-.footer-credit a:hover {
-  color: #aeeaff !important;
-}
-
-/* Optionally, fallback for missing image */
-.footer-icon:not([src]) {
-  background: #222;
-  border-radius: 2px;
-  width: 1.15em;
-  height: 1.15em;
-  display: inline-block;
-}
-
-.footer-separator {
-  margin: 0 0.4em;
-  color: var(--text-color, #888);
-  font-weight: 400;
-}
-
-.footer-version {
-  color: var(--text-color, #888);
-  font-size: 0.97em;  letter-spacing: 0.01em;
 }
 
 /* Responsive Utilities */

@@ -12,8 +12,6 @@
  */
 
 import React, { useState, useEffect } from "react";
-import fgoLogo from "./fgo_calc_logo.png";
-import saintQuartzIcon from "./saintquartz.png";
 import "./styles/theme.css";
 import "./App.css";
 import RunsCalculator from "./RunsCalculator";
@@ -22,6 +20,7 @@ import BondLevelSelector from "./components/core/BondLevelSelector";
 import BondProgressDisplay from "./components/core/BondProgressDisplay";
 import ServerToggle from "./components/core/ServerToggle";
 import ThemeToggle from "./components/core/ThemeToggle";
+import Header, { Footer } from "./components/core/Header";
 
 function App() {
   const [selectedServant, setSelectedServant] = useState(null);
@@ -143,15 +142,10 @@ function App() {
         {/* Theme Toggle Component */}
         <ThemeToggle
           isDarkMode={isDarkMode}
-          onThemeChange={setIsDarkMode}
-        />
+          onThemeChange={setIsDarkMode}        />
 
-        <div className="logo-container">
-          <img
-            src={fgoLogo}
-            alt="FGO Bond Level Calculator"
-            className="logo"
-          />        </div>
+        {/* Header Component - Logo */}
+        <Header />
 
         {/* Server Toggle Component */}
         <ServerToggle
@@ -214,19 +208,10 @@ function App() {
         <RunsCalculator
           selectedServant={selectedServant}
           targetBond={targetBond}
-          pointsNeeded={result ? result.totalPoints : 0}
-        />
+          pointsNeeded={result ? result.totalPoints : 0}        />
 
-        <footer className="footer-credit">
-          Made with <img
-            src={saintQuartzIcon}
-            alt="Saint Quartz"
-            className="footer-icon"
-            aria-hidden="true"
-          /> by <a href="https://github.com/AJDxB" target="_blank" rel="noopener noreferrer">AJDxB</a>
-          <span className="footer-separator"> | </span>
-          <span className="footer-version">v0.3.4</span>
-        </footer>
+        {/* Footer Component */}
+        <Footer />
       </div>
     </div>
   );

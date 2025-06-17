@@ -1,0 +1,75 @@
+/**
+ * Header.module.css
+ * FGO Bond Calculator - Header Component Styles
+ * 
+ * Styles for logo container, footer credits, and version display
+ * Extracted from App.css for better component organization
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.4 - Extracted from App.css for modular styling
+ * @created 2025-06-17
+ * @github https://github.com/AJDxB/fgo-bond-calculator
+ */
+
+/* Logo Container */
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(15px, 3vw, 20px);
+  margin-top: clamp(-8px, -1.5vw, -10px);
+}
+
+.logo {
+  width: clamp(280px, 70vw, 500px);
+  height: auto;
+  display: block;
+  background: transparent;
+  filter: drop-shadow(0 4px 18px rgba(90,120,180,0.10));
+}
+
+/* Footer Credit */
+.footerCredit {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--text-color, #888);
+  font-size: 0.95em;
+}
+
+.footerIcon {
+  height: 1.15em;
+  vertical-align: text-bottom;
+  margin: 0 0.2em;
+  display: inline-block;
+  font-size: 1.15em;
+}
+
+.footerCredit a {
+  color: #6cf !important; /* Always light blue */
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.footerCredit a:hover {
+  color: #aeeaff !important;
+}
+
+/* Fallback for missing image */
+.footerIcon:not([src]) {
+  background: #222;
+  border-radius: 2px;
+  width: 1.15em;
+  height: 1.15em;
+  display: inline-block;
+}
+
+.footerSeparator {
+  margin: 0 0.4em;
+  color: var(--text-color, #888);
+  font-weight: 400;
+}
+
+.footerVersion {
+  color: var(--text-color, #888);
+  font-size: 0.97em;
+  letter-spacing: 0.01em;
+}
