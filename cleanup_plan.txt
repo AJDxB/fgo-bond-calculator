@@ -25,7 +25,7 @@ PHASE 1: IMMEDIATE REFACTORING (Priority 1) - IN PROGRESS
 🚧 NEXT STEPS:
 1B. ✅ COMPLETED: CSS Refactoring & Theme Migration 
 2. ✅ COMPLETED: BondLevelSelector Component (Extracted & committed)
-3. BondProgressDisplay Component (Current target: ~80 lines)
+3. ✅ COMPLETED: BondProgressDisplay Component (Extracted & committed)
 4. ServerToggle Component (Current target: ~40 lines)
 5. ThemeToggle Component (Current target: ~30 lines)
 6. Header Component (Current target: ~50 lines)
@@ -47,7 +47,10 @@ Target: Modular, reusable components
 SPLIT APP.JS INTO:
 - ServantSelector (servant search, filtering, class icons) ✅ DONE
 - BondLevelSelector (current/target bond level inputs) ✅ DONE
-- BondProgressDisplay (bond points, percentages, visual progress)
+- BondProgressDisplay (bond points, percentages, visual progress) ✅ DONE
+- ServerToggle (NA/JP server selection) 
+- ThemeToggle (dark/light mode toggle)
+- Header (logo, title, version display)
 - ServerToggle (NA/JP server selection with enhanced UI)
 - ThemeToggle (dark/light mode)
 - Header (logo, version, navigation)

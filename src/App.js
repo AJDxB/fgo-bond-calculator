@@ -20,6 +20,7 @@ import RunsCalculator from "./RunsCalculator";
 import ServantSelector from "./components/core/ServantSelector";
 import BondLevelSelector from "./components/core/BondLevelSelector";
 import BondProgressDisplay from "./components/core/BondProgressDisplay";
+import ServerToggle from "./components/core/ServerToggle";
 
 function App() {
   const [selectedServant, setSelectedServant] = useState(null);
@@ -151,21 +152,15 @@ function App() {
             src={fgoLogo}
             alt="FGO Bond Level Calculator"
             className="logo"
-          />
-        </div>        <div className="server-toggle">
-          <button 
-            onClick={() => setIsJPServer(false)}
-            className={`server-btn ${!isJPServer ? 'active' : ''}`}
-          >
-            NA Server
-          </button>
-          <button 
-            onClick={() => setIsJPServer(true)}
-            className={`server-btn ${isJPServer ? 'active' : ''}`}
-          >
-            JP Server
-          </button>
-        </div>        <div>
+          />        </div>
+
+        {/* Server Toggle Component */}
+        <ServerToggle
+          isJPServer={isJPServer}
+          onServerChange={setIsJPServer}
+        />
+
+        <div>
           <div className="form-group">
             <label className="form-label">Servant</label>
             <ServantSelector

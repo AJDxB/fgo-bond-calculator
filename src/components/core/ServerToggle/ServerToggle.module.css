@@ -1,0 +1,53 @@
+/**
+ * ServerToggle.module.css
+ * FGO Bond Calculator - Server Toggle Component Styles
+ * 
+ * Styles for NA/JP server selection toggle with responsive design
+ * Extracted from App.css for better component organization
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.4 - Extracted from App.css for modular styling
+ * @created 2025-06-17
+ * @github https://github.com/AJDxB/fgo-bond-calculator
+ */
+
+/* Server Toggle Container */
+.serverToggle {
+  display: flex;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  background: var(--input-bg);
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 4px rgba(30,40,90,0.04);
+}
+
+/* Server Button Styling */
+.serverBtn {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--option-hover);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+/* Dark Theme Button Background */
+[data-theme="dark"] .serverBtn {
+  background: transparent;
+}
+
+/* Active Button State */
+.serverBtn.active {
+  background: var(--highlight-color, #3142b7);
+  color: white;
+}
+
+/* Hover State for Inactive Buttons */
+.serverBtn:hover:not(.active) {
+  background: var(--option-hover);
+}
