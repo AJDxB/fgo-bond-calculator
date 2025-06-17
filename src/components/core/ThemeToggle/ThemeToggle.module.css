@@ -1,0 +1,38 @@
+/**
+ * ThemeToggle.module.css
+ * FGO Bond Calculator - Theme Toggle Component Styles
+ * 
+ * Styles for dark/light theme toggle button with responsive design
+ * Extracted from App.css for better component organization
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.4 - Extracted from App.css for modular styling
+ * @created 2025-06-17
+ * @github https://github.com/AJDxB/fgo-bond-calculator
+ */
+
+/* Theme Toggle Button */
+.themeToggle {
+  position: absolute;
+  top: clamp(15px, 3vw, 20px);
+  right: clamp(15px, 3vw, 20px);
+  width: clamp(35px, 6vw, 40px);
+  height: clamp(35px, 6vw, 40px);
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(14px, 2.5vw, 16px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+/* Hover Effect */
+.themeToggle:hover {
+  transform: scale(1.1);
+}

@@ -34,31 +34,6 @@
   transition: background 0.3s ease;
 }
 
-/* Dark Mode Toggle */
-.theme-toggle {
-  position: absolute;
-  top: clamp(15px, 3vw, 20px);
-  right: clamp(15px, 3vw, 20px);
-  width: clamp(35px, 6vw, 40px);
-  height: clamp(35px, 6vw, 40px);
-  border-radius: 50%;
-  border: 2px solid var(--border-color);
-  background: var(--card-bg);
-  color: var(--text-color);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(14px, 2.5vw, 16px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  z-index: 10;
-}
-
-.theme-toggle:hover {
-  transform: scale(1.1);
-}
-
 /* Logo Container */
 .logo-container {
   display: flex;

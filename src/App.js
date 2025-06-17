@@ -21,6 +21,7 @@ import ServantSelector from "./components/core/ServantSelector";
 import BondLevelSelector from "./components/core/BondLevelSelector";
 import BondProgressDisplay from "./components/core/BondProgressDisplay";
 import ServerToggle from "./components/core/ServerToggle";
+import ThemeToggle from "./components/core/ThemeToggle";
 
 function App() {
   const [selectedServant, setSelectedServant] = useState(null);
@@ -136,16 +137,14 @@ function App() {
       totalPoints,
     });
   }, [selectedServant, bondLevels, targetBond, currentBondLevel, currentPointsLeft]);
-
   return (
     <div className="app-container">
-      <div className="main-card">        <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className="theme-toggle"
-            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          >
-            {isDarkMode ? "☀" : "☽"}
-          </button>
+      <div className="main-card">
+        {/* Theme Toggle Component */}
+        <ThemeToggle
+          isDarkMode={isDarkMode}
+          onThemeChange={setIsDarkMode}
+        />
 
         <div className="logo-container">
           <img
