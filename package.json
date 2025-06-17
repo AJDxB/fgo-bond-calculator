@@ -51,11 +51,15 @@
     "deploy": "gh-pages --add --dotfiles -d build",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix"
-  },
-  "eslintConfig": {
+  },  "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(axios)/)"
     ]
   },
   "browserslist": {

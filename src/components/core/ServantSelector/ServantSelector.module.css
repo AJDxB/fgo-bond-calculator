@@ -1,0 +1,222 @@
+/**
+ * ServantSelector.module.css
+ * FGO Bond Calculator - Servant Selector Component Styles
+ * 
+ * Styles for servant selection dropdown and class icons
+ * Integrates with global theme system in ../../../styles/theme.css
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.4 - Enhanced with theme integration
+ * @created 2025-06-16
+ */
+
+.servant-selector {
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
+/* React-Select Custom Styles */
+.servant-selector :global(.react-select__control) {
+  width: 100%;
+  font-size: var(--font-base);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--select-bg);
+  color: var(--text-color);
+  transition: all var(--transition-normal);
+  box-shadow: none;
+  min-height: 48px;
+}
+
+.servant-selector :global(.react-select__control:hover) {
+  border-color: var(--focus-color);
+}
+
+.servant-selector :global(.react-select__control--is-focused) {
+  border-color: var(--focus-color);
+  box-shadow: 0 0 0 2px var(--focus-bg);
+}
+
+.servant-selector :global(.react-select__placeholder) {
+  color: var(--placeholder-color);
+  font-size: var(--font-base);
+}
+
+.servant-selector :global(.react-select__single-value) {
+  color: var(--text-color);
+  font-size: var(--font-base);
+}
+
+.servant-selector :global(.react-select__menu) {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 9999;
+}
+
+.servant-selector :global(.react-select__menu-list) {
+  padding: 0;
+  max-height: 300px;
+}
+
+.servant-selector :global(.react-select__option) {
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.servant-selector :global(.react-select__option:hover) {
+  background: var(--option-hover);
+}
+
+.servant-selector :global(.react-select__option--is-focused) {
+  background: var(--option-hover);
+}
+
+.servant-selector :global(.react-select__option--is-selected) {
+  background: var(--focus-bg);
+  color: var(--focus-color);
+}
+
+.servant-selector :global(.react-select__input-container) {
+  color: var(--text-color);
+}
+
+.servant-selector :global(.react-select__indicator-separator) {
+  background-color: var(--border-color);
+}
+
+.servant-selector :global(.react-select__dropdown-indicator) {
+  color: var(--placeholder-color);
+}
+
+.servant-selector :global(.react-select__dropdown-indicator:hover) {
+  color: var(--text-color);
+}
+
+/* Option Container Styling */
+.option-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  min-height: clamp(20px, 4vw, 24px);
+}
+
+.option-stars {
+  width: 15%;
+  text-align: left;
+  padding-right: var(--spacing-xs);
+  font-size: var(--font-xs);
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.bronze {
+  color: var(--star-bronze);
+}
+
+.silver {
+  color: var(--star-silver);
+}
+
+.gold {
+  color: var(--star-gold);
+}
+
+.option-divider {
+  width: 1px;
+  height: clamp(16px, 3vw, 20px);
+  background-color: var(--divider-color);
+  margin-right: var(--spacing-xs);
+}
+
+.option-name {
+  width: 75%;
+  text-align: left;
+  padding-right: var(--spacing-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.option-class {
+  width: calc(10% - 9px);
+  text-align: right;
+  color: var(--class-fallback-color);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-base);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Class icon styles */
+.class-icon {
+  width: clamp(20px, 4vw, 24px);
+  height: clamp(20px, 4vw, 24px);
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  transition: transform var(--transition-fast);
+}
+
+.class-icon:hover {
+  transform: scale(1.05);
+}
+
+.class-emoji {
+  font-size: var(--font-base);
+  display: inline-block;
+  width: clamp(20px, 4vw, 24px);
+  height: clamp(20px, 4vw, 24px);
+  text-align: center;
+  line-height: clamp(20px, 4vw, 24px);
+  border-radius: var(--radius-sm);
+  color: var(--class-fallback-color);
+}
+
+/* Loading state */
+.servant-selector.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.servant-selector.loading :global(.react-select__control) {
+  cursor: not-allowed;
+}
+
+/* Error state */
+.servant-selector.error {
+  border: 2px solid var(--error-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+  background: var(--error-bg);
+}
+
+.servant-selector.error :global(.react-select__control) {
+  border-color: var(--error-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .servant-selector {
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .servant-selector :global(.react-select__control) {
+    min-height: 44px;
+  }
+  
+  .class-icon,
+  .class-emoji {
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+}

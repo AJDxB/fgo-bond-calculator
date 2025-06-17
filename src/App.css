@@ -8,50 +8,7 @@
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
 
-/* App.css - Extracted from App.js */
-
-/* CSS Variables for Theme Support */
-:root {
-  /* Light theme */
-  --bg-color: #f7f7f9;
-  --card-bg: #fff;
-  --text-color: #333;
-  --border-color: #bbb;
-  --input-bg: #fff;
-  --select-bg: #fafbfc;
-  --result-bg: #eef5ff;
-  --result-text: #204b86;
-  --placeholder-color: #969ca1;
-  --divider-color: #ddd;
-  --option-hover: #f4f6fa;
-
-  /* Result section variables */
-  --result-box-bg: #eef5ff;
-  --result-box-text: #204b86;
-  --result-description-text: #335dc2;
-  --result-value-text: #204b86;
-}
-
-[data-theme="dark"] {
-  /* Dark theme */
-  --bg-color: #1a1a1a;
-  --card-bg: #2d2d2d;
-  --text-color: #e0e0e0;
-  --border-color: #555;
-  --input-bg: #3a3a3a;
-  --select-bg: #3a3a3a;
-  --result-bg: #2a3f5f;
-  --result-text: #a8c5ff;
-  --placeholder-color: #888;
-  --divider-color: #404040;
-  --option-hover: #404040;
-
-  /* Result section variables */
-  --result-box-bg: #1e3a8a;
-  --result-box-text: #e2e8f0;
-  --result-description-text: #93c5fd;
-  --result-value-text: #e2e8f0;
-}
+/* App.css - Main Application Layout Styles */
 
 /* Base App Container */
 .app-container {
@@ -63,26 +20,6 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-}
-
-/* Tomoe Ice Effect */
-.tomoe-frost {
-  color: #a8d0ff !important;
-  text-shadow: 0 0 1px rgba(0, 0, 0, 0.4), 
-               0 0 2px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .tomoe-frost {
-  color: #b8e0ff !important;
-  text-shadow: 0 0 1px rgba(0, 0, 0, 0.6), 
-               0 0 3px rgba(0, 0, 0, 0.3);
-}
-
-/* Ensure the ice color applies to the entire option */
-.tomoe-frost .option-name,
-.tomoe-frost .option-stars,
-.tomoe-frost .option-class {
-  color: inherit;
 }
 
 /* Main Card */
@@ -276,65 +213,6 @@
   text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* Select Option Styling */
-.option-container {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  min-height: clamp(20px, 4vw, 24px);
-}
-
-.option-stars {
-  width: 15%;
-  text-align: left;
-  padding-right: clamp(4px, 1.5vw, 8px);
-  font-size: clamp(0.7rem, 2vw, 0.9em);
-  font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-
-.option-stars.bronze {
-  color: #CD7F32;
-}
-
-.option-stars.silver {
-  color: #C0C0C0;
-}
-
-.option-stars.gold {
-  color: #FFD700;
-}
-
-.option-divider {
-  width: 1px;
-  height: clamp(16px, 3vw, 20px);
-  background-color: var(--divider-color);
-  margin-right: clamp(4px, 1.5vw, 8px);
-}
-
-.option-name {
-  width: 75%;
-  text-align: left;
-  padding-right: clamp(4px, 1.5vw, 8px);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.option-class {
-  width: calc(10% - 9px);
-  text-align: right;
-  color: #a3a3a3;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: clamp(1rem, 2.5vw, 1.2em);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
 /* Class Icon Styling */
 .class-icon {
   width: clamp(20px, 4vw, 24px);
@@ -394,7 +272,6 @@
 }
 
 /* Header Controls for Server Toggle */
-/* Import calculator mode toggle styles for server toggle */
 .server-toggle {
   display: flex;
   margin-bottom: 1rem;
@@ -404,22 +281,6 @@
   gap: 4px;
   border: 1px solid var(--border-color);
   box-shadow: 0 1px 4px rgba(30,40,90,0.04);
-}
-
-/* Update existing theme-toggle button to match new layout */
-.theme-toggle {
-  padding: 0.5rem;
-  font-size: 1.2rem;
-  background: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-color);
-  cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.theme-toggle:hover {
-  background: var(--option-hover);
 }
 
 .server-btn {

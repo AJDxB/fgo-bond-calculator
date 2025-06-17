@@ -1,0 +1,171 @@
+/**
+ * theme.css
+ * FGO Bond Calculator - Global Theme Variables and Base Styles
+ * 
+ * Centralized theme system extracted from App.css for component reuse
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.4 - Theme extraction for modular components
+ * @created 2025-06-16
+ * @github https://github.com/AJDxB/fgo-bond-calculator
+ */
+
+/* CSS Variables for Theme Support */
+:root {
+  /* Light theme */
+  --bg-color: #f7f7f9;
+  --card-bg: #fff;
+  --text-color: #333;
+  --border-color: #bbb;
+  --input-bg: #fff;
+  --select-bg: #fafbfc;
+  --result-bg: #eef5ff;
+  --result-text: #204b86;
+  --placeholder-color: #969ca1;
+  --divider-color: #ddd;
+  --option-hover: #f4f6fa;
+
+  /* Result section variables */
+  --result-box-bg: #eef5ff;
+  --result-box-text: #204b86;
+  --result-description-text: #335dc2;
+  --result-value-text: #204b86;
+
+  /* Error states */
+  --error-color: #ff4444;
+  --error-bg: #ffe6e6;
+
+  /* Success states */
+  --success-color: #22c55e;
+  --success-bg: #dcfce7;
+
+  /* Warning states */
+  --warning-color: #f59e0b;
+  --warning-bg: #fef3c7;
+
+  /* Focus states */
+  --focus-color: #3b82f6;
+  --focus-bg: #dbeafe;
+
+  /* Star colors */
+  --star-bronze: #CD7F32;
+  --star-silver: #C0C0C0;
+  --star-gold: #FFD700;
+
+  /* Class icon fallback color */
+  --class-fallback-color: #a3a3a3;
+
+  /* Spacing variables */
+  --spacing-xs: clamp(4px, 1vw, 6px);
+  --spacing-sm: clamp(8px, 2vw, 12px);
+  --spacing-md: clamp(12px, 3vw, 18px);
+  --spacing-lg: clamp(16px, 4vw, 24px);
+  --spacing-xl: clamp(20px, 5vw, 32px);
+
+  /* Border radius variables */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  /* Font size variables */
+  --font-xs: clamp(0.7rem, 1.8vw, 0.875rem);
+  --font-sm: clamp(0.875rem, 2.2vw, 1rem);
+  --font-base: clamp(1rem, 2.6vw, 1.15rem);
+  --font-lg: clamp(1.1rem, 2.8vw, 1.28rem);
+  --font-xl: clamp(1.25rem, 3.2vw, 1.5rem);
+
+  /* Shadow variables */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 18px rgba(90,120,180,0.10);
+  --shadow-lg: 0 8px 48px 0 rgba(30,40,90,0.13);
+
+  /* Transition variables */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+[data-theme="dark"] {
+  /* Dark theme */
+  --bg-color: #1a1a1a;
+  --card-bg: #2d2d2d;
+  --text-color: #e0e0e0;
+  --border-color: #555;
+  --input-bg: #3a3a3a;
+  --select-bg: #3a3a3a;
+  --result-bg: #2a3f5f;
+  --result-text: #a8c5ff;
+  --placeholder-color: #888;
+  --divider-color: #404040;
+  --option-hover: #404040;
+
+  /* Result section variables */
+  --result-box-bg: #1e3a8a;
+  --result-box-text: #e2e8f0;
+  --result-description-text: #93c5fd;
+  --result-value-text: #e2e8f0;
+
+  /* Error states */
+  --error-color: #ef4444;
+  --error-bg: #2d1b1b;
+
+  /* Success states */
+  --success-color: #10b981;
+  --success-bg: #1a2e23;
+
+  /* Warning states */
+  --warning-color: #f59e0b;
+  --warning-bg: #2d2416;
+
+  /* Focus states */
+  --focus-color: #60a5fa;
+  --focus-bg: #1e293b;
+}
+
+/* Tomoe Ice Effect */
+.tomoe-frost {
+  color: #a8d0ff !important;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.4), 
+               0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .tomoe-frost {
+  color: #b8e0ff !important;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.6), 
+               0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Ensure the ice color applies to the entire option */
+.tomoe-frost .option-name,
+.tomoe-frost .option-stars,
+.tomoe-frost .option-class {
+  color: inherit;
+}
+
+/* Global utility classes */
+.text-bronze {
+  color: var(--star-bronze);
+}
+
+.text-silver {
+  color: var(--star-silver);
+}
+
+.text-gold {
+  color: var(--star-gold);
+}
+
+/* Base transition for theme switching */
+* {
+  transition: background-color var(--transition-normal), 
+              color var(--transition-normal), 
+              border-color var(--transition-normal);
+}
+
+/* Remove transition from specific elements for performance */
+*:focus,
+*:hover,
+*:active {
+  transition: all var(--transition-fast);
+}

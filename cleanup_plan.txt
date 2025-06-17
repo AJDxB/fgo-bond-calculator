@@ -1,168 +1,501 @@
-FGO Bond Calculator Cleanup Plan
-============================
+FGO Bond Calculator Cleanup Plan v2.1
+=====================================
 
-1. Code Organization
-------------------
-- Split App.js into smaller components:
-  * ServantSelector (servant selection logic)
-  * BondLevelSelector (bond level input)
-  * ResultDisplay (bond calculation results)
-  * ThemeToggle (dark/light mode)
-  * ServerToggle (NA/JP server selection)
-  * Header (logo and version)
-  * Footer (credits)
+PHASE 1: IMMEDIATE REFACTORING (Priority 1) - IN PROGRESS
+==========================================================
 
-2. File Structure
----------------
+✅ COMPLETED:
+1. ServantSelector Component Extraction
+   - ✅ Created ServantSelector.jsx with servant search & filtering
+   - ✅ Created ClassIcon.jsx for class icon display with fallbacks
+   - ✅ Created ServantSelector.module.css for component styles
+   - ✅ Updated App.js to use new ServantSelector component
+   - ✅ Fixed Jest configuration for ES6 modules (axios)
+   - ✅ Updated App.test.js to test actual app functionality
+   - ✅ Added ServantSelector.test.js for component testing
+   - ✅ Removed redundant code from App.js (fuzzy search, styles, helpers)
+   - ✅ Fixed servant data file paths (servants.json, servants_jp.json)
+
+⚠️ KNOWN ISSUES:
+   - ✅ FIXED: ServantSelector styling now matches original (CSS variables properly integrated)
+   - ✅ FIXED: Removed duplicate CSS variables from App.css 
+   - ✅ FIXED: Component-specific styles properly migrated to ServantSelector.module.css
+   - ✅ FIXED: Theme integration working correctly across components
+
+🚧 NEXT STEPS:
+1B. ✅ COMPLETED: CSS Refactoring & Theme Migration 
+2. BondLevelSelector Component (Current target: ~100 lines)
+3. BondProgressDisplay Component (Current target: ~80 lines)
+4. ServerToggle Component (Current target: ~40 lines)
+5. ThemeToggle Component (Current target: ~30 lines)
+6. Header Component (Current target: ~50 lines)
+
+CURRENT STATUS:
+- App.js reduced from 580 lines to ~230 lines (60% reduction)
+- ServantSelector fully extracted and tested
+- ✅ CSS refactoring completed - theme system working properly
+- ✅ Component styles properly migrated to CSS Modules
+- ✅ Duplicate CSS variables removed from App.css
+- Tests passing (Jest ES6 module issue resolved)
+- Development server running successfully
+
+1. Code Organization & Component Splitting
+-----------------------------------------
+Current state: 580-line App.js with multiple responsibilities
+Target: Modular, reusable components
+
+SPLIT APP.JS INTO:
+- ServantSelector (servant search, filtering, class icons) ✅ DONE
+- BondLevelSelector (current/target bond level inputs)
+- BondProgressDisplay (bond points, percentages, visual progress)
+- ServerToggle (NA/JP server selection with enhanced UI)
+- ThemeToggle (dark/light mode)
+- Header (logo, version, navigation)
+- Layout (responsive container, grid system)
+
+EXTRACT EXISTING COMPONENTS:
+- RunsCalculator (already exists, needs cleanup)
+- InfoTooltip (already exists, move to components/)
+- QuestSelect (functionality exists in RunsCalculator)
+
+1B. CSS REFACTORING & THEME MIGRATION (CRITICAL PRIORITY)
+=========================================================
+CURRENT CSS STRUCTURE ISSUES:
+- App.css: Contains theme variables, component styles, and react-select customization
+- Component-specific CSS: InfoTooltip.css, QuestSelect.css, RunsCalculator.css
+- Global styles in index.css
+- ServantSelector created with CSS Modules but missing theme integration
+
+CSS MIGRATION STRATEGY:
+Phase 1A: Extract Theme System
+  - Create /src/styles/variables.css with CSS custom properties
+  - Create /src/styles/themes.css for dark/light mode variations
+  - Extract all CSS variables from App.css
+  - Ensure theme variables are globally available
+  
+Phase 1B: Component CSS Migration
+  - Extract react-select styles from App.css to ServantSelector.module.css
+  - Migrate form styles to appropriate component modules
+  - Ensure CSS Modules properly use CSS variables
+  - Maintain responsive breakpoints and hover effects
+  
+Phase 1C: CSS Architecture Cleanup
+  - Move global styles to /src/styles/globals.css
+  - Keep only app-level layout styles in App.css
+  - Establish CSS variable naming conventions
+  - Document theme system usage
+
+CRITICAL CSS FILES TO MIGRATE:
+Current: App.css (600+ lines) → Target: Multiple organized files
+- Theme variables → /src/styles/variables.css
+- Component styles → Component.module.css files
+- Global styles → /src/styles/globals.css
+- Layout styles → App.css (reduced)
+
+EXISTING CSS FILES TO REORGANIZE:
+- InfoTooltip.css → /src/components/ui/InfoTooltip/InfoTooltip.module.css
+- QuestSelect.css → /src/components/calculators/RunsCalculator/QuestSelect.module.css
+- RunsCalculator.css → /src/components/calculators/RunsCalculator/RunsCalculator.module.css
+- index.css → /src/styles/globals.css + component-specific files
+
+2. Enhanced File Structure
+------------------------
+CURRENT STRUCTURE ISSUES:
+- Multiple CSS files in src/ root (App.css, InfoTooltip.css, QuestSelect.css, RunsCalculator.css)
+- Assets scattered (fgo_calc_logo.png, saintquartz.png in src/)
+- ServantClassImages duplicated in src/ and public/
+- No organized component structure
+- Missing separation of concerns
+
+TARGET STRUCTURE:
 /src
   /components
-    /servant-selector
-      ServantSelector.js
-      ServantSelector.css
-    /bond-level
-      BondLevelSelector.js
-      BondLevelSelector.css
-    /result-display
-      ResultDisplay.js
-      ResultDisplay.css
-    /runs-calculator
-      RunsCalculator.js
-      RunsCalculator.css
-    /common
-      ThemeToggle.js
-      ServerToggle.js
-      Header.js
-      Footer.js
+    /core
+      ServantSelector/
+        ServantSelector.jsx ✅
+        ClassIcon.jsx ✅
+        ServantSelector.module.css ✅ (needs theme integration)
+        ServantSelector.test.js ✅
+        index.js ✅
+      BondLevelSelector/
+        BondLevelSelector.jsx
+        BondLevelSelector.module.css
+        BondLevelSelector.test.js
+        index.js
+      BondProgressDisplay/
+        BondProgressDisplay.jsx
+        BondProgressDisplay.module.css
+        BondProgressDisplay.test.js
+        index.js
+    /calculators
+      RunsCalculator/
+        RunsCalculator.jsx (migrate from src/RunsCalculator.js)
+        QuestModePanel.jsx (extract from RunsCalculator)
+        CustomPointsPanel.jsx (extract from RunsCalculator)
+        QuickListPanel.jsx (extract from RunsCalculator)
+        QuestSelect.jsx (extract with QuestSelect.css)
+        RunsCalculator.module.css (migrate from src/RunsCalculator.css)
+        QuestSelect.module.css (migrate from src/QuestSelect.css)
+        RunsCalculator.test.js
+        index.js
+    /ui
+      InfoTooltip/
+        InfoTooltip.jsx (migrate from src/InfoTooltip.js)
+        InfoTooltip.module.css (migrate from src/InfoTooltip.css)
+        InfoTooltip.test.js
+        index.js
+      ServerToggle/
+        ServerToggle.jsx (extract from App.js)
+        ServerToggle.module.css
+        ServerToggle.test.js
+        index.js
+      ThemeToggle/
+        ThemeToggle.jsx (extract from App.js)
+        ThemeToggle.module.css
+        ThemeToggle.test.js
+        index.js
+    /layout
+      Header/
+        Header.jsx (extract from App.js)
+        Header.module.css
+        Header.test.js
+        index.js
+      Layout/
+        Layout.jsx (extract container logic)
+        Layout.module.css
+        Layout.test.js
+        index.js
+  /hooks
+    useServantData.js (extract servant loading logic)
+    useBondCalculations.js (extract bond calculation logic)
+    useQuestData.js (extract quest data logic)
+    useTheme.js (extract theme management)
+    useLocalStorage.js (extract localStorage utilities)
+    useDebounce.js (for search optimization)
+  /utils
+    bondCalculations.js (extract from components)
+    servantUtils.js (extract filtering/search logic)
+    questUtils.js (extract quest processing)
+    formatters.js (number formatting, etc.)
+    constants.js (magic numbers, default values)
+    apiClient.js (axios wrapper with error handling)
+    classUtils.js (capitalizeClass and related functions)
+  /services
+    servantService.js (servant data fetching/caching)
+    questService.js (quest data fetching/caching)
+    dataTransformers.js (API response processing)
   /assets
     /images
-      fgo_calc_logo.png
-      saintquartz.png
+      fgo_calc_logo.png (move from src/)
+      saintquartz.png (move from src/)
     /icons
-      class-icons/
-  /data
-    servant-data.js
-    bond-calculations.js
-  /utils
-    formatting.js
-    calculations.js
-    constants.js
-  /hooks
-    useTheme.js
-    useServantData.js
-    useBondCalculations.js
+      /class-icons (consolidate from src/ServantClassImages)
   /styles
-    theme.css
-    variables.css
-    common.css
+    globals.css (global styles, reset, base typography)
+    variables.css (CSS custom properties for theming)
+    themes.css (dark/light mode theme definitions)
+    components.css (shared component utilities)
+  App.js (simplified main component)
+  App.css (reduced to app-level layout only)
+  index.js (unchanged)
+  index.css (migrate to /styles/globals.css)
 
-3. Component Organization
------------------------
-- Each component should:
-  * Have its own folder
-  * Include component file
-  * Include styles file
-  * Include test file
-  * Include README.md for documentation
-  * Follow single responsibility principle
+MIGRATION PRIORITIES:
+1. CSS system migration (variables, themes, component styles)
+2. Existing component file reorganization (InfoTooltip, RunsCalculator)
+3. Asset consolidation (images, icons)
+4. Utility function extraction
+5. Custom hooks creationPHASE 2: TECHNICAL IMPROVEMENTS (Priority 2)
+============================================
 
-4. Data Management
-----------------
-- Move servant data fetching logic to custom hook
-- Create data transformation utilities
-- Implement proper error handling
-- Add data caching
-- Consider using React Query for data fetching
-- Add loading states and error boundaries
+3. Modern React Patterns & Performance
+------------------------------------
+IMPLEMENT:
+- CSS Modules for scoped styling (already planned structure)
+- React.memo for expensive components (ServantSelector, QuestSelect)
+- useMemo for expensive calculations (bond calculations, servant filtering)
+- useCallback for event handlers to prevent re-renders
+- Custom hooks for business logic separation
+- Error boundaries for each major section
+- Suspense boundaries for data loading
+- Code splitting with React.lazy()
 
-5. Documentation
---------------
-- Add JSDoc comments for all components
-- Create component documentation with examples
-- Document data flow and state management
-- Add inline comments for complex logic
-- Create contribution guidelines
-- Update README.md with setup instructions
+REPLACE:
+- Class-based components → Functional components (if any remain)
+- Inline styles → CSS Modules
+- Direct state mutations → Immutable updates
+- Prop drilling → Context API where appropriate
 
-6. Testing
----------
-- Add unit tests for:
-  * Bond calculations
-  * Servant filtering
-  * Data transformation
-  * Component rendering
-- Add integration tests for:
-  * Servant selection flow
-  * Bond calculation flow
-  * Theme switching
-  * Server switching
-- Add E2E tests for critical paths
-- Setup test coverage reporting
+4. Data Management & API Layer
+-----------------------------
+CURRENT ISSUES:
+- Direct axios calls in components
+- No error handling for API failures
+- No loading states
+- No data caching
+- Large JSON files loaded on startup
 
-7. Version Control
-----------------
-- Update .gitignore for build artifacts
-- Add commit message guidelines
-- Setup pre-commit hooks for linting
-- Add branch protection rules
-- Document Git workflow
+IMPROVEMENTS:
+- Create dedicated API service layer
+- Implement React Query for data fetching, caching, and sync
+- Add proper loading states and error boundaries
+- Implement virtual scrolling for large servant lists
+- Add data prefetching for better UX
+- Consider IndexedDB for offline quest data
 
-8. Build Process
---------------
-- Optimize build configuration
-- Add source maps for development
-- Configure code splitting
-- Setup proper asset optimization
-- Add bundle analysis
-- Configure CI/CD pipeline
-
-9. Performance Improvements
-------------------------
-- Implement React.memo for expensive components
-- Add proper loading states
-- Optimize images and assets
-- Implement code splitting
-- Add service worker for offline support
-- Cache API responses
-
-10. Accessibility
----------------
-- Add ARIA labels
-- Improve keyboard navigation
-- Add proper focus management
-- Ensure proper color contrast
-- Add screen reader support
-- Test with accessibility tools
-
-11. Error Handling
-----------------
-- Add error boundaries
-- Implement proper error logging
-- Add user-friendly error messages
-- Handle API errors gracefully
-- Add fallback UI for errors
-
-12. Future Features
+5. State Management
 -----------------
-- Quest location recommendations
-- Bond CE benefits calculator
-- Team composition suggestions
-- Progress tracking
-- Data export/import
-- Account management
-- Multi-servant planning
+CURRENT: useState scattered across components
+TARGET: 
+- Context API for global state (theme, server, selected servant)
+- Local state for component-specific data
+- Custom hooks for complex state logic
+- Consider Zustand for more complex state if needed
 
-Implementation Priority:
-1. Code organization and component splitting
-2. Documentation
-3. Testing setup
-4. Performance improvements
-5. Error handling
-6. Accessibility improvements
-7. Future features
+6. TypeScript Migration (Long-term)
+---------------------------------
+BENEFITS:
+- Better developer experience
+- Compile-time error catching
+- Improved IntelliSense
+- Self-documenting code
 
-Next Steps:
-1. Create new directory structure
-2. Split App.js into components
-3. Setup testing environment
-4. Add initial documentation
-5. Implement error boundaries
+MIGRATION PLAN:
+- Convert utils and constants first
+- Add types for API responses
+- Convert hooks to TypeScript
+- Convert components one by one
+- Enable strict mode
+
+PHASE 3: QUALITY & DEVELOPER EXPERIENCE (Priority 3)
+===================================================
+
+7. Testing Strategy
+-----------------
+UNIT TESTS:
+- Bond calculation utilities
+- Servant filtering logic
+- Data transformation functions
+- Custom hooks
+- Component rendering
+
+INTEGRATION TESTS:
+- Servant selection flow
+- Calculator mode switching
+- Theme/server switching
+- Error handling flows
+
+E2E TESTS (Playwright/Cypress):
+- Complete bond calculation workflow
+- Quest mode functionality
+- Responsive design on different devices
+
+TESTING TOOLS:
+- Jest + React Testing Library (already configured)
+- MSW for API mocking
+- Playwright for E2E testing
+- Testing coverage reports
+
+8. Code Quality & Standards
+-------------------------
+LINTING & FORMATTING:
+- ESLint with React/hooks rules
+- Prettier for consistent formatting
+- Husky for pre-commit hooks
+- lint-staged for staged file linting
+
+CODE STANDARDS:
+- Consistent naming conventions
+- Component composition patterns
+- Props validation with PropTypes
+- JSDoc documentation
+- Function complexity limits
+
+9. Performance Monitoring
+-----------------------
+- React DevTools Profiler integration
+- Bundle analyzer for build optimization
+- Lighthouse CI for performance regression testing
+- Core Web Vitals monitoring
+- Error tracking (consider Sentry)
+
+10. Accessibility (WCAG 2.1 AA)
+-----------------------------
+CURRENT ISSUES TO FIX:
+- Missing ARIA labels on interactive elements
+- Poor keyboard navigation
+- Color contrast issues in themes
+- No screen reader announcements
+
+IMPROVEMENTS:
+- Add semantic HTML structure
+- Implement proper focus management
+- Add ARIA live regions for dynamic content
+- Test with screen readers
+- Add keyboard shortcuts for power users
+- Ensure proper color contrast ratios
+
+PHASE 4: ADVANCED FEATURES (Priority 4)
+======================================
+
+11. Enhanced User Experience
+--------------------------
+- Progressive Web App (PWA) capabilities
+- Offline functionality with service worker
+- Data persistence with localStorage/IndexedDB
+- Import/export calculator configurations
+- Bookmarkable URLs for specific calculations
+- Multi-language support (i18n)
+
+12. Advanced Calculator Features
+------------------------------
+- Bulk servant planning
+- Optimal quest path recommendations
+- Bond CE efficiency calculations
+- Event-specific calculations
+- Team composition optimizer
+- Progress tracking over time
+
+IMPLEMENTATION ROADMAP
+====================
+
+WEEK 1-2: Phase 1 - Core Refactoring
+- 🔥 PRIORITY: CSS system migration and theme extraction
+- Split App.js into components with proper CSS migration
+- Setup new folder structure and move existing files
+- Extract utility functions and custom hooks
+- Migrate existing components (InfoTooltip, RunsCalculator)
+- Basic testing setup for new components
+
+WEEK 3: Phase 2 - Technical Improvements
+- Implement remaining custom hooks
+- Add error boundaries and loading states
+- Setup React Query for data management
+- Performance optimizations (memoization, code splitting)
+
+WEEK 4: Phase 3 - Quality Improvements
+- Complete testing suite for all components
+- Add linting/formatting rules
+- Accessibility improvements (ARIA, keyboard navigation)
+- Documentation and code review
+
+FUTURE: Phase 4 - Advanced Features
+- PWA implementation
+- TypeScript migration
+- Advanced calculator features
+
+ADDITIONAL MISSING CONSIDERATIONS
+================================
+
+1. DATA VALIDATION & ERROR HANDLING
+---------------------------------
+CURRENT GAPS:
+- No validation for servant data structure
+- Missing error boundaries for component failures
+- No fallback UI for missing data files
+- No handling of malformed JSON responses
+
+ADDITIONS NEEDED:
+- PropTypes or TypeScript for component props
+- Data schema validation for servant/quest JSON
+- Graceful degradation for missing features
+- User-friendly error messages
+- Retry mechanisms for failed requests
+
+2. PERFORMANCE CONSIDERATIONS
+---------------------------
+CURRENT GAPS:
+- Large servant data loaded synchronously
+- No virtualization for long lists
+- Missing memoization for expensive calculations
+- No lazy loading of components
+
+ADDITIONS NEEDED:
+- React.memo for expensive components
+- useMemo for calculation results
+- useCallback for event handlers
+- Virtual scrolling for servant/quest lists
+- Code splitting with React.lazy()
+
+3. ACCESSIBILITY & UX
+-------------------
+CURRENT GAPS:
+- Missing ARIA labels and roles
+- No keyboard navigation strategy
+- Poor screen reader support
+- No loading states or progress indicators
+
+ADDITIONS NEEDED:
+- Semantic HTML structure
+- Focus management between components
+- ARIA live regions for dynamic updates
+- Loading spinners and skeleton screens
+- Keyboard shortcuts for power users
+
+4. BROWSER COMPATIBILITY & POLYFILLS
+----------------------------------
+CURRENT GAPS:
+- CSS custom properties may need fallbacks
+- Modern JavaScript features (optional chaining, nullish coalescing)
+- CSS Grid and Flexbox fallbacks
+
+ADDITIONS NEEDED:
+- Browserslist configuration
+- PostCSS for CSS preprocessing
+- Babel polyfills for older browsers
+- Feature detection and graceful degradation
+
+5. DEVELOPMENT WORKFLOW
+---------------------
+CURRENT GAPS:
+- No pre-commit hooks
+- Missing code formatting standards
+- No automated testing in CI
+- No bundle size monitoring
+
+ADDITIONS NEEDED:
+- Husky + lint-staged for pre-commit checks
+- Prettier configuration
+- GitHub Actions for testing
+- Bundle analyzer integration
+- Automated accessibility testing
+
+6. DATA MIGRATION & VERSIONING
+----------------------------
+CURRENT GAPS:
+- No strategy for handling servant data updates
+- Missing data versioning
+- No migration path for localStorage changes
+- No handling of breaking API changes
+
+ADDITIONS NEEDED:
+- Data version checks
+- Migration scripts for localStorage
+- Fallback for old data formats
+- API versioning strategy
+
+CRITICAL SUCCESS FACTORS
+========================
+1. Maintain backward compatibility during refactoring
+2. Keep the current functionality working at all times
+3. Implement changes incrementally with testing
+4. Document decisions and patterns for future developers
+5. Monitor performance impact of changes
+6. 🔥 Prioritize CSS migration to prevent visual regressions
+7. Ensure theme system works across all components
+8. Test on multiple devices/browsers during migration
+9. Validate data integrity after component extraction
+10. Maintain existing keyboard and accessibility features
+
+BREAKING CHANGES TO AVOID
+=========================
+- Don't change existing component APIs abruptly
+- Maintain current CSS class names for custom styling (during transition)
+- Keep existing data formats compatible
+- Preserve current calculation accuracy
+- Don't break mobile responsiveness
+- Don't change localStorage key names without migration
+- Maintain current color schemes and visual hierarchy
+- Preserve existing keyboard shortcuts and interactions
+- Don't break existing URL structure (if any)
+- Maintain current error handling behavior for users
