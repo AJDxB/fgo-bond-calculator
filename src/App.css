@@ -323,22 +323,6 @@
   }
 }
 
-@media (max-width: 700px) {
-  .form-row.bond-row {
-    flex-direction: column;
-    gap: 14px;
-    align-items: stretch;
-    padding: 0;
-    margin-bottom: 14px;
-  }
-  .bond-level-group, .bond-points-group {
-    min-width: 0;
-    width: 100%;
-    padding: 0;
-    margin-bottom: 0;
-  }
-}
-
 /* Animation for smooth transitions */
 .fade-in {
   animation: fadeIn 0.3s ease-in;
@@ -353,31 +337,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Display 'Current Bond Level' and 'Points Left to Next Level' side by side on desktop, stacked on mobile */
-.form-row.bond-row {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-
-.bond-level-group, .bond-points-group {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.bond-level-group .form-label,
-.bond-points-group .form-label {
-  margin-bottom: 8px;
-  font-weight: 500;
-  text-align: left;
-}
-
-.bond-level-group .form-select,
-.bond-points-group .form-input {
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 0;
 }

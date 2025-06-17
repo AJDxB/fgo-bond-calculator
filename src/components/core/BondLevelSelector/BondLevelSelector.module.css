@@ -1,0 +1,34 @@
+/* BondLevelSelector.module.css */
+
+/* Bond level selection row layout */
+.bondRow {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Bond level select group */
+.bondLevelGroup {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Bond points input group */
+.bondPointsGroup {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+  .bondRow {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .bondLevelGroup,
+  .bondPointsGroup {
+    min-width: 100%;
+  }
+}

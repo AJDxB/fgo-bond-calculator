@@ -18,6 +18,7 @@ import "./styles/theme.css";
 import "./App.css";
 import RunsCalculator from "./RunsCalculator";
 import ServantSelector from "./components/core/ServantSelector";
+import BondLevelSelector from "./components/core/BondLevelSelector";
 
 function App() {
   const [selectedServant, setSelectedServant] = useState(null);
@@ -172,43 +173,18 @@ function App() {
               isJPServer={isJPServer}
               onServantsLoaded={handleServantsLoaded}
             />
-          </div>
-
-          <div className="form-row bond-row">
-            <div className="form-group bond-level-group">
-              <label className="form-label">Current Bond Level</label>
-              <select
-                value={currentBondLevel}
-                onChange={e => {
-                  setCurrentBondLevel(Number(e.target.value));
-                  setCurrentPointsLeft("");
-                }}
-                className="form-select"
-                disabled={!bondLevels.length}
-              >
-                {bondLevels.length === 0 && <option value="">Select a servant first</option>}
-                {bondLevels.map((level, idx) => (
-                  <option key={level.value} value={level.value}>{level.label}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group bond-points-group">
-              <label className="form-label">Points Left to Next Level</label>
-              <input
-                type="text"
-                value={currentPointsLeft}
-                onChange={e => {
-                  const value = e.target.value.replace(/[^\d]/g, "");
-                  const formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                  setCurrentPointsLeft(formatted);
-                }}
-                className="form-input"
-                placeholder="0"
-                inputMode="numeric"
-                disabled={!bondLevels.length || currentBondLevel === bondLevels[bondLevels.length-1]?.value}
-              />
-            </div>
+          </div>          <div className="form-row bond-row">
+            <BondLevelSelector
+              bondLevels={bondLevels}
+              currentBondLevel={currentBondLevel}
+              onBondLevelChange={(newLevel) => {
+                setCurrentBondLevel(newLevel);
+                setCurrentPointsLeft("");
+              }}
+              currentPointsLeft={currentPointsLeft}
+              onPointsLeftChange={setCurrentPointsLeft}
+              disabled={!bondLevels.length}
+            />
           </div>
 
           <div className="form-group">
