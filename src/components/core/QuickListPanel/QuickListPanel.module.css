@@ -1,0 +1,91 @@
+/**
+ * QuickListPanel.module.css
+ * FGO Bond Calculator - Quick List Panel Styles
+ * 
+ * Modular CSS for the Quick List Panel component.
+ * Extracted from RunsCalculator.css for better component isolation.
+ * 
+ * @author AJDxB <ajdxb4787@gmail.com>
+ * @version 0.3.4
+ * @created 2025-06-18
+ */
+
+.quickListPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formLabel {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+/* React Select overrides for quick list selection */
+.quickListPanel :global(.quest-select__control) {
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg);
+  min-height: 42px;
+  box-shadow: none;
+}
+
+.quickListPanel :global(.quest-select__control:hover) {
+  border-color: var(--highlight-color, #3142b7);
+}
+
+.quickListPanel :global(.quest-select__menu) {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.quickListPanel :global(.quest-select__menu-list) {
+  padding: 4px;
+}
+
+.quickListPanel :global(.quest-select__option) {
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+.quickListPanel :global(.quest-select__option--is-selected) {
+  background-color: var(--highlight-color, #3142b7);
+  color: white;
+}
+
+.quickListPanel :global(.quest-select__option--is-focused) {
+  background-color: var(--option-hover);
+  color: var(--text-color);
+}
+
+.quickListPanel :global(.quest-select__group-heading) {
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: none;
+  padding: 8px 12px 4px;
+}
+
+.quickListPanel :global(.quest-select__input) {
+  color: var(--text-color);
+}
+
+.quickListPanel :global(.quest-select__single-value) {
+  color: var(--text-color);
+}
+
+.quickListPanel :global(.quest-select__placeholder) {
+  color: var(--text-muted, #666);
+}
