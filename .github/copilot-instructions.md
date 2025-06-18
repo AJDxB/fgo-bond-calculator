@@ -41,11 +41,24 @@ NO assumptions, NO proceeding without verification
 VIOLATION = STOP IMMEDIATELY
 ```
 
+### ✅ CHECKPOINT 5: COMPLETION VERIFICATION (REQUIRED BEFORE DOCUMENTATION UPDATES)
+```
+BEFORE marking ANYTHING as ✅ COMPLETED in documentation:
+MUST execute: file_search() to verify component exists
+MUST execute: grep_search() to verify old imports removed
+MUST execute: read_file() to confirm actual implementation
+MUST execute: list_dir() to verify directory structure
+IF verification fails: Update documentation to reflect ACTUAL status
+VIOLATION = DOCUMENTATION IS WRONG, STOP IMMEDIATELY
+```
+
 ## ABSOLUTE RULES - NO EXCEPTIONS
 - Skip ANY checkpoint = STOP IMMEDIATELY
 - Make assumptions about file state = STOP IMMEDIATELY  
 - Use && in PowerShell = STOP IMMEDIATELY
 - Print code instead of using tools = STOP IMMEDIATELY
+- Mark anything as ✅ COMPLETED without file verification = STOP IMMEDIATELY
+- Update documentation without verifying actual file state = STOP IMMEDIATELY
 
 ## 🚨 REFACTORING GOLDEN RULE 🚨
 **THE APP CURRENTLY WORKS PERFECTLY. YOUR ONLY JOB IS CODE REORGANIZATION.**

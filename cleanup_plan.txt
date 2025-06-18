@@ -11,27 +11,32 @@ FGO Bond Calculator Cleanup Plan v3.0
 5. **ThemeToggle** - Dark/light mode toggle ✅ DONE
 6. **Header** - Logo, title, version display ✅ DONE
 
-## 🎉 PHASE 2A: RUNSCALCULATOR MODULARIZATION - COMPLETED! 🎉
+## 🎉 PHASE 2A: RUNSCALCULATOR MODULARIZATION - PARTIALLY COMPLETED! 🎉
 
 ### ✅ COMPLETED SUBCOMPONENTS:
 1. **QuestModePanel** - Quest database selection with React Select ✅ DONE
 2. **CustomPointsPanel** - Manual bond points and AP input ✅ DONE
 3. **QuickListPanel** - Predefined quest selection dropdown ✅ DONE
 
-### 📊 CURRENT STATUS (PHASE 2A COMPLETE):
-- **RunsCalculator.js**: Reduced from 792 lines to ~592 lines (25% reduction)  
+### ❌ REMAINING TASKS:
+1. **QuestSelect component extraction** - NOT DONE (React Select styling embedded in panels)
+2. **RunsCalculator.css → CSS module migration** - NOT DONE (still in src/ root)
+3. **QuestSelect.css → CSS module migration** - NOT DONE (still in src/ root)
+
+### 📊 CURRENT STATUS (PHASE 2A PARTIAL):
+- **RunsCalculator.js**: Reduced from 792 lines to 638 lines (19% reduction)  
 - **Files created**: 12 new files (3 components × 4 files each)
-- **Total project reduction**: App.js (62%) + RunsCalculator.js (25%)
+- **Total project reduction**: App.js (62%) + RunsCalculator.js (19%)
 - **Functionality**: 100% preserved (identical user experience)
 - **Tests**: All 25 tests passing with React Select mocking
 - **Git**: Changes committed and pushed to clean-up branch
 
-### 📊 COMBINED STATUS (PHASE 1 + 2A COMPLETE):
+### 📊 COMBINED STATUS (PHASE 1 + 2A PARTIAL):
 - **App.js**: Reduced from 580 lines to 221 lines (62% reduction)
-- **RunsCalculator.js**: Reduced from 792 lines to ~592 lines (25% reduction)
+- **RunsCalculator.js**: Reduced from 792 lines to 638 lines (19% reduction)
 - **Total files created**: 36 new files with proper structure
 - **Functionality**: 100% preserved (zero visual/behavioral changes)
-- **CSS**: Fully modularized with theme system intact
+- **CSS**: Partially modularized (3 new components, 2 CSS files still in src/)
 - **Tests**: All 25 tests passing with comprehensive coverage
 - **Git**: Clean history with professional commits
 - **Development server**: Running successfully
@@ -137,12 +142,12 @@ FGO Bond Calculator Cleanup Plan v3.0
 ## 🚀 PHASE 2: ADVANCED REFACTORING (NEXT PRIORITIES)
 
 ### IMMEDIATE NEXT STEPS:
-1. **RunsCalculator Component Breakdown** ✅ **COMPLETED**
+1. **RunsCalculator Component Breakdown** 🔄 **PARTIALLY COMPLETED**
    - ✅ Extract QuestModePanel subcomponent
    - ✅ Extract CustomPointsPanel subcomponent  
    - ✅ Extract QuickListPanel subcomponent
-   - ✅ Extract QuestSelect.jsx (with QuestSelect.css)
-   - 🔄 Migrate RunsCalculator.css to CSS module
+   - ❌ Extract QuestSelect.jsx (with QuestSelect.css) - NOT DONE
+   - ❌ Migrate RunsCalculator.css to CSS module - NOT DONE
 
 2. **InfoTooltip Migration** 🔄 **NEXT**
    - Move InfoTooltip.js to /components/ui/InfoTooltip/
@@ -168,8 +173,8 @@ FGO Bond Calculator Cleanup Plan v3.0
 **Critical CSS Files to Migrate:**
 - App.css (600+ lines) → Multiple organized files
 - InfoTooltip.css → InfoTooltip.module.css
-- QuestSelect.css → QuestSelect.module.css  
-- RunsCalculator.css → RunsCalculator.module.css
+- ❌ QuestSelect.css → QuestSelect.module.css (NOT DONE - still in src/)
+- ❌ RunsCalculator.css → RunsCalculator.module.css (NOT DONE - still in src/)
 - index.css → /styles/globals.css
 
 ---
