@@ -23,10 +23,13 @@
 }
 
 .formLabel {
-  font-weight: 600;
-  color: var(--text-color);
-  font-size: 0.95rem;
-  margin-bottom: 0.25rem;
+  font-size: var(--form-label-font-size);
+  font-weight: var(--form-label-font-weight);
+  color: var(--form-label-color);
+  display: var(--form-label-display);
+  align-items: var(--form-label-align-items);
+  margin-bottom: var(--form-label-margin-bottom);
+  text-align: var(--form-label-text-align);
 }
 
 /* React Select overrides for quick list selection */

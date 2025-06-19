@@ -1,6 +1,6 @@
 /**
- * RunsCalculator.css
- * FGO Bond Calculator - Runs Calculator Component Styles
+ * RunsCalculator.module.css
+ * FGO Bond Calculator - Runs Calculator Component Styles (CSS Module)
  * 
  * Styling for quest runs calculator including responsive design,
  * custom point mode toggle, result displays, and theme support
@@ -10,9 +10,7 @@
  * @created 2025-06-04
  */
 
-/* RunsCalculator.css */
-
-.runs-calculator {
+.runsCalculator {
   margin-top: clamp(25px, 6vw, 35px);
   padding: clamp(20px, 5vw, 30px);
   background: var(--card-bg);
@@ -21,7 +19,7 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
-.runs-title {
+.runsTitle {
   font-size: clamp(1.3rem, 3.5vw, 1.6rem);
   font-weight: 600;
   color: var(--text-color);
@@ -31,7 +29,7 @@
   padding-bottom: clamp(12px, 3vw, 16px);
 }
 
-.runs-info {
+.runsInfo {
   text-align: center;
   color: var(--text-color);
   font-size: clamp(1rem, 2.5vw, 1.15rem);
@@ -39,15 +37,14 @@
   opacity: 0.8;
 }
 
-.runs-form {
+.runsForm {
   display: flex;
   flex-direction: column;
   gap: clamp(15px, 3vw, 20px);
   margin-bottom: clamp(20px, 5vw, 25px);
 }
 
-/* Add spacing and layout styles for mode toggle and inputs */
-.calculator-mode-toggle {
+.calculatorModeToggle {
   margin-bottom: clamp(15px, 3vw, 20px);
   padding: 8px 0;
   display: flex;
@@ -56,67 +53,65 @@
   background: var(--input-bg);
   padding: 4px;
   gap: 4px;
-  border: 1px solid var(--border-color); /* Add border for clarity in light mode */
-  box-shadow: 0 1px 4px rgba(30,40,90,0.04); /* Subtle shadow for depth */
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 4px rgba(30,40,90,0.04);
 }
 
-.quest-type-section,
-.custom-points-section {
+.questTypeSection,
+.customPointsSection {
   display: flex;
   flex-direction: column;
   gap: clamp(15px, 3vw, 20px);
 }
 
-.custom-inputs-row {
+.customInputsRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(12px, 3vw, 16px);
   margin: 0;
 }
 
-.custom-inputs-row .form-group {
+.customInputsRow .formGroup {
   margin: 0;
 }
 
-.form-group {
-  margin: 0;
+.formGroup {
+  margin-bottom: 16px;
 }
 
-/* Remove margin from the last form-group to match Quick List spacing */
-.runs-form > :last-child.form-group {
+.runsForm > :last-child.formGroup {
   margin-bottom: 0;
 }
 
 @media (max-width: 768px) {
-  .custom-inputs-row {
+  .customInputsRow {
     flex-direction: column;
     gap: 1rem;
   }
 
-  .custom-inputs-row .form-group {
+  .customInputsRow .formGroup {
     margin-bottom: 0;
   }
 }
 
-/* Mobile Responsive */
 @media (max-width: 600px) {
-  .results-grid {
+  .resultsGrid {
     grid-template-columns: 1fr;
   }
   
-  .result-item.full-width {
+  .resultItem.fullWidth {
     grid-column: 1;
   }
   
-  .runs-form {
+  .runsForm {
     gap: clamp(12px, 3vw, 15px);
   }
 }
 
-/* Consistent input styling - exclude CSS module inputs */
-.runs-calculator select:not([class*="formInput"]),
-.runs-calculator input[type="number"]:not([class*="formInput"]),
-.runs-calculator input[type="text"]:not([class*="formInput"]) {
+/* Consistent input styling */
+.runsCalculator select,
+.runsCalculator input[type="number"],
+.runsCalculator input[type="text"] {
   width: 100%;
   padding: 8px 12px;
   border-radius: 8px;
@@ -126,8 +121,6 @@
   font-size: 0.95rem;
   transition: all 0.2s ease;
 }
-
-
 
 /* Animation for results appearance */
 @keyframes slideIn {
@@ -141,25 +134,29 @@
   }
 }
 
-.results-container.fade-in {
+.fadeIn {
   animation: slideIn 0.4s ease-out;
 }
 
-.results-container {
+.resultsContainer.fadeIn {
+  animation: slideIn 0.4s ease-out;
+}
+
+.resultsContainer {
   background: var(--result-bg);
   border-radius: 12px;
   padding: clamp(18px, 4vw, 24px);
   border: 1px solid var(--border-color);
 }
 
-.results-grid {
+.resultsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(12px, 3vw, 16px);
   margin-bottom: clamp(15px, 3vw, 20px);
 }
 
-.runs-item {
+.runsItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -172,23 +169,23 @@
   transition: all 0.2s ease;
 }
 
-.runs-item:hover {
+.runsItem:hover {
   background: var(--input-bg);
   border-color: var(--border-color);
 }
 
-.runs-item.full-width {
+.runsItem.fullWidth {
   grid-column: 1 / -1;
 }
 
-.runs-label {
+.runsLabel {
   font-size: 0.85rem;
   color: var(--text-color);
   font-weight: 500;
   opacity: 0.75;
 }
 
-.runs-value {
+.runsValue {
   font-size: 0.9rem;
   font-weight: 700;
   color: #3142b7;
@@ -197,11 +194,11 @@
   letter-spacing: -0.01em;
 }
 
-[data-theme="dark"] .runs-value {
+:global([data-theme="dark"]) .runsValue {
   color: #738aff;
 }
 
-.quest-info {
+.questInfo {
   text-align: center;
   font-size: clamp(1rem, 2.5vw, 1.15rem);
   color: var(--text-color);
@@ -211,18 +208,7 @@
   border: 1px solid var(--border-color);
 }
 
-.calculator-mode-toggle {
-  display: flex;
-  margin-bottom: 1rem;
-  border-radius: 10px;
-  background: var(--input-bg);
-  padding: 4px;
-  gap: 4px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 1px 4px rgba(30,40,90,0.04);
-}
-
-.calc-toggle-btn {
+.calcToggleBtn {
   flex: 1;
   padding: 8px 16px;
   border: none;
@@ -234,115 +220,49 @@
   font-size: 1rem;
 }
 
-[data-theme="dark"] .calc-toggle-btn {
+:global([data-theme="dark"]) .calcToggleBtn {
   background: transparent;
 }
 
 /* Quick List - Green */
-.calc-toggle-btn.active:nth-child(1) {
+.calcToggleBtn:global(.active):nth-child(1) {
   background: #2e7d32; /* Darker green for light mode */
   color: white;
 }
 
-[data-theme="dark"] .calc-toggle-btn.active:nth-child(1) {
+:global([data-theme="dark"]) .calcToggleBtn:global(.active):nth-child(1) {
   background: #4caf50; /* Lighter green for dark mode */
   color: white;
 }
 
 /* Quest Mode - Blue */
-.calc-toggle-btn.active:nth-child(2) {
+.calcToggleBtn:global(.active):nth-child(2) {
   background: var(--highlight-color, #3142b7);
   color: white;
 }
 
 /* Custom Points - Red */
-.calc-toggle-btn.active:nth-child(3) {
+.calcToggleBtn:global(.active):nth-child(3) {
   background: #c62828; /* Darker red for light mode */
   color: white;
 }
 
-[data-theme="dark"] .calc-toggle-btn.active:nth-child(3) {
+:global([data-theme="dark"]) .calcToggleBtn:global(.active):nth-child(3) {
   background: #ef5350; /* Lighter red for dark mode */
   color: white;
 }
 
-.calc-toggle-btn:hover:not(.active) {
+.calcToggleBtn:hover:not(:global(.active)) {
   background: var(--option-hover);
 }
 
-.calculator-mode-toggle {
-  margin-bottom: 16px;
-}
-
-.custom-inputs-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 0px;
-}
-
-.custom-inputs-row .form-group {
-  flex: 1;
-  margin-bottom: 0;
-}
-
-.form-group {
-  margin-bottom: 16px;
-}
-
-/* Remove margin from the last form-group to match Quick List spacing */
-.runs-form > :last-child.form-group {
-  margin-bottom: 0;
-}
-
-@media (max-width: 768px) {
-  .custom-inputs-row {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .custom-inputs-row .form-group {
-    margin-bottom: 0;
-  }
-}
-
-/* Mobile Responsive */
-@media (max-width: 600px) {
-  .results-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .result-item.full-width {
-    grid-column: 1;
-  }
-  
-  .runs-form {
-    gap: clamp(12px, 3vw, 15px);
-  }
-}
-
-/* Animation for results appearance */
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.results-container.fade-in {
-  animation: slideIn 0.4s ease-out;
-}
-
-.form-label {
+.formLabel {
   display: inline-flex;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.form-label .bonus-help {
+.formLabel .bonusHelp {
   margin-left: clamp(12px, 3vw, 24px);
   font-size: clamp(0.85rem, 2vw, 0.95rem);
   font-weight: normal;
@@ -351,44 +271,66 @@
   white-space: nowrap;
 }
 
+.formInput {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.formSelect {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
 /* React Select Overrides */
-.quest-select .quest-select__control {
+.runsCalculator :global(.quest-select__control) {
   border-color: var(--border-color);
   background-color: var(--input-bg);
   box-shadow: none;
 }
 
-.quest-select .quest-select__control:hover {
+.runsCalculator :global(.quest-select__control:hover) {
   border-color: var(--highlight-color, #3142b7);
 }
 
-.quest-select .quest-select__control--is-focused {
+.runsCalculator :global(.quest-select__control--is-focused) {
   border-color: var(--highlight-color, #3142b7);
   box-shadow: 0 0 0 1px var(--highlight-color, #3142b7);
 }
 
-.quest-select .quest-select__menu {
+.runsCalculator :global(.quest-select__menu) {
   z-index: 10;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
 }
 
-.quest-select .quest-select__group-heading {
+.runsCalculator :global(.quest-select__group-heading) {
   color: var(--text-color);
 }
 
-.quest-select .quest-select__option {
+.runsCalculator :global(.quest-select__option) {
   color: var(--text-color);
 }
 
-.quest-select .quest-select__single-value {
+.runsCalculator :global(.quest-select__single-value) {
   color: var(--text-color);
 }
 
-.quest-select .quest-select__input {
+.runsCalculator :global(.quest-select__input) {
   color: var(--text-color);
 }
 
-.quest-select .quest-select__placeholder {
+.runsCalculator :global(.quest-select__placeholder) {
   color: var(--text-muted, #666);
 }

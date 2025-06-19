@@ -12,6 +12,15 @@
 
 /* CSS Variables for Theme Support */
 :root {
+  /* Form Component Styling Variables */
+  --form-label-font-size: clamp(1.1rem, 2.8vw, 1.28rem);
+  --form-label-font-weight: 500;
+  --form-label-color: var(--text-color);
+  --form-label-display: inline-flex;
+  --form-label-align-items: center;
+  --form-label-margin-bottom: 8px;
+  --form-label-text-align: left;
+  
   /* Light theme */
   --bg-color: #f7f7f9;
   --card-bg: #fff;

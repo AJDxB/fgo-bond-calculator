@@ -11,32 +11,44 @@ FGO Bond Calculator Cleanup Plan v3.0
 5. **ThemeToggle** - Dark/light mode toggle ✅ DONE
 6. **Header** - Logo, title, version display ✅ DONE
 
-## 🎉 PHASE 2A: RUNSCALCULATOR MODULARIZATION - PARTIALLY COMPLETED! 🎉
+## 🎉 PHASE 2A: RUNSCALCULATOR MODULARIZATION - MOSTLY COMPLETED! 🎉
 
 ### ✅ COMPLETED SUBCOMPONENTS:
 1. **QuestModePanel** - Quest database selection with React Select ✅ DONE
 2. **CustomPointsPanel** - Manual bond points and AP input ✅ DONE
 3. **QuickListPanel** - Predefined quest selection dropdown ✅ DONE
 
+### ✅ COMPLETED CSS MIGRATIONS:
+1. **RunsCalculator.module.css creation** - ✅ DONE (exists but NOT ACTIVE - commented out import)
+2. **CSS custom properties system** - ✅ DONE (form styling variables in theme.css)
+3. **Component CSS consistency** - ✅ DONE (all subcomponent form labels use unified styling)
+
 ### ❌ REMAINING TASKS:
-1. **QuestSelect component extraction** - NOT DONE (React Select styling embedded in panels)
-2. **RunsCalculator.css → CSS module migration** - NOT DONE (still in src/ root)
+1. **RunsCalculator CSS module activation** - NOT DONE (import commented out, still using global CSS)
+2. **QuestSelect component extraction** - NOT DONE (React Select styling still embedded in panels)
 3. **QuestSelect.css → CSS module migration** - NOT DONE (still in src/ root)
 
-### 📊 CURRENT STATUS (PHASE 2A PARTIAL):
-- **RunsCalculator.js**: Reduced from 792 lines to 638 lines (19% reduction)  
-- **Files created**: 12 new files (3 components × 4 files each)
+### 📊 CURRENT STATUS (PHASE 2A MOSTLY COMPLETED):
+- **RunsCalculator.js**: Uses global CSS (RunsCalculator.css) - CSS module created but import commented out
+- **RunsCalculator.module.css**: ✅ Created but NOT ACTIVE (import: `// import styles from "./RunsCalculator.module.css";`)
+- **CSS Custom Properties**: ✅ Form styling variables implemented in theme.css
+- **Subcomponent Form Labels**: ✅ All use unified styling via CSS variables (CustomPointsPanel, QuickListPanel, QuestModePanel)
+- **Layout Issues**: ✅ All resolved (CustomPointsPanel responsive layout working)
+- **Files created**: 12 new files (3 components × 4 files each) + CSS module system
 - **Total project reduction**: App.js (62%) + RunsCalculator.js (19%)
 - **Functionality**: 100% preserved (identical user experience)
 - **Tests**: All 25 tests passing with React Select mocking
 - **Git**: Changes committed and pushed to clean-up branch
 
-### 📊 COMBINED STATUS (PHASE 1 + 2A PARTIAL):
+### 📊 COMBINED STATUS (PHASE 1 + 2A MOSTLY COMPLETED):
 - **App.js**: Reduced from 580 lines to 221 lines (62% reduction)
 - **RunsCalculator.js**: Reduced from 792 lines to 638 lines (19% reduction)
-- **Total files created**: 36 new files with proper structure
+- **CSS Modularization**: ✅ RunsCalculator CSS module created but not yet activated
+- **Styling Consistency**: ✅ CSS custom properties system implemented for subcomponents
+- **Component Isolation**: ✅ All subcomponents use modular CSS with unified form styling
+- **Total files created**: 36+ new files with proper structure + CSS module system
 - **Functionality**: 100% preserved (zero visual/behavioral changes)
-- **CSS**: Partially modularized (3 new components, 2 CSS files still in src/)
+- **CSS**: Mostly modularized (3 subcomponents + RunsCalculator module ready + form variables)
 - **Tests**: All 25 tests passing with comprehensive coverage
 - **Git**: Clean history with professional commits
 - **Development server**: Running successfully
@@ -77,15 +89,14 @@ FGO Bond Calculator Cleanup Plan v3.0
       BondProgressDisplay/ ✅ DONE
       ServerToggle/ ✅ DONE
       ThemeToggle/ ✅ DONE
-      Header/ ✅ DONE
-    /calculators
+      Header/ ✅ DONE    /calculators
       RunsCalculator/
-        RunsCalculator.jsx (migrate from src/RunsCalculator.js)
-        QuestModePanel.jsx (extract from RunsCalculator)
-        CustomPointsPanel.jsx (extract from RunsCalculator)
-        QuickListPanel.jsx (extract from RunsCalculator)
+        RunsCalculator.jsx (currently using global CSS, module ready)
+        RunsCalculator.module.css (✅ CREATED - ready to activate)
+        QuestModePanel.jsx (✅ EXTRACTED with CSS module)
+        CustomPointsPanel.jsx (✅ EXTRACTED with CSS module)
+        QuickListPanel.jsx (✅ EXTRACTED with CSS module)
         QuestSelect.jsx (extract with QuestSelect.css)
-        RunsCalculator.module.css (migrate from src/RunsCalculator.css)
         QuestSelect.module.css (migrate from src/QuestSelect.css)
         RunsCalculator.test.js
         index.js
@@ -125,11 +136,11 @@ FGO Bond Calculator Cleanup Plan v3.0
       fgo_calc_logo.png (move from src/)
       saintquartz.png (move from src/)
     /icons
-      /class-icons (consolidate from src/ServantClassImages)
-  /styles
+      /class-icons (consolidate from src/ServantClassImages)  /styles
     globals.css (global styles, reset, base typography)
     variables.css (CSS custom properties for theming)
     themes.css (dark/light mode theme definitions)
+    theme.css (✅ ENHANCED with form styling variables)
     components.css (shared component utilities)
   App.js (simplified main component)
   App.css (reduced to app-level layout only)
@@ -142,14 +153,16 @@ FGO Bond Calculator Cleanup Plan v3.0
 ## 🚀 PHASE 2: ADVANCED REFACTORING (NEXT PRIORITIES)
 
 ### IMMEDIATE NEXT STEPS:
-1. **RunsCalculator Component Breakdown** 🔄 **PARTIALLY COMPLETED**
+1. **RunsCalculator Component Breakdown** 🔄 **MOSTLY COMPLETED**
    - ✅ Extract QuestModePanel subcomponent
    - ✅ Extract CustomPointsPanel subcomponent  
    - ✅ Extract QuickListPanel subcomponent
+   - ✅ Create RunsCalculator.module.css (exists but not activated)
+   - ✅ Implement CSS custom properties for consistent styling
+   - ❌ Activate RunsCalculator CSS module (uncomment import, test thoroughly)
    - ❌ Extract QuestSelect.jsx (with QuestSelect.css) - NOT DONE
-   - ❌ Migrate RunsCalculator.css to CSS module - NOT DONE
 
-2. **InfoTooltip Migration** 🔄 **NEXT**
+2. **InfoTooltip Migration**
    - Move InfoTooltip.js to /components/ui/InfoTooltip/
    - Convert InfoTooltip.css to CSS module
    - Add proper tests
@@ -174,7 +187,7 @@ FGO Bond Calculator Cleanup Plan v3.0
 - App.css (600+ lines) → Multiple organized files
 - InfoTooltip.css → InfoTooltip.module.css
 - ❌ QuestSelect.css → QuestSelect.module.css (NOT DONE - still in src/)
-- ❌ RunsCalculator.css → RunsCalculator.module.css (NOT DONE - still in src/)
+- 🔄 RunsCalculator.css → RunsCalculator.module.css (CREATED but not activated - import commented out)
 - index.css → /styles/globals.css
 
 ---

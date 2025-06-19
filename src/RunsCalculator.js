@@ -17,12 +17,16 @@
  */
 
 import React, { useState, useEffect } from "react";
+// import styles from "./RunsCalculator.module.css";
 import "./RunsCalculator.css";
 import "./QuestSelect.css";
 import InfoTooltip from "./InfoTooltip";
 import QuestModePanel from "./components/core/QuestModePanel";
 import CustomPointsPanel from "./components/core/CustomPointsPanel";
 import QuickListPanel from "./components/core/QuickListPanel";
+
+// DEBUG: Log CSS module styles
+// console.log('CSS Module styles loaded:', styles);
 
 // Quest data with base bond points
 const QUEST_DATA = {
@@ -437,28 +441,25 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
     const formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     setCustomAP(formatted);
   };
-
   if (!selectedServant) {
-    return (
-      <div className="runs-calculator">
+    return (      <div className="runs-calculator">
         <h3 className="runs-title">Runs to Max Calculator</h3>
         <p className="runs-info">Select a servant first to calculate quest runs needed.</p>
       </div>
     );
   }
-
-  return (
-    <div className="runs-calculator">
+  return (    <div className="runs-calculator">
       <h3 className="runs-title">Runs to Max Calculator</h3>
-        <div className="runs-form">        <div className="calculator-mode-toggle">          <button            className={`calc-toggle-btn ${!isCustomMode && !isQuestMode ? 'active' : ''}`}
+        <div className="runs-form">        <div className="calculator-mode-toggle">
+          <button
+            className={`calc-toggle-btn ${!isCustomMode && !isQuestMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(false);
               setIsQuestMode(false);
             }}
           >
             Quick List
-          </button>
-          <button 
+          </button>          <button 
             className={`calc-toggle-btn ${isQuestMode && !isCustomMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(false);
@@ -466,8 +467,7 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             }}
           >
             Quest Mode
-          </button>
-          <button 
+          </button>          <button 
             className={`calc-toggle-btn ${isCustomMode ? 'active' : ''}`}
             onClick={() => {
               setIsCustomMode(true);
@@ -498,8 +498,8 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
           />
         )}
 
-        {/* Universal options: Bond Bonus and Heroic Portrait bonus */}
-        <div className="form-group">          <label className="form-label">
+        {/* Universal options: Bond Bonus and Heroic Portrait bonus */}        <div className="form-group">
+          <label className="form-label">
             Bond Bonus (%)
             <InfoTooltip text="Include CE bonuses (Chaldea Lunchtime, etc.), event bonuses, and other bond point multipliers" />
           </label>
@@ -515,8 +515,7 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
         </div>
         <div className="form-group" style={{ display: 'flex', gap: '2em', alignItems: 'flex-end' }}>
           {/* Heroic Portrait */}
-          <div style={{ flex: 1 }}>
-            <label className="form-label" htmlFor="heroicPortrait">
+          <div style={{ flex: 1 }}>            <label className={"form-label"} htmlFor="heroicPortrait">
               Heroic Portrait
               <span className="bonus-help" style={{ marginLeft: 6 }}>
                 +50 per
@@ -529,12 +528,11 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
                 checked={heroicPortraitEnabled}
                 onChange={e => setHeroicPortraitEnabled(e.target.checked)}
                 style={{ marginRight: '0.5em', accentColor: 'var(--primary-color, #2962ff)' }}
-              />
-              <select
+              />              <select
                 value={heroicPortraitMultiplier}
                 onChange={e => setHeroicPortraitMultiplier(Number(e.target.value))}
                 disabled={!heroicPortraitEnabled}
-                className="form-select"                style={{ minWidth: 50 }}
+                className={"form-select"}
               >
                 {[1,2].map(n => (
                   <option key={n} value={n}>{`${n} CE${n > 1 ? 's' : ''}`}</option>
@@ -543,8 +541,7 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             </div>
           </div>
           {/* Frontline Bonus */}
-          <div style={{ flex: 1 }}>
-            <label className="form-label" htmlFor="frontlineBonus">
+          <div style={{ flex: 1 }}>            <label className={"form-label"} htmlFor="frontlineBonus">
               Frontline Bonus
               <span className="bonus-help" style={{ marginLeft: 6 }}>
                 
@@ -557,12 +554,11 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
                 checked={frontlineBonusEnabled}
                 onChange={e => setFrontlineBonusEnabled(e.target.checked)}
                 style={{ marginRight: '0.5em', accentColor: 'var(--primary-color, #2962ff)' }}
-              />
-              <select
+              />              <select
                 value={frontlineBonusPercent}
                 onChange={e => setFrontlineBonusPercent(Number(e.target.value))}
                 disabled={!frontlineBonusEnabled}
-                className="form-select"
+                className={"form-select"}
                 style={{ minWidth: 70 }}
               >
                 <option value={0.24}>24%</option>
@@ -574,42 +570,41 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
         </div>
       </div>
 
-      {results && (
-        <div className="results-container fade-in">
-          <div className="results-grid">            <div className="runs-item">
-              <span className="runs-label">Runs Needed:</span>
-              <span className="runs-value">{results.runsNeeded.toLocaleString()}</span>
+      {results && (        <div className={`${"results-container"} ${"fade-in"}`}>
+          <div className={"results-grid"}>
+            <div className={"runs-item"}>
+              <span className={"runs-label"}>Runs Needed:</span>
+              <span className={"runs-value"}>{results.runsNeeded.toLocaleString()}</span>
             </div>
             
-            <div className="runs-item">
-              <span className="runs-label">Total AP Cost:</span>
-              <span className="runs-value">{results.totalAP.toLocaleString()}</span>
+            <div className={"runs-item"}>
+              <span className={"runs-label"}>Total AP Cost:</span>
+              <span className={"runs-value"}>{results.totalAP.toLocaleString()}</span>
             </div>
             
-            <div className="runs-item">
-              <span className="runs-label">Bond per Run:</span>
-              <span className="runs-value">{results.bondPerRun.toLocaleString()}</span>
+            <div className={"runs-item"}>
+              <span className={"runs-label"}>Bond per Run:</span>
+              <span className={"runs-value"}>{results.bondPerRun.toLocaleString()}</span>
             </div>
             
-            <div className="runs-item">
-              <span className="runs-label">Points Needed:</span>
-              <span className="runs-value">{results.pointsNeeded.toLocaleString()}</span>
+            <div className={"runs-item"}>
+              <span className={"runs-label"}>Points Needed:</span>
+              <span className={"runs-value"}>{results.pointsNeeded.toLocaleString()}</span>
             </div>
-            
-            {results.estimatedTime && (
-              <div className="runs-item full-width">
-                <span className="runs-label">Estimated Time:</span>
-                <span className="runs-value">
+              {results.estimatedTime && (
+              <div className={`${"runs-item"} ${"full-width"}`}>
+                <span className={"runs-label"}>Estimated Time:</span>
+                <span className={"runs-value"}>
                   {results.estimatedTime.hours > 0 && `${results.estimatedTime.hours}h `}
                   {results.estimatedTime.minutes}m
                 </span>
               </div>
             )}
               {results.apPerDay > 0 && (
-              <div className="runs-item full-width">
-                <span className="runs-label">                  {results.isBleachedEarth ? "Days Required:" : "Days with Natural AP:"}
+              <div className={`${"runs-item"} ${"full-width"}`}>
+                <span className={"runs-label"}>                  {results.isBleachedEarth ? "Days Required:" : "Days with Natural AP:"}
                 </span>
-                <span className="runs-value">                  {Math.ceil(results.apPerDay)} {Math.ceil(results.apPerDay) === 1 ? 'Day' : 'Days'}
+                <span className={"runs-value"}>                  {Math.ceil(results.apPerDay)} {Math.ceil(results.apPerDay) === 1 ? 'Day' : 'Days'}
                   {results.isBleachedEarth && 
                     <span className="bonus-help" style={{ display: 'block', fontSize: '0.85em', color: 'var(--text-muted)' }}>
                       (Based on 3 runs per day limit for Bleached Earth quests)
@@ -620,7 +615,7 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             )}
           </div>
           
-          <div className="quest-info">
+          <div className={"quest-info"}>
             Running: <strong>{results.questName}</strong>
             {results.isBleachedEarth && (
               <div className="quest-note" style={{ marginTop: '0.5em', fontSize: '0.9em', color: 'var(--text-muted)' }}>

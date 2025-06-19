@@ -1,27 +1,24 @@
 /**
  * CustomPointsPanel.module.css
  * FGO Bond Calculator - Custom Points Panel Styles
- * 
+ *
  * Modular CSS for the Custom Points Panel component.
  * Extracted from RunsCalculator.css for better component isolation.
- * 
+ *
  * @author AJDxB <ajdxb4787@gmail.com>
  * @version 0.3.4
  * @created 2025-06-18
  */
-
 .customPointsPanel {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
-
 .customInputsRow {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
 }
-
 .formGroup {
   display: flex;
   flex-direction: column;
@@ -29,14 +26,15 @@
   flex: 1;
   min-width: 200px;
 }
-
 .formLabel {
-  font-weight: 600;
-  color: var(--text-color);
-  font-size: 0.95rem;
-  margin-bottom: 0.25rem;
+  font-size: var(--form-label-font-size);
+  font-weight: var(--form-label-font-weight);
+  color: var(--form-label-color);
+  display: var(--form-label-display);
+  align-items: var(--form-label-align-items);
+  margin-bottom: var(--form-label-margin-bottom);
+  text-align: var(--form-label-text-align);
 }
-
 .formInput {
   padding: 0.75rem;
   border: 1px solid var(--border-color);
@@ -46,23 +44,20 @@
   font-size: 1rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 .formInput:focus {
   outline: none;
   border-color: var(--highlight-color, #3142b7);
   box-shadow: 0 0 0 2px rgba(49, 66, 183, 0.1);
 }
-
 .formInput::placeholder {
   color: var(--text-muted, #666);
 }
-
 /* Responsive design */
 @media (max-width: 768px) {
   .customInputsRow {
     flex-direction: column;
   }
-  
+
   .formGroup {
     min-width: unset;
   }
