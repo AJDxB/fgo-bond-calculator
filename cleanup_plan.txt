@@ -10,6 +10,13 @@ FGO Bond Calculator Cleanup Plan v3.0
 4. **ServerToggle** - NA/JP server selection ✅ DONE
 5. **ThemeToggle** - Dark/light mode toggle ✅ DONE
 6. **Header** - Logo, title, version display ✅ DONE
+7. **QuestSelect Component (COMPLETED ✅) - NEW!
+   - **Location**: `src/components/core/QuestSelect/`
+   - **Files**: QuestSelect.jsx + QuestSelect.module.css + index.js
+   - **Status**: Newly extracted shared component, CSS modularized
+   - **Functionality**: Quest option formatting now shared across panels
+   - **Impact**: Removed duplicate code, improved maintainability
+   - **Migration**: Converted global QuestSelect.css to CSS module
 
 ## 🎉 PHASE 2A: RUNSCALCULATOR MODULARIZATION - MOSTLY COMPLETED! 🎉
 
@@ -22,11 +29,12 @@ FGO Bond Calculator Cleanup Plan v3.0
 1. **RunsCalculator.module.css creation** - ✅ DONE (exists but NOT ACTIVE - commented out import)
 2. **CSS custom properties system** - ✅ DONE (form styling variables in theme.css)
 3. **Component CSS consistency** - ✅ DONE (all subcomponent form labels use unified styling)
+4. **QuestSelect.css → CSS module migration** - ✅ **NEW! COMPLETED**
 
 ### ❌ REMAINING TASKS:
 1. **RunsCalculator CSS module activation** - DEFERRED (keeping global CSS per migration roadmap)
-2. **QuestSelect component extraction** - 🎯 **NEXT PRIORITY** 
-3. **QuestSelect.css → CSS module migration** - Part of QuestSelect extraction
+2. **InfoTooltip component organization** - 🎯 **NEXT PRIORITY**
+3. **Asset organization and import cleanup**
 
 ### 📊 CURRENT STATUS (PHASE 2A MOSTLY COMPLETED):
 - **RunsCalculator.js**: Uses global CSS (RunsCalculator.css) - CSS module created but import commented out

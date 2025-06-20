@@ -1,14 +1,18 @@
 /**
- * InfoTooltip.css
- * FGO Bond Calculator - Tooltip Component Styles
+ * InfoTooltip.module.css
+ * FGO Bond Calculator - Tooltip Component Styles (CSS Module)
+ * 
+ * Modular CSS for InfoTooltip component with interactive click-based tooltips.
+ * Migrated from global InfoTooltip.css to module-scoped styles.
  * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.4 - New styles for interactive tooltip component with responsive design
+ * @version 0.3.4 - Converted to CSS module with preserved functionality
  * @created 2025-06-16
+ * @updated 2025-06-20
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
 
-.info-tooltip-wrapper {
+.infoTooltipWrapper {
   position: relative;
   display: inline-flex;
   margin-left: 6px;
@@ -17,11 +21,8 @@
 }
 
 /* Make sure the button itself can receive events */
-.info-icon {
+.infoIcon {
   pointer-events: auto;
-}
-
-.info-icon {
   cursor: pointer;
   color: var(--text-color);
   font-size: 15px;
@@ -39,7 +40,7 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.info-icon:hover {
+.infoIcon:hover {
   opacity: 1;
   color: var(--highlight-color, #3142b7);
   background-color: rgba(49, 66, 183, 0.08);
@@ -47,13 +48,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-.info-icon:focus {
+.infoIcon:focus {
   outline: none;
   border-color: var(--highlight-color, #3142b7);
   box-shadow: 0 0 0 2px rgba(49, 66, 183, 0.2);
 }
 
-.tooltip-content {
+.tooltipContent {
   position: absolute;
   bottom: calc(100% + 8px);
   transform: translateX(-50%);
@@ -74,18 +75,17 @@
   text-align: center;
 }
 
-.tooltip-content.active {
+.tooltipContent.active {
   opacity: 1;
   visibility: visible;
 }
 
-/* Show tooltip when container is touched on mobile */
-.info-tooltip-container.active .tooltip-text {
-  display: block;
+.tooltipBackdrop {
+  display: none;
 }
 
 @media (max-width: 768px) {
-  .tooltip-content {
+  .tooltipContent {
     position: fixed;
     bottom: auto;
     top: 50%;
@@ -101,12 +101,12 @@
     max-width: 280px;
   }
 
-  .tooltip-content::after {
+  .tooltipContent::after {
     display: none;
   }
 
-  .tooltip-backdrop {
-    display: none;
+  .tooltipBackdrop {
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
@@ -114,9 +114,5 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
-  }
-
-  .tooltip-backdrop.active {
-    display: block;
   }
 }

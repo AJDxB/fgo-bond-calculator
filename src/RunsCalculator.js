@@ -19,7 +19,7 @@
 import React, { useState, useEffect } from "react";
 // import styles from "./RunsCalculator.module.css";
 import "./RunsCalculator.css";
-import InfoTooltip from "./InfoTooltip";
+import InfoTooltip from "./components/ui/InfoTooltip";
 import QuestModePanel from "./components/core/QuestModePanel";
 import CustomPointsPanel from "./components/core/CustomPointsPanel";
 import QuickListPanel from "./components/core/QuickListPanel";
