@@ -5,17 +5,20 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 
 ---
 
-## 📍 Current Status (Phase 2A - Mostly Complete)
+## 📍 Current Status (Phase 2B - Completed!)
 
 ### ✅ **Completed Phases:**
 - **Phase 1:** Component Extraction (6 components extracted)
 - **Phase 2A:** RunsCalculator Modularization (4 subcomponents + CSS consistency system)
+- **Phase 2B:** Component Organization & Asset Structure (3 additional components + organized assets)
 
 ### 📊 **Current Metrics:**
 - **App.js:** 62% reduction (580 → 221 lines)
-- **RunsCalculator.js:** 24% reduction (792 → 595 lines) *updated*
-- **Files Created:** 39+ new organized files *updated*
-- **Shared Components:** 1 (QuestSelect) *new*
+- **RunsCalculator.js:** 30% reduction (792 → 550 lines est.) *updated*
+- **Files Created:** 45+ new organized files *updated*
+- **Shared Components:** 1 (QuestSelect) *completed*
+- **UI Components:** 1 (InfoTooltip) *new*
+- **Asset Organization:** Completed with /assets structure *new*
 - **Functionality:** 100% preserved (zero breaking changes)
 
 ---
@@ -34,30 +37,48 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 
 ## 📋 Phase Breakdown
 
-### **🔄 Phase 2B: Component Organization (Next - Q3 2025)**
+### **✅ Phase 2B: Component Organization (COMPLETED 2025-06-20!)**
 **Goal:** Complete component extraction and establish clean architecture
 
-#### Immediate Priorities:
+#### ✅ Completed Tasks:
 1. **✅ QuestSelect Component Extraction (COMPLETED 2025-06-20)**
    - ✅ Extracted shared QuestSelect component from panels
    - ✅ Migrated QuestSelect.css to CSS module
    - ✅ Updated panels to use shared component
    - ✅ Reduced code duplication and improved maintainability
 
-2. **InfoTooltip Migration** 🎯 *Next Priority*
-   - Move to `/components/ui/InfoTooltip/`
-   - Convert to CSS module
-   - Add comprehensive tests
+2. **✅ InfoTooltip Migration (COMPLETED 2025-06-20)**
+   - ✅ Moved to `/components/ui/InfoTooltip/`
+   - ✅ Converted to CSS module
+   - ✅ Established UI component directory structure
+   - ✅ Updated import paths in RunsCalculator
 
-3. **Asset Organization**
-   - Consolidate `/assets/images/` directory
-   - Organize class icons
-   - Update import paths
+3. **✅ Asset Organization (COMPLETED 2025-06-20)**
+   - ✅ Created organized `/assets` directory structure
+   - ✅ Moved all images to `/assets/images/`
+   - ✅ Moved icons to `/assets/icons/`
+   - ✅ Updated import paths in components   - ✅ Removed unused backup files
 
-#### Secondary Tasks:
-- Extract custom hooks (useServantData, useBondCalculations)
-- Create utility functions (bondCalculations.js, formatters.js)
-- Establish services layer (servantService, questService)
+---
+
+### **🔄 Phase 2C: Advanced Refactoring (Next - Q3 2025)**
+**Goal:** Extract custom hooks, utilities, and prepare for TypeScript migration
+
+#### Immediate Priorities:
+1. **Custom Hooks Extraction** 🎯 *Next Priority*
+   - Extract data fetching logic from components
+   - Create reusable state management hooks (useServantData, useBondCalculations)
+   - Improve component separation of concerns
+
+2. **Utility Functions Organization**
+   - Create `/utils` directory for pure functions
+   - Extract calculation logic (bondCalculations.js, formatters.js)
+   - Improve code reusability and testability
+
+3. **Service Layer Creation**
+   - Create `/services` directory for API calls
+   - Centralize data fetching (servantService, questService)
+   - Prepare for enhanced error handling
 
 ---
 
@@ -139,17 +160,21 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 /src
   /components
     /core         # Extracted components (✅ Done - 4 components)
-      /QuestSelect      # ✅ NEW! Shared quest formatting (2025-06-20)
+      /QuestSelect      # ✅ Shared quest formatting (2025-06-20)
       /QuestModePanel   # ✅ Quest database selection
       /CustomPointsPanel# ✅ Manual input panel  
       /QuickListPanel   # ✅ Predefined quest dropdown
-    /ui           # Reusable UI components (⏳ In Progress)
+    /ui           # Reusable UI components (✅ Done - 1 component)
+      /InfoTooltip      # ✅ Interactive tooltip (2025-06-20)
     /layout       # Layout components (📋 Planned)
-  /hooks          # Custom React hooks (📋 Planned)
+  /hooks          # Custom React hooks (🎯 Next Priority)
   /utils          # Pure utility functions (📋 Planned)
   /services       # API and data services (📋 Planned)
   /types          # TypeScript definitions (🎯 Phase 3)
   /styles         # Theme and global styles (✅ Enhanced)
+  /assets         # Organized asset structure (✅ Completed 2025-06-20)
+    /images       # ✅ All PNG assets organized
+    /icons        # ✅ SVG and icon assets
 ```
 
 ### **Code Quality Standards:**
@@ -228,6 +253,9 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 
 ## 📈 Recent Achievements (2025-06-20)
 
+### ✅ **Phase 2B Completion - MAJOR MILESTONE!**
+**Impact:** Completed full component organization and asset structure overhaul
+
 ### ✅ **QuestSelect Component Extraction - SUCCESS!**
 **Impact:** Eliminated code duplication and created first shared component
 
@@ -238,12 +266,33 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 - **CSS Migration:** Global `QuestSelect.css` → CSS module
 - **Zero Breaking Changes:** 100% functionality preserved
 
+### ✅ **InfoTooltip Migration - SUCCESS!**
+**Impact:** Established UI component architecture and improved organization
+
+**Technical Details:**
+- **Directory Created:** `/components/ui/InfoTooltip/` structure established
+- **CSS Migration:** Global `InfoTooltip.css` → CSS module with camelCase classes
+- **Import Updates:** Updated RunsCalculator.js import path
+- **Mobile Support:** Preserved responsive behavior and backdrop functionality
+- **Zero Breaking Changes:** Identical click behavior and visual appearance
+
+### ✅ **Asset Organization - SUCCESS!**
+**Impact:** Clean src directory structure and organized asset management
+
+**Technical Details:**
+- **Directory Structure:** Created `/assets/images/` and `/assets/icons/`
+- **Assets Moved:** 70+ files reorganized from src root to organized structure
+- **Import Updates:** Updated Header component asset paths
+- **Cleanup:** Removed unused backup CSS module files
+- **Documentation:** Created assets/index.js for future reference
+
 **Architecture Benefits:**
 - **DRY Principle:** Quest formatting now centralized
-- **Maintainability:** Single source of truth for quest displays
-- **Reusability:** Component can be used across any panel
-- **Consistency:** Unified quest option styling
+- **Maintainability:** Single source of truth for quest displays and tooltips
+- **Reusability:** Components ready for use across application
+- **Consistency:** Unified styling and organized asset structure
+- **Clean Structure:** Clutter-free src root directory
 
-**Next Target:** InfoTooltip component migration
+**Next Target:** Custom hooks extraction for advanced refactoring
 
 ---
