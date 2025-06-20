@@ -9,12 +9,13 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 
 ### ✅ **Completed Phases:**
 - **Phase 1:** Component Extraction (6 components extracted)
-- **Phase 2A:** RunsCalculator Modularization (3 subcomponents + CSS consistency system)
+- **Phase 2A:** RunsCalculator Modularization (4 subcomponents + CSS consistency system)
 
 ### 📊 **Current Metrics:**
 - **App.js:** 62% reduction (580 → 221 lines)
-- **RunsCalculator.js:** 19% reduction (792 → 638 lines)
-- **Files Created:** 36+ new organized files
+- **RunsCalculator.js:** 24% reduction (792 → 595 lines) *updated*
+- **Files Created:** 39+ new organized files *updated*
+- **Shared Components:** 1 (QuestSelect) *new*
 - **Functionality:** 100% preserved (zero breaking changes)
 
 ---
@@ -37,12 +38,13 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 **Goal:** Complete component extraction and establish clean architecture
 
 #### Immediate Priorities:
-1. **QuestSelect Component Extraction** 🎯
-   - Extract shared QuestSelect component from panels
-   - Migrate QuestSelect.css to CSS module
-   - Update panels to use shared component
+1. **✅ QuestSelect Component Extraction (COMPLETED 2025-06-20)**
+   - ✅ Extracted shared QuestSelect component from panels
+   - ✅ Migrated QuestSelect.css to CSS module
+   - ✅ Updated panels to use shared component
+   - ✅ Reduced code duplication and improved maintainability
 
-2. **InfoTooltip Migration**
+2. **InfoTooltip Migration** 🎯 *Next Priority*
    - Move to `/components/ui/InfoTooltip/`
    - Convert to CSS module
    - Add comprehensive tests
@@ -136,7 +138,11 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 ```
 /src
   /components
-    /core         # Extracted components (✅ Done)
+    /core         # Extracted components (✅ Done - 4 components)
+      /QuestSelect      # ✅ NEW! Shared quest formatting (2025-06-20)
+      /QuestModePanel   # ✅ Quest database selection
+      /CustomPointsPanel# ✅ Manual input panel  
+      /QuickListPanel   # ✅ Predefined quest dropdown
     /ui           # Reusable UI components (⏳ In Progress)
     /layout       # Layout components (📋 Planned)
   /hooks          # Custom React hooks (📋 Planned)
@@ -217,3 +223,27 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 
 **Last Updated:** 2025-06-20
 **Next Review:** After Phase 2B completion
+
+---
+
+## 📈 Recent Achievements (2025-06-20)
+
+### ✅ **QuestSelect Component Extraction - SUCCESS!**
+**Impact:** Eliminated code duplication and created first shared component
+
+**Technical Details:**
+- **Files Created:** 3 new files (`QuestSelect.jsx`, `QuestSelect.module.css`, `index.js`)
+- **Code Reduction:** ~50 lines removed from `RunsCalculator.js` 
+- **Shared Functions:** `formatQuickListOption()`, `formatQuestModeOption()`
+- **CSS Migration:** Global `QuestSelect.css` → CSS module
+- **Zero Breaking Changes:** 100% functionality preserved
+
+**Architecture Benefits:**
+- **DRY Principle:** Quest formatting now centralized
+- **Maintainability:** Single source of truth for quest displays
+- **Reusability:** Component can be used across any panel
+- **Consistency:** Unified quest option styling
+
+**Next Target:** InfoTooltip component migration
+
+---
