@@ -16,7 +16,7 @@
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 // import styles from "./RunsCalculator.module.css";
 import "./RunsCalculator.css";
 import InfoTooltip from "./components/ui/InfoTooltip";
@@ -24,6 +24,7 @@ import QuestModePanel from "./components/core/QuestModePanel";
 import CustomPointsPanel from "./components/core/CustomPointsPanel";
 import QuickListPanel from "./components/core/QuickListPanel";
 import { formatQuickListOption, formatQuestModeOption } from "./components/core/QuestSelect";
+import { useQuestData, useBondCalculations, useRunsCalculatorState } from "./hooks";
 
 // DEBUG: Log CSS module styles
 // console.log('CSS Module styles loaded:', styles);
@@ -82,36 +83,63 @@ const quickListOptions = [
   }
 ];
 
-// Change the isBleachedEarthQuest function to handle both modes
-const isBleachedEarthQuest = (questKey, questData = null) => {
-  if (questData) {
-    // Quest Mode - Check if the quest name contains "Bleached Earth"
-    return questData.questName.includes("Bleached Earth");
-  }
-  // Quick List Mode - Check by quest key
-  return questKey.startsWith('bleached_');
-};
-
-// Helper function to check if a quest is a Bleached Earth quest
-// const isBleachedEarthQuest = (questKey) => questKey.startsWith('bleached_');
-
 // Set the default selected quest to the first key in QUEST_DATA
 const QUEST_KEYS = Object.keys(QUEST_DATA);
 
 const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
-  const [selectedQuest, setSelectedQuest] = useState(QUEST_KEYS[0]);
-  const [bondBonus, setBondBonus] = useState(0);
-  const [results, setResults] = useState(null);
-  const [isCustomMode, setIsCustomMode] = useState(false);
-  const [isQuestMode, setIsQuestMode] = useState(false);
-  const [customBondPoints, setCustomBondPoints] = useState("");
-  const [customAP, setCustomAP] = useState("");
-  const [heroicPortraitEnabled, setHeroicPortraitEnabled] = useState(false);
-  const [heroicPortraitMultiplier, setHeroicPortraitMultiplier] = useState(1);
-  const [frontlineBonusEnabled, setFrontlineBonusEnabled] = useState(false);
-  const [frontlineBonusPercent, setFrontlineBonusPercent] = useState(0.24);
-  const [filteredQuests, setFilteredQuests] = useState([]);
-  const [selectedQuestFromData, setSelectedQuestFromData] = useState("");
+  // Use custom hooks for state management
+  const {
+    selectedQuest,
+    setSelectedQuest,
+    isCustomMode,
+    isQuestMode,
+    customBondPoints,
+    setCustomBondPoints,
+    customAP,
+    setCustomAP,
+    bondBonus,
+    setBondBonus,
+    heroicPortraitEnabled,
+    setHeroicPortraitEnabled,
+    heroicPortraitMultiplier,
+    setHeroicPortraitMultiplier,
+    frontlineBonusEnabled,
+    setFrontlineBonusEnabled,
+    frontlineBonusPercent,
+    setFrontlineBonusPercent,
+    switchToQuickList,
+    switchToCustomMode,
+    switchToQuestMode
+  } = useRunsCalculatorState(QUEST_KEYS);
+
+  // Use quest data hook
+  const {
+    filteredQuests,
+    isLoading: isQuestDataLoading,
+    error: questDataError,
+    selectedQuestId: selectedQuestFromData,
+    setSelectedQuestId: setSelectedQuestFromData
+  } = useQuestData();
+
+  // Use bond calculations hook
+  const { results } = useBondCalculations({
+    selectedServant,
+    targetBond,
+    pointsNeeded,
+    bondBonus,
+    isCustomMode,
+    isQuestMode,
+    customBondPoints,
+    customAP,
+    heroicPortraitEnabled,
+    heroicPortraitMultiplier,
+    frontlineBonusEnabled,
+    frontlineBonusPercent,
+    filteredQuests,
+    selectedQuestFromData,
+    selectedQuest,
+    QUEST_DATA
+  });
 
   // Memoize quest options
   const questOptions = React.useMemo(() => {
@@ -205,209 +233,20 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
       label: warLongName,
       options: quests.map(quest => ({
         value: quest.questId.toString(),
-        label: quest.displayName,
-        quest: quest
+        label: quest.displayName,        quest: quest
       }))
     }));
   }, [filteredQuests]);
-    // Load quest data for Quest Mode
-  useEffect(() => {
-    const loadQuestData = async () => {
-      try {
-        // Handle both development and production environments
-        const publicUrl = process.env.PUBLIC_URL || '';
-        const response = await fetch(`${publicUrl}/quests.json`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        
-        // Filter quests: afterClear "repeatLast"/"resetInterval", consumeType "ap", questType "free"
-        const filtered = data.filter(quest => 
-          quest.questType === "free" &&
-          quest.consumeType === "ap" &&
-          (quest.afterClear === "repeatLast" || quest.afterClear === "resetInterval")
-        );
-        
-        setFilteredQuests(filtered);
-        
-        // Set default selection to first quest if available
-        if (filtered.length > 0) {
-          setSelectedQuestFromData(`${filtered[0].questId}`);
-        }      } catch (error) {
-        console.error('Error loading quest data:', error);
-        setFilteredQuests([]);
-        // Show user-friendly error in the UI
-        setResults({
-          runsNeeded: 0,
-          totalAP: 0,
-          pointsNeeded: 0,
-          bondPerRun: 0,
-          message: "Failed to load quest data. Please refresh the page or try again later."
-        });
-      }
-    };
 
-    loadQuestData();
-  }, []);
-
-  // Calculate runs when inputs change
-  useEffect(() => {
-    const calculateRuns = () => {
-      if (!selectedServant || !targetBond) return;      // Ensure we have valid numeric input for points
-      const points = typeof pointsNeeded === 'number' ? pointsNeeded : 0;
-
-      if (points <= 0) {
-        setResults({
-          runsNeeded: 0,
-          totalAP: 0,
-          pointsNeeded: 0,
-          bondPerRun: 0,
-          message: "Target bond level already reached!"
-        });
-        return;
-      }      let bondPerRun, runsNeeded, totalAP, questName;
-      
-      if (isCustomMode) {
-        const customPoints = parseInt(customBondPoints.replace(/,/g, ''), 10) || 0;
-        const customAPValue = parseInt(customAP.replace(/,/g, ''), 10) || 0;
-        if (customPoints <= 0 || customAPValue <= 0) {
-          setResults({
-            runsNeeded: 0,
-            totalAP: 0,
-            pointsNeeded: 0,
-            bondPerRun: 0,
-            message: "Please enter valid points and AP values"
-          });
-          return;
-        }
-        let base = Math.floor(customPoints * (1 + bondBonus / 100)) + (heroicPortraitEnabled ? 50 * heroicPortraitMultiplier : 0);
-        if (frontlineBonusEnabled) base = Math.floor(base * (1 + frontlineBonusPercent));
-        bondPerRun = base;
-        runsNeeded = Math.ceil(points / bondPerRun);
-        totalAP = runsNeeded * customAPValue;
-        questName = "Custom Quest";
-      } else if (isQuestMode) {
-        // Handle Quest Mode selection
-        const selectedQuestData = filteredQuests.find(q => q.questId.toString() === selectedQuestFromData);
-        if (!selectedQuestData) {
-          setResults({
-            runsNeeded: 0,
-            totalAP: 0,
-            pointsNeeded: 0,
-            bondPerRun: 0,
-            message: "Please select a quest"
-          });
-          return;
-        }
-        
-        // Get bond points for the first available bond level (usually level 1)
-        const bondLevels = Object.keys(selectedQuestData.bond);
-        const baseBondPoints = selectedQuestData.bond[bondLevels[0]] || 0;
-        
-        if (baseBondPoints <= 0) {
-          setResults({
-            runsNeeded: 0,
-            totalAP: 0,
-            pointsNeeded: 0,
-            bondPerRun: 0,
-            message: "Selected quest has no bond points"
-          });
-          return;
-        }
-        
-        let base = Math.floor(baseBondPoints * (1 + bondBonus / 100)) + (heroicPortraitEnabled ? 50 * heroicPortraitMultiplier : 0);
-        if (frontlineBonusEnabled) base = Math.floor(base * (1 + frontlineBonusPercent));
-        bondPerRun = base;
-        runsNeeded = Math.ceil(points / bondPerRun);
-        totalAP = runsNeeded * selectedQuestData.ap;
-        // Get war display name with the same mapping used in the quest options        // Get war display name using the same mapping logic as in the quest options
-        let warDisplayName;
-        if (selectedQuestData.warLongName.includes('Ancient Ocean of the Dreadnought Gods, Atlantis')) {
-          warDisplayName = 'LB5.1 - Atlantis';
-        } else if (selectedQuestData.warLongName.includes('Interstellar Mountainous City, Olympus')) {
-          warDisplayName = 'LB5.2 - Olympus';
-        } else if (selectedQuestData.warLongName.includes('Golden Sea of Trees, Nahui Mictlān')) {
-          warDisplayName = 'LB7 - Nahui Mictlān';
-        } else if (selectedQuestData.warLongName.includes('Zero Compass Inner Domain')) {
-          warDisplayName = 'Paper Moon';
-        } else if (selectedQuestData.warLongName.includes('Naraka Mandala')) {
-          warDisplayName = 'Heian-kyo';
-        } else if (selectedQuestData.warLongName.includes('Realm of the Thanatos Impulse')) {
-          warDisplayName = 'Traum';
-        } else if (selectedQuestData.warLongName.startsWith('Pseudo-Singularity I:') || selectedQuestData.warLongName.startsWith('Epic of Remnant I:')) {
-          warDisplayName = 'EoR 1 - Shinjuku';
-        } else if (selectedQuestData.warLongName.startsWith('Pseudo-Singularity II:') || selectedQuestData.warLongName.startsWith('Epic of Remnant II:')) {
-          warDisplayName = 'EoR 2 - Agartha';
-        } else if (selectedQuestData.warLongName.startsWith('Pseudo-Singularity III:') || selectedQuestData.warLongName.startsWith('Epic of Remnant III:') || 
-                   selectedQuestData.warLongName.includes('Pseudo-Parallel World')) {
-          warDisplayName = 'EoR 3 - Shimousa';
-        } else if (selectedQuestData.warLongName.startsWith('Pseudo-Singularity IV') || selectedQuestData.warLongName.startsWith('Epic of Remnant IV:')) {
-          warDisplayName = 'EoR 4 - Salem';
-        } else {
-          // For all other cases, use the same mapping as the quest options
-          const warNameMap = {
-            'Singularity F': 'Singularity F - Fuyuki',
-            'First Singularity': '1st Singularity - Orleans',
-            'Second Singularity': '2nd Singularity - Septem',
-            'Third Singularity': '3rd Singularity - Okeanos',
-            'Fourth Singularity': '4th Singularity - London',
-            'Fifth Singularity': '5th Singularity - E Pluribus Unum',
-            'Sixth Singularity': '6th Singularity - Camelot',
-            'Seventh Singularity': '7th Singularity - Babylonia',
-            'Lostbelt No.1': 'LB1 - Anastasia',
-            'Lostbelt No.2': 'LB2 - Götterdämmerung',
-            'Lostbelt No.3': 'LB3 - SIN',
-            'Lostbelt No.4': 'LB4 - Yuga Kshetra',
-            'Lostbelt No.6': 'LB6 - Avalon le Fae',
-            'Heian-kyo': 'Heian-kyo',
-            'Traum': 'Traum',
-            'Lostbelt No.7': 'LB7 - Nahui Mictlān',
-            'Paper Moon': 'Paper Moon',
-            'Isolated Realm of the Far East, Imperial Capital': 'Imperial Capital'
-          };          warDisplayName = warNameMap[selectedQuestData.warLongName.split('\n')[0]] || selectedQuestData.warLongName;
-        }
-        questName = `${warDisplayName} - ${selectedQuestData.spotName}`;
-      } else {
-        const quest = QUEST_DATA[selectedQuest];
-        let base = Math.floor(quest.baseBond * (1 + bondBonus / 100)) + (heroicPortraitEnabled ? 50 * heroicPortraitMultiplier : 0);
-        if (frontlineBonusEnabled) base = Math.floor(base * (1 + frontlineBonusPercent));
-        bondPerRun = base;
-        runsNeeded = Math.ceil(points / bondPerRun);
-        totalAP = runsNeeded * quest.ap;
-        questName = quest.name;
-      }
-
-      // Calculate estimated time (assuming 1 run = 3 minutes average)
-      const estimatedMinutes = runsNeeded * 3;
-      const hours = Math.floor(estimatedMinutes / 60);
-      const minutes = estimatedMinutes % 60;
-      
-      // Special calculation for Bleached Earth quests (3 runs per day limit)
-      let isBleached = false;
-      if (isQuestMode) {
-        const selectedQuestData = filteredQuests.find(q => q.questId.toString() === selectedQuestFromData);
-        isBleached = selectedQuestData ? isBleachedEarthQuest(null, selectedQuestData) : false;
-      } else if (!isCustomMode) {
-        isBleached = isBleachedEarthQuest(selectedQuest);
-      }
-      
-      const daysNeeded = isBleached ? Math.ceil(runsNeeded / 3) : Math.ceil(totalAP / (24 * 12));
-
-      setResults({
-        runsNeeded,
-        totalAP,
-        pointsNeeded: points,
-        bondPerRun,
-        questName,
-        estimatedTime: { hours, minutes },
-        apPerDay: daysNeeded,
-        isBleachedEarth: isBleached
-      });
-    };    if (selectedServant && targetBond && typeof pointsNeeded === "number") {
-      calculateRuns();
-    }
-  }, [selectedServant, targetBond, pointsNeeded, selectedQuest, bondBonus, isCustomMode, isQuestMode, customBondPoints, customAP, heroicPortraitEnabled, heroicPortraitMultiplier, frontlineBonusEnabled, frontlineBonusPercent, selectedQuestFromData, filteredQuests]);
+  // Handle quest data loading error display
+  if (questDataError) {
+    return (
+      <div className="runs-calculator">
+        <h3 className="runs-title">Runs to Max Calculator</h3>
+        <p className="runs-info error">Failed to load quest data. Please refresh the page or try again later.</p>
+      </div>
+    );
+  }
 
   const handleBonusChange = (e) => {
     const value = Math.max(0, Math.min(300, parseInt(e.target.value) || 0)); // Cap at 300%
@@ -437,26 +276,19 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
         <div className="runs-form">        <div className="calculator-mode-toggle">
           <button
             className={`calc-toggle-btn ${!isCustomMode && !isQuestMode ? 'active' : ''}`}
-            onClick={() => {
-              setIsCustomMode(false);
-              setIsQuestMode(false);
-            }}
+            onClick={switchToQuickList}
           >
             Quick List
-          </button>          <button 
+          </button>
+          <button 
             className={`calc-toggle-btn ${isQuestMode && !isCustomMode ? 'active' : ''}`}
-            onClick={() => {
-              setIsCustomMode(false);
-              setIsQuestMode(true);
-            }}
+            onClick={switchToQuestMode}
           >
             Quest Mode
-          </button>          <button 
+          </button>
+          <button 
             className={`calc-toggle-btn ${isCustomMode ? 'active' : ''}`}
-            onClick={() => {
-              setIsCustomMode(true);
-              setIsQuestMode(false);
-            }}
+            onClick={switchToCustomMode}
           >
             Custom Points
           </button>
@@ -467,12 +299,12 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
             customAP={customAP}
             onCustomAPChange={handleCustomAPChange}
           />
-        ) : isQuestMode ? (
-          <QuestModePanel
+        ) : isQuestMode ? (          <QuestModePanel
             questOptions={questOptions}
             selectedQuestFromData={selectedQuestFromData}
             onQuestChange={setSelectedQuestFromData}
             filteredQuests={filteredQuests}
+            isLoading={isQuestDataLoading}
           />
         ) : (
           <QuickListPanel
