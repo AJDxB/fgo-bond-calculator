@@ -24,9 +24,9 @@ FGO Bond Calculator Cleanup Plan v3.0
 3. **Component CSS consistency** - ✅ DONE (all subcomponent form labels use unified styling)
 
 ### ❌ REMAINING TASKS:
-1. **RunsCalculator CSS module activation** - NOT DONE (import commented out, still using global CSS)
-2. **QuestSelect component extraction** - NOT DONE (React Select styling still embedded in panels)
-3. **QuestSelect.css → CSS module migration** - NOT DONE (still in src/ root)
+1. **RunsCalculator CSS module activation** - DEFERRED (keeping global CSS per migration roadmap)
+2. **QuestSelect component extraction** - 🎯 **NEXT PRIORITY** 
+3. **QuestSelect.css → CSS module migration** - Part of QuestSelect extraction
 
 ### 📊 CURRENT STATUS (PHASE 2A MOSTLY COMPLETED):
 - **RunsCalculator.js**: Uses global CSS (RunsCalculator.css) - CSS module created but import commented out
@@ -153,16 +153,13 @@ FGO Bond Calculator Cleanup Plan v3.0
 ## 🚀 PHASE 2: ADVANCED REFACTORING (NEXT PRIORITIES)
 
 ### IMMEDIATE NEXT STEPS:
-1. **RunsCalculator Component Breakdown** 🔄 **MOSTLY COMPLETED**
-   - ✅ Extract QuestModePanel subcomponent
-   - ✅ Extract CustomPointsPanel subcomponent  
-   - ✅ Extract QuickListPanel subcomponent
-   - ✅ Create RunsCalculator.module.css (exists but not activated)
-   - ✅ Implement CSS custom properties for consistent styling
-   - ❌ Activate RunsCalculator CSS module (uncomment import, test thoroughly)
-   - ❌ Extract QuestSelect.jsx (with QuestSelect.css) - NOT DONE
+1. **QuestSelect Component Extraction** - 🎯 **NEXT PRIORITY**
+   - Extract shared QuestSelect.jsx component from subcomponent panels
+   - Migrate QuestSelect.css to CSS module
+   - Update QuestModePanel and QuickListPanel to use shared component
+   - Complete Phase 2A
 
-2. **InfoTooltip Migration**
+2. **InfoTooltip Migration** (Phase 2 Start)
    - Move InfoTooltip.js to /components/ui/InfoTooltip/
    - Convert InfoTooltip.css to CSS module
    - Add proper tests
@@ -171,6 +168,10 @@ FGO Bond Calculator Cleanup Plan v3.0
    - Move images from src/ to /assets/images/
    - Consolidate class icons
    - Update import paths
+
+4. **Clean Up CSS Module Files**
+   - Remove unused RunsCalculator.module.css files (.backup, .new)
+   - Keep main RunsCalculator.module.css for future reference
 
 ### CSS SYSTEM MIGRATION (CRITICAL):
 **Current CSS Issues:**
@@ -189,6 +190,46 @@ FGO Bond Calculator Cleanup Plan v3.0
 - ❌ QuestSelect.css → QuestSelect.module.css (NOT DONE - still in src/)
 - 🔄 RunsCalculator.css → RunsCalculator.module.css (CREATED but not activated - import commented out)
 - index.css → /styles/globals.css
+
+---
+
+## 🗺️ LONG-TERM MIGRATION ROADMAP
+
+### ARCHITECTURAL DECISION: Migration Path Strategy
+**Decision Date:** 2025-06-20
+**Context:** Evaluated CSS module migration vs component extraction priorities
+**Decision:** Prioritize component extraction over CSS migration for optimal TypeScript transition
+
+### OPTIMAL MIGRATION SEQUENCE:
+1. **Phase 2-4: Component Extraction** (Current Priority)
+   - Complete QuestSelect component extraction
+   - InfoTooltip migration to component structure
+   - Asset organization and consolidation
+   - Custom hooks extraction
+   - Utility functions separation
+
+2. **Future Phase: TypeScript Migration**
+   - Convert extracted components incrementally (.jsx → .tsx)
+   - Add TypeScript interfaces for props and state
+   - Type safety for API responses and data structures
+   - Better IDE support and error detection
+
+3. **Future Phase: CSS-in-JS Migration** (styled-components/emotion)
+   - Convert CSS modules to styled-components
+   - Full TypeScript integration with styled-components
+   - Runtime theming capabilities
+   - Component-scoped styling
+
+### RATIONALE:
+- **Component Extraction First**: Creates smaller, focused files that are easier to migrate to TypeScript
+- **TypeScript Second**: Adds type safety to well-structured components before styling changes
+- **CSS-in-JS Last**: Leverages full TypeScript integration for optimal developer experience
+- **Incremental Approach**: Each phase can be done gradually without breaking changes
+
+### CURRENT CSS STRATEGY:
+- **Keep Global CSS**: Working perfectly for shared styles (quest-option, form-label, etc.)
+- **CSS Modules for Components**: Subcomponents use CSS modules with CSS custom properties
+- **Hybrid Approach**: Best of both worlds until full CSS-in-JS migration
 
 ---
 

@@ -19,11 +19,11 @@
 import React, { useState, useEffect } from "react";
 // import styles from "./RunsCalculator.module.css";
 import "./RunsCalculator.css";
-import "./QuestSelect.css";
 import InfoTooltip from "./InfoTooltip";
 import QuestModePanel from "./components/core/QuestModePanel";
 import CustomPointsPanel from "./components/core/CustomPointsPanel";
 import QuickListPanel from "./components/core/QuickListPanel";
+import { formatQuickListOption, formatQuestModeOption } from "./components/core/QuestSelect";
 
 // DEBUG: Log CSS module styles
 // console.log('CSS Module styles loaded:', styles);
@@ -46,15 +46,6 @@ const QUEST_DATA = {
   event_90p: { name: "Event Quest Lv90+ (40 AP)", ap: 40, baseBond: 1098 },
   event_90pp: { name: "Event Quest Lv90++ (40 AP)", ap: 40, baseBond: 1318 },
 };
-
-// Helper function to format quest options
-const formatQuickListOption = (name, ap, bond) => (
-  <div className="quest-option">
-    <span className="quest-name">{name}</span>
-    <span className="quest-ap">{ap} AP</span>
-    <span className="quest-bond">{bond} Bond</span>
-  </div>
-);
 
 // Quick List options with formatted display
 const quickListOptions = [
@@ -198,16 +189,9 @@ const RunsCalculator = ({ selectedServant, targetBond, pointsNeeded }) => {
       }
       
       // Get first bond level value
-      const firstBondValue = quest.bond[Object.keys(quest.bond)[0]];
-      acc[warDisplayName].push({
+      const firstBondValue = quest.bond[Object.keys(quest.bond)[0]];      acc[warDisplayName].push({
         ...quest,
-        displayName: (
-          <div className="quest-option">
-            <span className="quest-name">{quest.spotName}</span>
-            <span className="quest-ap">{quest.ap} AP</span>
-            <span className="quest-bond">{firstBondValue} Bond</span>
-          </div>
-        )
+        displayName: formatQuestModeOption(quest.spotName, quest.ap, firstBondValue)
       });
       return acc;
     }, {});

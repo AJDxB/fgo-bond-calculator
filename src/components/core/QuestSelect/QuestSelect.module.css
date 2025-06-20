@@ -1,14 +1,17 @@
 /**
- * QuestSelect.css
+ * QuestSelect.module.css
  * FGO Bond Calculator - Quest Selection Component Styles
  * 
+ * Modular CSS for QuestSelect component with consistent quest option formatting.
+ * Migrated from global QuestSelect.css to module-scoped styles.
+ * 
  * @author AJDxB <ajdxb4787@gmail.com>
- * @version 0.3.4 - New styles for Quest Mode dropdown layout and mobile responsiveness
- * @created 2025-06-16
+ * @version 0.3.4 - Converted to CSS module with preserved functionality
+ * @created 2025-06-20
  * @github https://github.com/AJDxB/fgo-bond-calculator
  */
 
-.quest-option {
+.questOption {
   display: grid;
   grid-template-columns: minmax(150px, 2fr) 65px 85px;
   gap: 8px;
@@ -17,20 +20,20 @@
   white-space: nowrap;
 }
 
-.quest-name {
+.questName {
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
 }
 
-.quest-ap, .quest-bond {
+.questAp, .questBond {
   text-align: right;
   flex-shrink: 0;
   position: relative;
   padding-left: 8px;
 }
 
-.quest-ap::before, .quest-bond::before {
+.questAp::before, .questBond::before {
   content: '|';
   position: absolute;
   left: 0;
@@ -38,23 +41,23 @@
 }
 
 @media (max-width: 480px) {
-  .quest-option {
+  .questOption {
     grid-template-columns: 1fr;
     gap: 4px;
     white-space: normal;
     padding: 4px;
   }
 
-  .quest-ap, .quest-bond {
+  .questAp, .questBond {
     text-align: left;
     padding-left: 0;
   }
 
-  .quest-ap::before, .quest-bond::before {
+  .questAp::before, .questBond::before {
     display: none;
   }
 
-  .quest-name {
+  .questName {
     font-weight: 500;
   }
 }
