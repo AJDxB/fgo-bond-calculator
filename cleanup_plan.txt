@@ -17,6 +17,13 @@ FGO Bond Calculator Cleanup Plan v3.0
    - **Functionality**: Quest option formatting now shared across panels
    - **Impact**: Removed duplicate code, improved maintainability
    - **Migration**: Converted global QuestSelect.css to CSS module
+8. **InfoTooltip Component (COMPLETED ✅) - NEW!
+   - **Location**: `src/components/ui/InfoTooltip/`
+   - **Files**: InfoTooltip.jsx + InfoTooltip.module.css + index.js
+   - **Status**: Migrated to UI directory, CSS modularized
+   - **Functionality**: Interactive tooltip with click activation preserved
+   - **Impact**: Established /ui directory structure for reusable components
+   - **Migration**: src/InfoTooltip.* → /components/ui/InfoTooltip/
 
 ## 🎉 PHASE 2A: RUNSCALCULATOR MODULARIZATION - MOSTLY COMPLETED! 🎉
 
@@ -29,12 +36,14 @@ FGO Bond Calculator Cleanup Plan v3.0
 1. **RunsCalculator.module.css creation** - ✅ DONE (exists but NOT ACTIVE - commented out import)
 2. **CSS custom properties system** - ✅ DONE (form styling variables in theme.css)
 3. **Component CSS consistency** - ✅ DONE (all subcomponent form labels use unified styling)
-4. **QuestSelect.css → CSS module migration** - ✅ **NEW! COMPLETED**
+4. **QuestSelect.css → CSS module migration** - ✅ **COMPLETED**
+5. **InfoTooltip.css → CSS module migration** - ✅ **NEW! COMPLETED**
 
 ### ❌ REMAINING TASKS:
 1. **RunsCalculator CSS module activation** - DEFERRED (keeping global CSS per migration roadmap)
-2. **InfoTooltip component organization** - 🎯 **NEXT PRIORITY**
-3. **Asset organization and import cleanup**
+2. **Asset organization and import cleanup** - 🎯 **NEXT PRIORITY**
+3. **Custom hooks extraction** - Future phase
+4. **Utility functions extraction** - Future phase
 
 ### 📊 CURRENT STATUS (PHASE 2A MOSTLY COMPLETED):
 - **RunsCalculator.js**: Uses global CSS (RunsCalculator.css) - CSS module created but import commented out

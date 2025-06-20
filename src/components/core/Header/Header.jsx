@@ -11,8 +11,8 @@
  */
 
 import React from 'react';
-import fgoLogo from '../../../fgo_calc_logo.png';
-import saintQuartzIcon from '../../../saintquartz.png';
+import fgoLogo from '../../../assets/images/fgo_calc_logo.png';
+import saintQuartzIcon from '../../../assets/images/saintquartz.png';
 import styles from './Header.module.css';
 
 const Header = () => {
