@@ -16,7 +16,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -35,6 +36,8 @@ jobs:
         run: |
           echo "Fetching NA servant data..."
           node fetch_servants.js
+          echo "NA fetch completed"
+          ls -la public/servants.json
         continue-on-error: false
 
       - name: Fetch and update JP servants data
@@ -42,6 +45,8 @@ jobs:
         run: |
           echo "Fetching JP servant data..."
           node fetch_servants_jp.js
+          echo "JP fetch completed"
+          ls -la public/servants_jp.json
         continue-on-error: false
 
       - name: Verify data files
@@ -52,7 +57,20 @@ jobs:
           fi
           echo "Both servant data files present and updated successfully"
 
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if git diff --quiet public/servants.json public/servants_jp.json; then
+            echo "No changes detected in servant data files"
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected in servant data files"
+            echo "changes=true" >> $GITHUB_OUTPUT
+            git diff --name-only public/servants.json public/servants_jp.json
+          fi
+
       - name: Commit and push changes
+        if: steps.check-changes.outputs.changes == 'true'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'chore: update servant data (automated)'
@@ -64,6 +82,12 @@ jobs:
           push_options: '--force'
           skip_dirty_check: false
           create_branch: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: No changes
+        if: steps.check-changes.outputs.changes == 'false'
+        run: echo "No changes to commit - servant data is up to date"
           
       - name: Handle Failure
         if: failure()
