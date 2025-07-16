@@ -85,6 +85,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
+      - name: Deploy to GitHub Pages
+        if: steps.check-changes.outputs.changes == 'true'
+        run: |
+          echo "Deploying updated servant data to GitHub Pages..."
+          npm run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: No changes
         if: steps.check-changes.outputs.changes == 'false'
         run: echo "No changes to commit - servant data is up to date"
