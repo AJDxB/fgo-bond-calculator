@@ -1,3 +1,26 @@
+## RECENT UPDATES
+
+### GitHub Actions Workflow Fix (July 16, 2025)
+- **FIXED**: GitHub Actions "Update Servant Data" workflow authentication issues
+- **CHANGES**:
+  - Set `persist-credentials: true` and explicit `GITHUB_TOKEN` for authentication
+  - Added change detection step to only commit when servant data files are actually modified
+  - Added debug output to understand fetch process better
+  - Added conditional commit step to prevent unnecessary commits
+  - Added proper error handling and status reporting
+  - Added verification that both servant data files exist before proceeding
+- **TESTING**: Workflow logic tested locally, changes pushed to main branch
+- **STATUS**: ✅ RESOLVED - Workflow should now work properly for automated servant data updates
+
+### Phase 2 Completion Status
+- ✅ **Phase 2A**: Component Migration and CSS Modules - COMPLETED
+- ✅ **Phase 2B**: Custom Hooks Extraction - COMPLETED
+- ✅ **GitHub Actions**: Servant Data Update Workflow - FIXED
+- 🔄 **Phase 2C**: Utility Functions Organization - PENDING
+- ⏳ **Phase 3**: Service Layer Creation - PENDING
+
+---
+
 FGO Bond Calculator Cleanup Plan v4.0
 =====================================
 

@@ -12,7 +12,10 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 - **Phase 2A:** RunsCalculator Modularization (4 subcomponents + CSS consistency system)
 - **Phase 2B:** Component Organization & Asset Structure (3 additional components + organized assets)
 
-### 📊 **Current Metrics:**
+### �️ **Infrastructure Fixes:**
+- **GitHub Actions:** Fixed "Update Servant Data" workflow authentication and change detection (2025-07-16)
+
+### �📊 **Current Metrics:**
 - **App.js:** 62% reduction (580 → 221 lines)
 - **RunsCalculator.js:** 30% reduction (792 → 550 lines est.) *updated*
 - **Files Created:** 45+ new organized files *updated*
@@ -20,6 +23,7 @@ Transform the FGO Bond Calculator from a monolithic React application into a mod
 - **UI Components:** 1 (InfoTooltip) *new*
 - **Asset Organization:** Completed with /assets structure *new*
 - **Functionality:** 100% preserved (zero breaking changes)
+- **CI/CD:** Automated servant data updates working properly ✅
 
 ---
 
